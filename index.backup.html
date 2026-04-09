@@ -27,12 +27,12 @@
             scroll-behavior: smooth;
         }
 
-        /* --- Animacoes de Navegacao --- */
+        /* --- Animações de Navegação --- */
         .page-transition { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Efeito de elevacao nos cards */
+        /* Efeito de elevação nos cards */
         .product-card { transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
 
@@ -101,21 +101,6 @@
         .checkout-hero {
             background: linear-gradient(135deg, rgba(17,24,39,0.98), rgba(52,131,250,0.95));
         }
-        .checkout-modal-scroll {
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-        }
-        @media (max-width: 767px) {
-            #checkout-modal {
-                align-items: flex-start;
-                overflow-y: auto;
-            }
-            #checkout-modal .modal-container {
-                max-height: calc(100dvh - 1rem);
-                margin: 0.5rem 0;
-                overflow-y: auto;
-            }
-        }
     </style>
 </head>
 <body class="text-gray-900">
@@ -149,13 +134,13 @@
                         <i data-lucide="map-pin" class="w-4 h-4 text-gray-600 group-hover:text-black transition-colors"></i>
                         <div class="flex flex-col">
                             <span class="text-[10px] text-gray-500">Enviar para</span>
-                            <span class="font-medium group-hover:text-black transition-colors">Sao Paulo 01001</span>
+                            <span class="font-medium group-hover:text-black transition-colors">São Paulo 01001</span>
                         </div>
                     </div>
                     <nav class="hidden md:flex items-center gap-4 font-medium">
                         <a href="#" class="hover:text-black transition-colors">Categorias</a>
                         <a href="#" class="hover:text-black transition-colors text-blue-600">Ofertas do Dia</a>
-                        <a href="#" class="hover:text-black transition-colors">Historico</a>
+                        <a href="#" class="hover:text-black transition-colors">Histórico</a>
                         <a href="#" class="hover:text-black transition-colors">Vender</a>
                     </nav>
                 </div>
@@ -189,7 +174,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
                         <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="truck" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Frete fixo R$ 49,90</span>
+                        <span class="text-xs font-bold text-gray-700">Frete grátis</span>
                     </div>
                     <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
                         <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="credit-card" class="text-blue-500 w-7 h-7"></i></div>
@@ -216,7 +201,7 @@
 
             <div class="max-w-7xl mx-auto px-4 mt-16">
                 <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-2xl font-light text-gray-600">Inspirado no seu ultimo historico</h2>
+                    <h2 class="text-2xl font-light text-gray-600">Inspirado no seu último histórico</h2>
                     <a href="#" class="text-sm text-blue-600 font-medium hover:underline">Ver tudo</a>
                 </div>
                 <div class="flex gap-5 overflow-x-auto pb-8 scrollbar-hide" id="products-list"></div>
@@ -229,7 +214,7 @@
         <div class="max-w-7xl mx-auto min-h-screen flex flex-col">
             <div class="p-4 border-b flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur-md z-10">
                 <button onclick="showPage('home')" class="flex items-center gap-2 text-blue-600 font-bold hover:translate-x-[-5px] transition-transform">
-                    <i data-lucide="chevron-left"></i> VOLTAR A LISTA
+                    <i data-lucide="chevron-left"></i> VOLTAR À LISTA
                 </button>
                 <div class="flex gap-5">
                     <i data-lucide="heart" class="w-6 h-6 text-blue-600 cursor-pointer hover:fill-blue-600 transition-all"></i>
@@ -271,7 +256,7 @@
                 </div>
             </div>
             <div class="max-w-4xl p-10 border-t border-gray-100 bg-white mx-auto w-full">
-                <h2 class="text-2xl font-bold mb-8 text-gray-800">Descricao do Produto</h2>
+                <h2 class="text-2xl font-bold mb-8 text-gray-800">Descrição do Produto</h2>
                 <p id="det-description" class="text-gray-600 leading-relaxed text-lg whitespace-pre-line"></p>
             </div>
         </div>
@@ -294,15 +279,15 @@
     </div>
 
     <!-- MODAL CHECKOUT -->
-    <div id="checkout-modal" class="fixed inset-0 z-[300] hidden flex items-start md:items-center justify-center p-2 md:p-4 overflow-y-auto">
+    <div id="checkout-modal" class="fixed inset-0 z-[300] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-md" onclick="closeCheckout()"></div>
-        <div class="modal-container checkout-modal-scroll checkout-shell bg-white w-full max-w-4xl max-h-[calc(100dvh-1rem)] md:max-h-[calc(100dvh-2rem)] rounded-[2rem] shadow-2xl overflow-y-auto overflow-x-hidden relative z-[301]">
+        <div class="modal-container checkout-shell bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden relative z-[301]">
             <div class="checkout-hero px-8 md:px-10 pt-8 pb-7 text-white">
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                     <div>
                         <p class="text-[11px] uppercase tracking-[0.3em] text-white/65 font-bold mb-3">Checkout seguro</p>
-                        <h2 class="text-3xl md:text-4xl font-black leading-tight">Produtos gratis, pague so o frete</h2>
-                        <p class="text-white/75 mt-3 max-w-2xl">Compra protegida, dados validados e confirmacao rapida direto pelo Mercado Livre.</p>
+                        <h2 class="text-3xl md:text-4xl font-black leading-tight">Finalize com PIX em poucos segundos</h2>
+                        <p class="text-white/75 mt-3 max-w-2xl">Compra protegida, dados validados e confirmação rápida direto pelo Mercado Livre.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <div id="step-pill-1" class="step-pill-active px-4 py-3 rounded-2xl flex items-center gap-3">
@@ -325,16 +310,16 @@
             <div id="check-step-1" class="p-8 md:p-10">
                 <div class="grid md:grid-cols-3 gap-3 mb-8">
                     <div class="checkout-chip rounded-2xl px-4 py-4">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Protecao</p>
+                        <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Proteção</p>
                         <p class="font-bold text-gray-900">Compra 100% segura</p>
                     </div>
                     <div class="checkout-chip rounded-2xl px-4 py-4">
                         <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Envio</p>
-                        <p class="font-bold text-gray-900">Despacho prioritario</p>
+                        <p class="font-bold text-gray-900">Despacho prioritário</p>
                     </div>
                     <div class="checkout-chip rounded-2xl px-4 py-4">
                         <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Pagamento</p>
-                        <p class="font-bold text-gray-900">PIX com aprovacao rapida</p>
+                        <p class="font-bold text-gray-900">PIX com aprovação rápida</p>
                     </div>
                 </div>
                 <h2 class="text-2xl font-bold mb-8 flex items-center gap-3"><i data-lucide="user" class="text-blue-600"></i> Dados do Comprador</h2>
@@ -361,17 +346,17 @@
                 <div class="flex flex-col gap-4">
                     <div class="grid grid-cols-2 gap-4">
                         <input type="text" id="ship-cep" placeholder="CEP" class="field-shell p-4 rounded-2xl outline-none transition-all text-base font-medium" maxlength="9" oninput="formatCEP(this)">
-                        <input type="text" id="ship-country" placeholder="Pais" value="Brasil" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
+                        <input type="text" id="ship-country" placeholder="País" value="Brasil" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
                     </div>
-                    <input type="text" id="ship-address" placeholder="Endereco (Rua/Avenida)" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
+                    <input type="text" id="ship-address" placeholder="Endereço (Rua/Avenida)" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
                     <div class="grid grid-cols-3 gap-4">
-                        <input type="text" id="ship-number" placeholder="Numero da Casa" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
+                        <input type="text" id="ship-number" placeholder="Número da Casa" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
                         <input type="text" id="ship-city" placeholder="Cidade" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all col-span-2">
                     </div>
                     <input type="text" id="ship-complement" placeholder="Complemento (Opcional)" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
                     
                     <button onclick="processIronPay()" id="pay-btn" class="bg-blue-600 text-white py-5 rounded-2xl font-bold mt-4 hover:bg-blue-700 active:scale-95 transition-all">
-                        Ir para pagamento do frete (R$ 49,90)
+                        Ir para o pagamento
                     </button>
                     <button onclick="goToCheckStep(1)" class="text-gray-400 text-sm font-bold hover:text-gray-600 transition-all">Voltar</button>
                 </div>
@@ -379,8 +364,8 @@
 
             <!-- Passo 3: PIX -->
             <div id="check-step-2" class="p-8 md:p-10 hidden text-center">
-                <h2 class="text-2xl font-bold mb-4 flex items-center justify-center gap-3"><i data-lucide="zap" class="text-blue-600"></i> Pague o frete com PIX</h2>
-                <p class="text-gray-500 mb-8">Aprovacao instantanea via Iron Pay!</p>
+                <h2 class="text-2xl font-bold mb-4 flex items-center justify-center gap-3"><i data-lucide="zap" class="text-blue-600"></i> Pague com PIX</h2>
+                <p class="text-gray-500 mb-8">Aprovação instantânea via Iron Pay!</p>
                 <div class="checkout-card p-6 rounded-[2rem] mb-6 inline-block min-w-[260px]">
                     <img id="pix-qr-image" alt="QR Code PIX" class="hidden w-48 h-48 mx-auto object-contain rounded-2xl bg-white p-3">
                     <div id="pix-qr-placeholder">
@@ -391,7 +376,7 @@
                 <div class="flex flex-col gap-3 mb-8">
                     <p class="text-xs font-bold text-gray-400 uppercase">PIX Copia e Cola</p>
                     <div class="flex gap-2 bg-gray-100 p-3 rounded-xl items-center border border-gray-200">
-                        <input type="text" readonly id="pix-code" value="Gerando codigo..." class="bg-transparent text-xs text-gray-500 flex-1 outline-none">
+                        <input type="text" readonly id="pix-code" value="Gerando código..." class="bg-transparent text-xs text-gray-500 flex-1 outline-none">
                         <button onclick="copyPix()" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-all" title="Copiar">
                             <i data-lucide="copy" class="w-4 h-4"></i>
                         </button>
@@ -400,8 +385,8 @@
                 </div>
 
                 <div class="bg-blue-600 p-5 rounded-2xl font-bold text-white text-2xl mb-4 shadow-lg shadow-blue-200" id="check-total-display"></div>
-                <p class="text-sm text-gray-500 mb-8">Assim que o pagamento for feito, a confirmacao costuma acontecer em segundos.</p>
-                <button onclick="goToCheckStep(3)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-bold hover:bg-green-700 active:scale-95 transition-all">Ja realizei o pagamento</button>
+                <p class="text-sm text-gray-500 mb-8">Assim que o pagamento for feito, a confirmação costuma acontecer em segundos.</p>
+                <button onclick="goToCheckStep(3)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-bold hover:bg-green-700 active:scale-95 transition-all">Já realizei o pagamento</button>
             </div>
 
             <!-- Passo 4: Sucesso -->
@@ -410,24 +395,23 @@
                     <i data-lucide="check-circle" class="w-12 h-12 text-green-600"></i>
                 </div>
                 <h2 class="text-3xl font-bold mb-4 text-gray-800">Pedido Confirmado!</h2>
-                <p class="text-gray-500 mb-10">Obrigado por comprar conosco. Seu pedido ja esta sendo processado.</p>
-                <button onclick="closeCheckout()" class="bg-blue-600 text-white px-12 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all">Voltar a Loja</button>
+                <p class="text-gray-500 mb-10">Obrigado por comprar conosco. Seu pedido já está sendo processado.</p>
+                <button onclick="closeCheckout()" class="bg-blue-600 text-white px-12 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all">Voltar à Loja</button>
             </div>
         </div>
     </div>
 
     <script>
         // --- Banco de Dados ---
-        const FIXED_SHIPPING = 49.90;
         const products = [
-            { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 0, oldPrice: 2199.99, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
-            { id: 2, title: 'Geladeira Electrolux Frost Free Inverter 480L', price: 0, oldPrice: 1980.00, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
-            { id: 3, title: "Apple iPhone 15 (128 GB) - Preto", price: 0, oldPrice: 2099.00, image: "https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX342_SY445_QL70_ML2_.jpg", description: "O iPhone 15 traz a Dynamic Island, c\u00E2mera de 48 MP e USB-C." },
-            { id: 4, title: "Philips Walita Airfryer XL Digital 6.2L", price: 0, oldPrice: 460.00, image: "https://m.media-amazon.com/images/I/51i3nkPbZ-L._AC_SX679_.jpg", description: "Cozinhe de forma saud\u00E1vel com at\u00E9 90% menos gordura." },
-            { id: 5, title: "Jogo de Panelas 13 Pe\u00E7as Antiaderente com Panela de Press\u00E3o", price: 0, oldPrice: 329.00, image: "https://m.media-amazon.com/images/I/61MUlJ3X-jL._AC_SX679_.jpg", description: "Conjunto completo antiaderente com 13 pe\u00E7as, incluindo panela de press\u00E3o, ideal para equipar sua cozinha." },
-            { id: 6, title: "SUGGAR FOG\u00C3O COOK GLASS PRETO MESA DE VIDRO 5 BOCAS MEGA CHAMA TREMPE 6 APOIOS ACENDIMENTO AUTOM\u00C1TICO FGVCG510PT", price: 0, oldPrice: 899.00, image: "https://m.media-amazon.com/images/I/51Llc-bUtRL._AC_SX522_.jpg", description: "Fog\u00E3o 5 bocas com mesa de vidro, mega chama, trempes com 6 apoios e acendimento autom\u00E1tico." },
-            { id: 7, title: "JBL, Caixa de Som, PartyBox Stage 520, Bluetooth, Port\u00E1til, Show de Luzes, At\u00E9 15 horas de reprodu\u00E7\u00E3o", price: 0, oldPrice: 1999.99, image: "https://m.media-amazon.com/images/I/61zm6pi9ziL._AC_SX679_.jpg", description: "Caixa de som Bluetooth port\u00E1til com show de luzes e at\u00E9 15 horas de reprodu\u00E7\u00E3o para animar qualquer ambiente." },
-            { id: 8, title: "Samsung Galaxy Book4 Intel Core i5-1335U, Windows 11 Home, 8GB, 512GB SSD, Iris Xe, 15.6'' Full HD LED, 1.55kg", price: 0, oldPrice: 2200.00, image: "https://m.media-amazon.com/images/I/51lGW2nP9qL._AC_SX522_.jpg", description: "Notebook leve com Intel Core i5, 8GB de RAM, SSD de 512GB e tela Full HD de 15,6 polegadas." }
+            { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 849.99, oldPrice: 4872.00, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
+            { id: 2, title: 'Geladeira Electrolux Frost Free Inverter 480L', price: 969.99, oldPrice: 3851.00, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
+            { id: 3, title: "Apple iPhone 15 (128 GB) - Preto", price: 699.99, oldPrice: 4259.00, image: "https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX342_SY445_QL70_ML2_.jpg", description: "O iPhone 15 traz a Dynamic Island, câmera de 48 MP e USB-C." },
+            { id: 4, title: "Philips Walita Airfryer XL Digital 6.2L", price: 349.99, oldPrice: 825.00, image: "https://m.media-amazon.com/images/I/51i3nkPbZ-L._AC_SX679_.jpg", description: "Cozinhe de forma saudável com até 90% menos gordura." },
+            { id: 5, title: "Jogo de Panelas 13 Pe�as Antiaderente com Panela de Press�o", price: 99.99, oldPrice: 569.99, image: "https://m.media-amazon.com/images/I/61MUlJ3X-jL._AC_SX679_.jpg", description: "Conjunto completo antiaderente com 13 pe�as, incluindo panela de press�o, ideal para equipar sua cozinha." },
+            { id: 6, title: "SUGGAR FOG�O COOK GLASS PRETO MESA DE VIDRO 5 BOCAS MEGA CHAMA TREMPE 6 APOIOS ACENDIMENTO AUTOM�TICO FGVCG510PT", price: 399.99, oldPrice: 1421.89, image: "https://m.media-amazon.com/images/I/51Llc-bUtRL._AC_SX522_.jpg", description: "Fog�o 5 bocas com mesa de vidro, mega chama, trempes com 6 apoios e acendimento autom�tico." },
+            { id: 7, title: "JBL, Caixa de Som, PartyBox Stage 520, Bluetooth, Port�til, Show de Luzes, At� 15 horas de reprodu��o", price: 1099.00, oldPrice: 4498.00, image: "https://m.media-amazon.com/images/I/61zm6pi9ziL._AC_SX679_.jpg", description: "Caixa de som Bluetooth port�til com show de luzes e at� 15 horas de reprodu��o para animar qualquer ambiente." },
+            { id: 8, title: "Samsung Galaxy Book4 Intel Core i5-1335U, Windows 11 Home, 8GB, 512GB SSD, Iris Xe, 15.6'' Full HD LED, 1.55kg", price: 875.99, oldPrice: 3835.00, image: "https://m.media-amazon.com/images/I/51lGW2nP9qL._AC_SX522_.jpg", description: "Notebook leve com Intel Core i5, 8GB de RAM, SSD de 512GB e tela Full HD de 15,6 polegadas." }
         ];
 
         let cart = [];
@@ -446,7 +430,7 @@
                             <div class="mt-2">
                                 <p class="text-sm text-gray-400">De <span class="line-through">R$ ${p.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></p>
                                 <p class="text-2xl font-bold text-gray-900">por R$ ${p.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                                <p class="text-[11px] text-green-600 font-bold">Produto gratis <span class="bg-green-600 text-white px-1 rounded-sm text-[9px] italic">FULL</span></p>
+                                <p class="text-[11px] text-green-600 font-bold">Frete grátis <span class="bg-green-600 text-white px-1 rounded-sm text-[9px] italic">FULL</span></p>
                             </div>
                         </div>
                         <button onclick="event.stopPropagation(); addToCart(${p.id})" class="mt-2 w-full bg-blue-600 text-white py-3 rounded-xl text-xs font-bold hover:bg-blue-700 active:scale-95 transition-all">Adicionar</button>
@@ -473,7 +457,7 @@
             document.getElementById('det-title').innerText = p.title;
             document.getElementById('det-price').innerText = `por R$ ${p.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             document.getElementById('det-old-price').innerHTML = `De <span class="line-through">R$ ${p.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
-            document.getElementById('det-parcel').innerText = (FIXED_SHIPPING / 10).toLocaleString("pt-BR", {minimumFractionDigits: 2});
+            document.getElementById('det-parcel').innerText = (p.price / 10).toLocaleString("pt-BR", {minimumFractionDigits: 2});
             document.getElementById('det-main-image').src = p.image;
             document.getElementById('det-img-1').src = p.image;
             document.getElementById('det-description').innerText = p.description;
@@ -501,7 +485,7 @@
             const container = document.getElementById("cart-items");
             const countLabel = document.getElementById("cart-count");
             const totalLabel = document.getElementById("cart-total");
-            container.innerHTML = cart.length === 0 ? '<div class="flex flex-col items-center justify-center h-64 text-gray-400 gap-4"><i data-lucide="shopping-bag" class="w-12 h-12 opacity-20"></i><p>Seu carrinho esta vazio</p></div>' : "";
+            container.innerHTML = cart.length === 0 ? '<div class="flex flex-col items-center justify-center h-64 text-gray-400 gap-4"><i data-lucide="shopping-bag" class="w-12 h-12 opacity-20"></i><p>Seu carrinho está vazio</p></div>' : "";
             let total = 0, count = 0;
             cart.forEach((item) => {
                 total += item.price * item.qty;
@@ -526,8 +510,8 @@
             });
             countLabel.innerText = count;
             countLabel.classList.toggle("hidden", count === 0);
-            totalLabel.innerText = `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById("check-total-display").innerText = `FRETE FIXO: ${formatCurrency(FIXED_SHIPPING)}`;
+            totalLabel.innerText = `R$ ${total.toLocaleString("pt-BR")}`;
+            document.getElementById("check-total-display").innerText = `TOTAL: R$ ${total.toLocaleString("pt-BR")}`;
             updateCheckoutSummary();
             lucide.createIcons();
         }
@@ -547,10 +531,6 @@
             hydrateCheckoutUI();
             updateCheckoutSummary();
             modal.classList.remove("hidden");
-            document.body.style.overflow = 'hidden';
-            modal.scrollTop = 0;
-            const container = modal.querySelector('.modal-container');
-            if (container) container.scrollTop = 0;
             setTimeout(() => modal.classList.add("modal-active"), 10);
             goToCheckStep(1);
         }
@@ -558,7 +538,6 @@
         function closeCheckout() {
             const modal = document.getElementById("checkout-modal");
             modal.classList.remove("modal-active");
-            document.body.style.overflow = 'auto';
             setTimeout(() => modal.classList.add("hidden"), 400);
             showPage('home');
         }
@@ -595,7 +574,7 @@
             if (pixCodeWrap) pixCodeWrap.className = 'flex gap-2 bg-gray-100 p-3 rounded-2xl items-center border border-gray-200 shadow-inner';
 
             const payBtn = document.getElementById('pay-btn');
-            if (payBtn) payBtn.innerText = `Ir para pagamento do frete (${formatCurrency(FIXED_SHIPPING)})`;
+            if (payBtn) payBtn.innerText = 'Gerar QR Code PIX';
         }
 
         function updateCheckoutSummary() {
@@ -603,40 +582,24 @@
             const inlineList = document.getElementById('checkout-items-inline');
             const inlineTotal = document.getElementById('checkout-total-inline');
 
-            if (inlineTotal) inlineTotal.innerText = formatCurrency(FIXED_SHIPPING);
+            if (inlineTotal) inlineTotal.innerText = `R$ ${total.toLocaleString('pt-BR')}`;
 
             if (inlineList) {
                 inlineList.innerHTML = cart.length
-                    ? `
-                        ${cart.map((item) => `
+                    ? cart.map((item) => `
                         <div class="flex items-center justify-between gap-3 py-2 border-b border-gray-100 last:border-b-0">
                             <div class="min-w-0">
                                 <p class="font-semibold text-gray-900 text-sm line-clamp-1">${item.title}</p>
-                                <p class="text-xs text-gray-400">Qtd ${item.qty} - Produto gratis</p>
+                                <p class="text-xs text-gray-400">Qtd ${item.qty}</p>
                             </div>
-                            <p class="font-bold text-sm text-gray-900">${formatCurrency(0)}</p>
+                            <p class="font-bold text-sm text-gray-900">R$ ${(item.price * item.qty).toLocaleString('pt-BR')}</p>
                         </div>
-                    `).join('')}
-                        <div class="flex items-center justify-between gap-3 py-3 border-b border-gray-100">
-                            <div class="min-w-0">
-                                <p class="font-semibold text-gray-900 text-sm">Frete fixo</p>
-                                <p class="text-xs text-gray-400">Cobrado apos o preenchimento do envio</p>
-                            </div>
-                            <p class="font-bold text-sm text-blue-600">${formatCurrency(FIXED_SHIPPING)}</p>
-                        </div>
-                        <div class="flex items-center justify-between gap-3 pt-2">
-                            <div class="min-w-0">
-                                <p class="font-semibold text-gray-900 text-sm">Produtos</p>
-                                <p class="text-xs text-gray-400">Todos os itens com valor zerado</p>
-                            </div>
-                            <p class="font-bold text-sm text-gray-900">${formatCurrency(total)}</p>
-                        </div>
-                    `
-                    : '<p class="text-sm text-gray-400">Seu carrinho sera exibido aqui.</p>';
+                    `).join('')
+                    : '<p class="text-sm text-gray-400">Seu carrinho será exibido aqui.</p>';
             }
 
             const totalDisplay = document.getElementById('check-total-display');
-            if (totalDisplay) totalDisplay.innerText = `FRETE FIXO: ${formatCurrency(FIXED_SHIPPING)}`;
+            if (totalDisplay) totalDisplay.innerText = `TOTAL: R$ ${total.toLocaleString('pt-BR')}`;
         }
 
         function updateStepper(step) {
@@ -689,19 +652,22 @@
 
             if (missingFields.length) return alert(`Preencha: ${missingFields.join(', ')}`);
 
-            if(!name || !cpf || !email || !cep || !address || !number || !city) return alert('Preencha todos os campos obrigatorios!');
+            if(!name || !cpf || !email || !cep || !address || !number || !city) return alert('Preencha todos os campos obrigatórios!');
 
             btn.disabled = true;
-            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i> Gerando PIX do frete...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i> Gerando PIX...';
             lucide.createIcons();
 
             try {
+                const total = cart.reduce((acc, i) => acc + i.price * i.qty, 0);
+                
                 // Chamada para o SEU servidor (Seguro)
                 const response = await fetch('/api/payments/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         items: cart, 
+                        total, 
                         customer: { name, cpf, email },
                         delivery: { cep, address, number, city, complement }
                     })
@@ -728,16 +694,12 @@
                 }
             } catch (e) {
                 console.error(e);
-                alert('Erro de conexao com o servidor.');
+                alert('Erro de conexão com o servidor.');
             } finally {
                 btn.disabled = false;
-                btn.innerText = `Ir para pagamento do frete (${formatCurrency(FIXED_SHIPPING)})`;
+                btn.innerText = 'Gerar QR Code PIX';
                 lucide.createIcons();
             }
-        }
-
-        function formatCurrency(value) {
-            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         function formatCPF(input) {

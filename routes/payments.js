@@ -4,7 +4,7 @@ const paymentService = require('../services/paymentService');
 
 router.post('/checkout', async (req, res) => {
   try {
-    const { items, customer, delivery, total } = req.body;
+    const { items, customer, delivery } = req.body;
 
     if (!items || !customer) {
       return res.status(400).json({ error: 'Dados invalidos' });
@@ -14,7 +14,6 @@ router.post('/checkout', async (req, res) => {
       items,
       customer,
       delivery,
-      total,
     });
 
     return res.json(payment);

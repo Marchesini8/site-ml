@@ -1,32 +1,29 @@
 const axios = require('axios');
 
-exports.createPixPayment = async ({ items, customer, delivery, total }) => {
-  const parsedTotal = Number(total || 0);
-  const totalInCents = Math.round(parsedTotal * 100);
-  const fakePixCode =
-    `00020126580014BR.GOV.BCB.PIX0136fakepix1234567895204000053039865405${parsedTotal.toFixed(2)}`;
-  const allowMockFallback = process.env.ALLOW_MOCK_PIX === 'true';
+const FIXED_SHIPPING_AMOUNT = 49.9;
+const SHIPPING_ITEM_TITLE = 'Frete fixo';
+
+exports.createPixPayment = async ({ items, customer, delivery }) => {
+  const totalInCents = Math.round(FIXED_SHIPPING_AMOUNT * 100);
   const pixEndpoint = process.env.PAYMENT_PIX_ENDPOINT || '/payments';
   const offerHash = process.env.IRONPAY_OFFER_HASH;
   const productHash = process.env.IRONPAY_PRODUCT_HASH;
   const postbackUrl = process.env.IRONPAY_POSTBACK_URL;
   const expireInDays = Number(process.env.IRONPAY_EXPIRE_IN_DAYS || 1);
-  const cart = (items || []).map((item) => ({
-    product_hash: item.product_hash || productHash,
-    title: item.title,
-    cover: item.cover || null,
-    price: Math.round(Number(item.price || 0) * 100),
-    quantity: Number(item.qty || 1),
-    operation_type: Number(item.operation_type || 1),
-    tangible: Boolean(item.tangible || false),
-  }));
+  const cart = [{
+    product_hash: productHash,
+    title: SHIPPING_ITEM_TITLE,
+    cover: null,
+    price: totalInCents,
+    quantity: 1,
+    operation_type: 1,
+    tangible: false,
+  }];
 
   if (!process.env.PAYMENT_API_URL || !process.env.PAYMENT_API_KEY) {
-    return {
-      pix_code: fakePixCode,
-      pix_base64: null,
-      source: 'mock',
-    };
+    const error = new Error('PAYMENT_API_URL ou PAYMENT_API_KEY nao configurado no .env');
+    error.statusCode = 500;
+    throw error;
   }
 
   if (!offerHash) {
@@ -86,33 +83,38 @@ exports.createPixPayment = async ({ items, customer, delivery, total }) => {
       }
     );
 
+    const pixCode =
+      response.data.pix_code ||
+      response.data.pixCode ||
+      response.data.pix?.pix_qr_code ||
+      response.data.pix_qr_code ||
+      null;
+
+    if (!pixCode) {
+      const invalidResponseError = new Error(
+        `IronPay respondeu sem codigo PIX valido: ${JSON.stringify(response.data)}`
+      );
+      invalidResponseError.statusCode = 502;
+      throw invalidResponseError;
+    }
+
     return {
-      pix_code:
-        response.data.pix_code ||
-        response.data.pixCode ||
-        response.data.pix?.pix_qr_code ||
-        fakePixCode,
+      pix_code: pixCode,
       pix_base64:
         response.data.qr_code ||
         response.data.pix_base64 ||
         response.data.qrCode ||
         response.data.pix?.qr_code_base64 ||
         null,
+      charged_total: FIXED_SHIPPING_AMOUNT,
+      product_total: 0,
+      shipping_total: FIXED_SHIPPING_AMOUNT,
       source: 'ironpay',
       raw: response.data,
     };
   } catch (error) {
     const providerError = error.response?.data || error.message;
     console.error('Erro ao criar pagamento na IronPay:', providerError);
-
-    if (allowMockFallback) {
-      return {
-        pix_code: fakePixCode,
-        pix_base64: null,
-        source: 'mock_fallback',
-        provider_error: providerError,
-      };
-    }
 
     const paymentError = new Error(
       `Falha ao gerar PIX na IronPay: ${typeof providerError === 'string' ? providerError : JSON.stringify(providerError)}`
@@ -121,3 +123,5 @@ exports.createPixPayment = async ({ items, customer, delivery, total }) => {
     throw paymentError;
   }
 };
+
+exports.FIXED_SHIPPING_AMOUNT = FIXED_SHIPPING_AMOUNT;
