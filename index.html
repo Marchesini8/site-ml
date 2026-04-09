@@ -101,6 +101,21 @@
         .checkout-hero {
             background: linear-gradient(135deg, rgba(17,24,39,0.98), rgba(52,131,250,0.95));
         }
+        .checkout-modal-scroll {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        @media (max-width: 767px) {
+            #checkout-modal {
+                align-items: flex-start;
+                overflow-y: auto;
+            }
+            #checkout-modal .modal-container {
+                max-height: calc(100dvh - 1rem);
+                margin: 0.5rem 0;
+                overflow-y: auto;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-900">
@@ -279,9 +294,9 @@
     </div>
 
     <!-- MODAL CHECKOUT -->
-    <div id="checkout-modal" class="fixed inset-0 z-[300] hidden flex items-center justify-center p-4">
+    <div id="checkout-modal" class="fixed inset-0 z-[300] hidden flex items-start md:items-center justify-center p-2 md:p-4 overflow-y-auto">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-md" onclick="closeCheckout()"></div>
-        <div class="modal-container checkout-shell bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden relative z-[301]">
+        <div class="modal-container checkout-modal-scroll checkout-shell bg-white w-full max-w-4xl max-h-[calc(100dvh-1rem)] md:max-h-[calc(100dvh-2rem)] rounded-[2rem] shadow-2xl overflow-y-auto overflow-x-hidden relative z-[301]">
             <div class="checkout-hero px-8 md:px-10 pt-8 pb-7 text-white">
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                     <div>
@@ -408,9 +423,9 @@
             { id: 2, title: 'Geladeira Electrolux Frost Free Inverter 480L', price: 969.99, oldPrice: 3851.00, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
             { id: 3, title: "Apple iPhone 15 (128 GB) - Preto", price: 699.99, oldPrice: 4259.00, image: "https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX342_SY445_QL70_ML2_.jpg", description: "O iPhone 15 traz a Dynamic Island, cÃ¢mera de 48 MP e USB-C." },
             { id: 4, title: "Philips Walita Airfryer XL Digital 6.2L", price: 349.99, oldPrice: 825.00, image: "https://m.media-amazon.com/images/I/51i3nkPbZ-L._AC_SX679_.jpg", description: "Cozinhe de forma saudÃ¡vel com atÃ© 90% menos gordura." },
-            { id: 5, title: "Jogo de Panelas 13 Peças Antiaderente com Panela de Pressão", price: 99.99, oldPrice: 569.99, image: "https://m.media-amazon.com/images/I/61MUlJ3X-jL._AC_SX679_.jpg", description: "Conjunto completo antiaderente com 13 peças, incluindo panela de pressão, ideal para equipar sua cozinha." },
-            { id: 6, title: "SUGGAR FOGÃO COOK GLASS PRETO MESA DE VIDRO 5 BOCAS MEGA CHAMA TREMPE 6 APOIOS ACENDIMENTO AUTOMÁTICO FGVCG510PT", price: 399.99, oldPrice: 1421.89, image: "https://m.media-amazon.com/images/I/51Llc-bUtRL._AC_SX522_.jpg", description: "Fogão 5 bocas com mesa de vidro, mega chama, trempes com 6 apoios e acendimento automático." },
-            { id: 7, title: "JBL, Caixa de Som, PartyBox Stage 520, Bluetooth, Portátil, Show de Luzes, Até 15 horas de reprodução", price: 1099.00, oldPrice: 4498.00, image: "https://m.media-amazon.com/images/I/61zm6pi9ziL._AC_SX679_.jpg", description: "Caixa de som Bluetooth portátil com show de luzes e até 15 horas de reprodução para animar qualquer ambiente." },
+            { id: 5, title: "Jogo de Panelas 13 Peï¿½as Antiaderente com Panela de Pressï¿½o", price: 99.99, oldPrice: 569.99, image: "https://m.media-amazon.com/images/I/61MUlJ3X-jL._AC_SX679_.jpg", description: "Conjunto completo antiaderente com 13 peï¿½as, incluindo panela de pressï¿½o, ideal para equipar sua cozinha." },
+            { id: 6, title: "SUGGAR FOGï¿½O COOK GLASS PRETO MESA DE VIDRO 5 BOCAS MEGA CHAMA TREMPE 6 APOIOS ACENDIMENTO AUTOMï¿½TICO FGVCG510PT", price: 399.99, oldPrice: 1421.89, image: "https://m.media-amazon.com/images/I/51Llc-bUtRL._AC_SX522_.jpg", description: "Fogï¿½o 5 bocas com mesa de vidro, mega chama, trempes com 6 apoios e acendimento automï¿½tico." },
+            { id: 7, title: "JBL, Caixa de Som, PartyBox Stage 520, Bluetooth, Portï¿½til, Show de Luzes, Atï¿½ 15 horas de reproduï¿½ï¿½o", price: 1099.00, oldPrice: 4498.00, image: "https://m.media-amazon.com/images/I/61zm6pi9ziL._AC_SX679_.jpg", description: "Caixa de som Bluetooth portï¿½til com show de luzes e atï¿½ 15 horas de reproduï¿½ï¿½o para animar qualquer ambiente." },
             { id: 8, title: "Samsung Galaxy Book4 Intel Core i5-1335U, Windows 11 Home, 8GB, 512GB SSD, Iris Xe, 15.6'' Full HD LED, 1.55kg", price: 875.99, oldPrice: 3835.00, image: "https://m.media-amazon.com/images/I/51lGW2nP9qL._AC_SX522_.jpg", description: "Notebook leve com Intel Core i5, 8GB de RAM, SSD de 512GB e tela Full HD de 15,6 polegadas." }
         ];
 
@@ -531,6 +546,10 @@
             hydrateCheckoutUI();
             updateCheckoutSummary();
             modal.classList.remove("hidden");
+            document.body.style.overflow = 'hidden';
+            modal.scrollTop = 0;
+            const container = modal.querySelector('.modal-container');
+            if (container) container.scrollTop = 0;
             setTimeout(() => modal.classList.add("modal-active"), 10);
             goToCheckStep(1);
         }
@@ -538,6 +557,7 @@
         function closeCheckout() {
             const modal = document.getElementById("checkout-modal");
             modal.classList.remove("modal-active");
+            document.body.style.overflow = 'auto';
             setTimeout(() => modal.classList.add("hidden"), 400);
             showPage('home');
         }
