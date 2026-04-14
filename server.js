@@ -40,7 +40,7 @@ function logStartupDiagnostics() {
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, { index: false }));
 
 app.use('/api/payments', paymentRoutes);
 app.use('/api/webhooks', webhookRoutes);
