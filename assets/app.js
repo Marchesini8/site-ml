@@ -1187,6 +1187,53 @@ function bindAuthForm() {
     });
 }
 
+function renderAccountArea() {
+    const session = appState.session;
+    const displayName = session?.name || "Nenhum usuario logado";
+    const displayEmail = session?.email || "Faca login para visualizar";
+    const provider = session?.provider
+        ? `${session.provider}${session.emailVerified ? " - email verificado" : ""}`
+        : "Nao definido";
+    const avatar = (session?.name || session?.email || "?").trim().charAt(0).toUpperCase() || "?";
+
+    document.getElementById("account-user-name").innerText = displayName;
+    document.getElementById("account-user-email").innerText = displayEmail;
+    document.getElementById("account-user-provider").innerText = provider;
+    document.getElementById("account-user-avatar").innerText = avatar;
+    document.getElementById("account-security-banner-text").innerText = session
+        ? "Seu acesso esta ativo. Reforce a seguranca e mantenha sua conta protegida."
+        : "Crie uma senha e mantenha sua conta segura";
+    document.getElementById("account-security-copy").innerText = session?.emailVerified
+        ? "Seu e-mail ja foi verificado. Revise as demais configuracoes."
+        : "Voce tem configuracoes pendentes.";
+    document.getElementById("logout-btn").classList.toggle("hidden", !session);
+}
+
+function renderPurchaseHistory() {
+    const wrap = document.getElementById("purchase-history");
+    if (!wrap) return;
+    if (!appState.purchases.length) {
+        wrap.innerHTML = '<div class="rounded-xl border border-dashed border-gray-300 p-5 text-gray-500">Nenhuma compra registrada ainda. Quando seus pedidos entrarem, eles aparecem aqui com status e itens comprados.</div>';
+        return;
+    }
+
+    wrap.innerHTML = appState.purchases.map((purchase) => `
+        <div class="rounded-xl border border-gray-200 bg-[#fafafa] p-5">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.25em] text-gray-400 font-bold">${purchase.id}</p>
+                    <p class="font-semibold text-gray-900 mt-2">${new Date(purchase.createdAt).toLocaleString("pt-BR")}</p>
+                </div>
+                <span class="rounded-full bg-green-100 text-green-700 px-3 py-1 text-xs font-bold">Confirmado</span>
+            </div>
+            <div class="mt-4 space-y-2">
+                ${purchase.items.map((item) => `<p class="text-sm text-gray-700">${item.qty}x ${item.title}</p>`).join("")}
+            </div>
+            <p class="text-sm text-gray-500 mt-4">Frete pago: ${formatCurrency(purchase.shipping)} - Cliente: ${purchase.customerEmail}</p>
+        </div>
+    `).join("");
+}
+
 function init() {
     loadState();
     renderProducts();

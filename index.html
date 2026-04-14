@@ -395,6 +395,81 @@
             opacity: 0;
             pointer-events: none;
         }
+        .account-dashboard {
+            background: #f5f5f5;
+        }
+        .account-sidebar {
+            background: rgba(255, 255, 255, 0.96);
+            border-right: 1px solid #ececec;
+        }
+        .account-sidebar-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: #6b7280;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .account-sidebar-item:hover,
+        .account-sidebar-item.is-active {
+            background: #eef4ff;
+            color: #2563eb;
+        }
+        .account-profile-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .account-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 999px;
+            background: white;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 1px solid #ececec;
+        }
+        .account-warning {
+            border-left: 3px solid #ff6d1b;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+        }
+        .account-grid-card {
+            background: white;
+            border: 1px solid #e7e7e7;
+            border-radius: 10px;
+            min-height: 108px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .account-grid-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        }
+        .account-grid-card.is-muted {
+            background: #ebebeb;
+        }
+        .account-grid-card.is-alert {
+            position: relative;
+        }
+        .account-grid-card-dot {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #ff6d1b;
+        }
+        .account-purchases-card {
+            background: white;
+            border: 1px solid #e7e7e7;
+            border-radius: 10px;
+        }
         .checkout-shell {
             background:
                 radial-gradient(circle at top right, rgba(52, 131, 250, 0.18), transparent 28%),
@@ -896,52 +971,132 @@
     </div>
 
     <!-- PAGINA COMPRAS -->
-    <div id="page-purchases" class="hidden min-h-screen bg-[#f5f5f5] page-transition">
-        <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-                <div>
-                    <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Minha conta</p>
-                    <h1 class="text-3xl md:text-4xl font-black text-gray-900 mt-2">Compras e dados do usuario</h1>
+    <div id="page-purchases" class="hidden min-h-screen account-dashboard page-transition">
+        <div class="mx-auto max-w-[1500px] flex">
+            <aside class="account-sidebar hidden lg:block w-[182px] min-h-screen px-3 py-8">
+                <div class="flex items-center gap-3 px-3 mb-8">
+                    <i data-lucide="menu" class="w-5 h-5 text-gray-500"></i>
+                    <p class="text-[15px] font-semibold text-gray-900">Minha conta</p>
                 </div>
-                <div class="flex gap-3">
-                    <button class="px-5 py-3 rounded-xl bg-white border border-gray-200 font-semibold text-gray-700" onclick="showPage('home')">Voltar para home</button>
-                    <button class="px-5 py-3 rounded-xl bg-[#3483fa] text-white font-semibold" onclick="openAuthPage(window.appState && window.appState.session ? 'login' : 'register')">Gerenciar acesso</button>
-                </div>
-            </div>
+                <nav class="space-y-2 text-sm">
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="shopping-bag" class="w-4 h-4"></i>Compras</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="tag" class="w-4 h-4"></i>Vendas</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="megaphone" class="w-4 h-4"></i>Marketing</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>Emprestimos</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4"></i>Assinaturas</span>
+                    </button>
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="receipt" class="w-4 h-4"></i>Faturamento</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <button class="account-sidebar-item is-active">
+                        <span class="flex items-center gap-3"><i data-lucide="circle-user" class="w-4 h-4"></i>Meu perfil</span>
+                    </button>
+                    <button class="account-sidebar-item">
+                        <span class="flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4"></i>Configuracoes</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                </nav>
+            </aside>
 
-            <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
-                <div class="info-card rounded-[2rem] p-6 md:p-8">
-                    <div class="flex items-center justify-between gap-3">
-                        <div>
-                            <p class="text-sm text-gray-500">Sessao atual</p>
-                            <h2 id="account-user-name" class="text-2xl font-black text-gray-900 mt-2">Nenhum usuario logado</h2>
+            <div class="flex-1 px-4 md:px-8 py-8 md:py-10">
+                <div class="max-w-[760px] mx-auto">
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div class="account-profile-summary">
+                            <div id="account-user-avatar" class="account-avatar">?</div>
+                            <div>
+                                <h1 id="account-user-name" class="text-[31px] md:text-[34px] font-semibold text-gray-900">Nenhum usuario logado</h1>
+                                <p id="account-user-email" class="text-sm text-gray-600 mt-1">Faca login para visualizar</p>
+                                <p id="account-user-provider" class="text-xs text-gray-400 mt-2 uppercase tracking-[0.18em]">Nao definido</p>
+                            </div>
                         </div>
-                        <button id="logout-btn" class="hidden px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-semibold" onclick="logout()">Sair</button>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-4 mt-6">
-                        <div class="rounded-2xl bg-gray-50 border border-gray-200 p-5">
-                            <p class="text-sm text-gray-500">E-mail</p>
-                            <p id="account-user-email" class="font-bold text-gray-900 mt-2">Faça login para visualizar</p>
-                        </div>
-                        <div class="rounded-2xl bg-gray-50 border border-gray-200 p-5">
-                            <p class="text-sm text-gray-500">Provedor</p>
-                            <p id="account-user-provider" class="font-bold text-gray-900 mt-2">Nao definido</p>
+                        <div class="flex gap-3">
+                            <button class="px-4 py-2.5 rounded-lg bg-white border border-gray-300 font-semibold text-gray-700" onclick="showPage('home')">Voltar</button>
+                            <button id="logout-btn" class="hidden px-4 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-semibold" onclick="logout()">Sair</button>
                         </div>
                     </div>
-                    <div class="rounded-[1.5rem] bg-[#fff8d9] border border-[#f4e38e] p-5 mt-6">
-                        <p class="text-sm text-gray-600">Base pronta para integrar</p>
-                        <p class="font-bold text-gray-900 mt-2">Backend com rotas de cadastro, login e Google pode ser conectado a banco depois sem refazer a tela.</p>
-                    </div>
-                </div>
 
-                <div class="info-card rounded-[2rem] p-6 md:p-8">
-                    <p class="text-sm text-gray-500">Historico</p>
-                    <h2 class="text-2xl font-black text-gray-900 mt-2">Ultimas compras</h2>
-                    <div id="purchase-history" class="mt-6 space-y-3">
-                        <div class="rounded-2xl border border-dashed border-gray-300 p-5 text-gray-500">
-                            Nenhuma compra registrada ainda. Quando voce integrar banco de dados, esse painel ja pode receber pedidos reais.
+                    <div class="account-warning bg-white rounded-lg mt-7 px-4 py-3 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 text-sm text-gray-700">
+                            <i data-lucide="shield-alert" class="w-4 h-4 text-gray-500"></i>
+                            <p id="account-security-banner-text">Crie uma senha e mantenha sua conta segura</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="px-4 py-2 rounded-md bg-[#3483fa] text-white text-sm font-semibold" onclick="openAuthPage('register')">Criar</button>
+                            <button class="text-gray-400" aria-label="Fechar aviso">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </div>
+
+                    <div class="grid md:grid-cols-3 gap-4 mt-8">
+                        <div class="account-grid-card is-muted p-4">
+                            <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Informacoes do seu perfil</p>
+                            <p class="text-sm text-gray-500 mt-1">Dados pessoais e da conta.</p>
+                        </div>
+                        <div class="account-grid-card is-alert p-4">
+                            <span class="account-grid-card-dot"></span>
+                            <i data-lucide="lock" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Seguranca</p>
+                            <p id="account-security-copy" class="text-sm text-gray-500 mt-1">Voce tem configuracoes pendentes.</p>
+                        </div>
+                        <div class="account-grid-card p-4">
+                            <i data-lucide="badge-check" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Meli+</p>
+                            <p class="text-sm text-gray-500 mt-1">Assinatura com beneficios em frete, compras e entretenimento.</p>
+                        </div>
+                        <div class="account-grid-card p-4">
+                            <i data-lucide="credit-card" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Cartoes</p>
+                            <p class="text-sm text-gray-500 mt-1">Cartoes salvos na sua conta.</p>
+                        </div>
+                        <div class="account-grid-card p-4">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Enderecos</p>
+                            <p class="text-sm text-gray-500 mt-1">Enderecos salvos na sua conta.</p>
+                        </div>
+                        <div class="account-grid-card p-4">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Privacidade</p>
+                            <p class="text-sm text-gray-500 mt-1">Preferencias e controle do uso dos seus dados.</p>
+                        </div>
+                        <div class="account-grid-card p-4">
+                            <i data-lucide="message-square" class="w-5 h-5 text-gray-500"></i>
+                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Comunicacoes</p>
+                            <p class="text-sm text-gray-500 mt-1">Escolha que tipo de informacao voce quer receber.</p>
+                        </div>
+                    </div>
+
+                    <div class="account-purchases-card mt-6 p-5">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-sm text-gray-500">Compras</p>
+                                <h2 class="text-[24px] font-semibold text-gray-900 mt-1">Historico recente</h2>
+                            </div>
+                            <button class="text-sm font-semibold text-[#3483fa]" onclick="showPage('home')">Continuar comprando</button>
+                        </div>
+                        <div id="purchase-history" class="mt-5 space-y-3">
+                            <div class="rounded-xl border border-dashed border-gray-300 p-5 text-gray-500">
+                                Nenhuma compra registrada ainda.
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-500 mt-8">Voce pode <button class="text-[#3483fa]" onclick="logout()">encerrar sua sessao</button> quando quiser.</p>
                 </div>
             </div>
         </div>
@@ -1376,11 +1531,9 @@
     </div>
 
     <script>
-        window.GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || "";
+        window.GOOGLE_CLIENT_ID = '__GOOGLE_CLIENT_ID__';
     </script>
     <script src="assets/app.js"></script>
 </body>
 </html>
-
-
 
