@@ -70,6 +70,30 @@ async function initDatabase() {
         ON email_verification_codes (email, purpose, consumed_at, expires_at DESC);
       `);
 
+      await query(`
+        CREATE TABLE IF NOT EXISTS user_addresses (
+          id VARCHAR(64) PRIMARY KEY,
+          user_id VARCHAR(64) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          label TEXT NOT NULL DEFAULT 'Casa',
+          recipient_name TEXT NOT NULL,
+          phone TEXT NOT NULL DEFAULT '',
+          cep TEXT NOT NULL,
+          street TEXT NOT NULL,
+          number TEXT NOT NULL,
+          complement TEXT NOT NULL DEFAULT '',
+          neighborhood TEXT NOT NULL DEFAULT '',
+          city TEXT NOT NULL DEFAULT '',
+          state TEXT NOT NULL DEFAULT '',
+          is_default BOOLEAN NOT NULL DEFAULT FALSE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `);
+
+      await query(`
+        CREATE INDEX IF NOT EXISTS idx_user_addresses_user_lookup
+        ON user_addresses (user_id, created_at DESC);
+      `);
+
       console.log("[startup] PostgreSQL conectado e tabelas garantidas.");
     })();
   }

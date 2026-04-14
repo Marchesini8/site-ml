@@ -182,7 +182,22 @@ async function loginWithGoogle({ name, email, avatar = "" }) {
 
   const existing = await findUserByEmail(normalizedEmail);
   if (existing) {
-    return sanitizeUser(existing);
+    const nextName = (name || existing.name || "Usuario Google").trim();
+    const nextAvatar = avatar || existing.avatar || "";
+    const nextProvider = existing.provider === "email" ? existing.provider : "google";
+
+    const updateResult = await query(
+      `UPDATE users
+       SET name = $2,
+           avatar = $3,
+           provider = $4,
+           email_verified = TRUE
+       WHERE id = $1
+       RETURNING id, name, email, provider, avatar, email_verified, created_at`,
+      [existing.id, nextName, nextAvatar, nextProvider]
+    );
+
+    return sanitizeUser(updateResult.rows[0]);
   }
 
   const userId = `usr-${crypto.randomUUID()}`;

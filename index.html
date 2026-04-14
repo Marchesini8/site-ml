@@ -70,6 +70,300 @@
             background: linear-gradient(90deg, #ffffff 0%, #f3f4ff 100%);
             box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
         }
+        .mobile-header-shell {
+            display: none;
+        }
+        .mobile-menu-btn {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+        .mobile-menu-badge {
+            position: absolute;
+            top: -5px;
+            right: -4px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+        }
+        .mobile-utility-chip {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+        }
+        #mobile-menu-drawer {
+            transition: opacity 0.25s ease;
+        }
+        #mobile-menu-drawer .mobile-menu-panel {
+            transform: translateY(-12px);
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #mobile-menu-drawer.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #mobile-menu-drawer.is-open .mobile-menu-panel {
+            transform: translateY(0);
+        }
+        .mobile-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            padding: 13px 4px;
+            color: #1f2937;
+            font-weight: 500;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .mobile-menu-profile {
+            background: linear-gradient(180deg, #ffe600 0%, #ffea3a 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .mobile-menu-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            flex-shrink: 0;
+        }
+        .mobile-menu-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .mobile-menu-banner {
+            display: block;
+            width: 100%;
+            border-radius: 999px;
+            overflow: hidden;
+            box-shadow: 0 12px 26px rgba(125, 69, 168, 0.18);
+        }
+        .mobile-menu-footer {
+            border-top: 1px solid #e5e7eb;
+        }
+        .desktop-account-shell {
+            position: relative;
+        }
+        .desktop-account-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 4;
+        }
+        .desktop-account-trigger:hover {
+            background: rgba(255, 255, 255, 0.42);
+        }
+        .desktop-account-trigger > * {
+            pointer-events: none;
+        }
+        .desktop-account-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #111827;
+            flex-shrink: 0;
+        }
+        .desktop-account-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .desktop-account-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 286px;
+            z-index: 220;
+            border-radius: 18px;
+            background: white;
+            border: 1px solid #ececec;
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.16);
+            padding: 14px;
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+        }
+        .desktop-account-menu.is-open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .desktop-account-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 8px;
+            border-radius: 12px;
+            color: #374151;
+            transition: background-color 0.18s ease;
+        }
+        .desktop-account-menu-link:hover {
+            background: #f8fafc;
+        }
+        .desktop-account-menu-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f1f5f9;
+        }
+        .address-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 16px;
+            background: #fff;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+        }
+        .address-form-grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .address-form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .address-form-field label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .address-form-field input {
+            min-height: 46px;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            padding: 0 14px;
+            outline: none;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        .address-form-field input:focus {
+            border-color: #3483fa;
+            box-shadow: 0 0 0 4px rgba(52, 131, 250, 0.12);
+        }
+        .address-form-field.is-full {
+            grid-column: 1 / -1;
+        }
+        .address-empty {
+            border: 1px dashed #d1d5db;
+            border-radius: 18px;
+            padding: 24px;
+            text-align: center;
+            color: #6b7280;
+            background: #fafafa;
+        }
+        .auth-login-shell {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 22px 18px 64px;
+        }
+        .auth-login-layout {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: minmax(280px, 1fr) minmax(360px, 392px);
+            gap: 56px;
+            align-items: start;
+        }
+        .auth-login-heading {
+            max-width: 380px;
+        }
+        .auth-login-card {
+            position: relative;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+            padding: 26px 28px;
+        }
+        .auth-login-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+        .auth-login-divider::before,
+        .auth-login-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        .auth-link-button {
+            color: #3483fa;
+            font-weight: 600;
+            transition: color 0.18s ease;
+        }
+        .auth-link-button:hover {
+            color: #2968c8;
+        }
+        .google-shell {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            min-height: 44px;
+        }
+        .google-shell > div,
+        .google-shell iframe {
+            margin: 0 auto !important;
+        }
+        .google-shell > div {
+            width: 100%;
+            max-width: 336px;
+            display: flex;
+            justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .address-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .auth-login-layout {
+                grid-template-columns: 1fr;
+                gap: 28px;
+                margin-top: 6px;
+            }
+            .auth-login-card {
+                max-width: 100%;
+                padding: 22px 18px;
+            }
+        }
         .hero-carousel-track {
             transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -145,15 +439,135 @@
         .account-card {
             box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
             border: 1px solid rgba(209, 213, 219, 0.85);
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease, opacity 0.35s ease;
+            animation: authCardReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .account-input {
             border: 1px solid #d1d5db;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
         }
         .account-input:focus {
             border-color: #3483fa;
             box-shadow: 0 0 0 4px rgba(52, 131, 250, 0.12);
+            transform: translateY(-1px);
             outline: none;
+        }
+        .auth-field-wrap {
+            transition: opacity 0.28s ease, transform 0.28s ease, max-height 0.32s ease, margin 0.28s ease;
+            max-height: 160px;
+            opacity: 1;
+            transform: translateY(0);
+            overflow: hidden;
+        }
+        .auth-field-wrap.hidden {
+            display: block !important;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-8px);
+            margin: 0 !important;
+            pointer-events: none;
+        }
+        #auth-code-wrap {
+            transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.35s ease, margin 0.3s ease;
+            max-height: 160px;
+            opacity: 1;
+            transform: translateY(0);
+            overflow: hidden;
+        }
+        #auth-code-wrap.hidden {
+            display: block !important;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            margin: 0 !important;
+            pointer-events: none;
+        }
+        .auth-submit-btn {
+            transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, opacity 0.22s ease;
+            box-shadow: 0 16px 30px rgba(52, 131, 250, 0.18);
+        }
+        .auth-submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 20px 34px rgba(52, 131, 250, 0.22);
+        }
+        .auth-submit-btn:active {
+            transform: translateY(0);
+        }
+        .auth-feedback {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.28s ease, transform 0.28s ease, color 0.2s ease;
+        }
+        .auth-feedback.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .auth-form.is-submitting {
+            opacity: 0.9;
+        }
+        .auth-top-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(52, 131, 250, 0.08);
+            overflow: hidden;
+            border-top-left-radius: 1.75rem;
+            border-top-right-radius: 1.75rem;
+            opacity: 0;
+            transition: opacity 0.22s ease;
+        }
+        .auth-top-loader.is-active {
+            opacity: 1;
+        }
+        .auth-top-loader-bar {
+            width: 42%;
+            height: 100%;
+            background: linear-gradient(90deg, #7fb2ff 0%, #3483fa 60%, #1d4ed8 100%);
+            box-shadow: 0 0 20px rgba(52, 131, 250, 0.45);
+            transform: translateX(-120%);
+        }
+        .auth-top-loader.is-active .auth-top-loader-bar {
+            animation: authTopLoader 1.15s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+        }
+        .auth-success-flash {
+            animation: authSuccessPulse 0.65s ease;
+        }
+        @keyframes authCardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes authSuccessPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
+            }
+            45% {
+                transform: scale(1.015);
+                box-shadow: 0 35px 90px rgba(34, 197, 94, 0.18);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
+            }
+        }
+        @keyframes authTopLoader {
+            0% {
+                transform: translateX(-120%);
+            }
+            60% {
+                transform: translateX(145%);
+            }
+            100% {
+                transform: translateX(220%);
+            }
         }
         .google-shell:empty::before {
             content: "Continuar com Google";
@@ -314,6 +728,30 @@
         .checkout-flow-header {
             background: #ffe600;
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .checkout-user-profile {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkout-user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #111827;
+        }
+        .checkout-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .checkout-surface {
             background: white;
@@ -525,12 +963,27 @@
             overscroll-behavior: contain;
         }
         @media (max-width: 767px) {
+            .mobile-header-shell {
+                display: block;
+            }
+            header .max-w-7xl {
+                gap: 0.45rem;
+            }
+            .ml-header-search {
+                height: 42px;
+            }
+            .ml-header-search input {
+                font-size: 14px;
+            }
             .hero-frame {
                 padding-left: 14px;
                 padding-right: 14px;
             }
             .offer-grid-card {
                 border-right: 0;
+            }
+            #cart-btn {
+                transform: none !important;
             }
             #checkout-modal {
                 align-items: flex-start;
@@ -548,17 +1001,47 @@
 
     <!-- HEADER -->
     <header class="bg-[#ffe600] w-full pt-1 pb-1.5 shadow-sm sticky top-0 z-[100]">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col gap-2">
-            <div class="flex items-center gap-3 md:gap-6">
-                <div class="flex items-center min-w-fit cursor-pointer" onclick="showPage('home')">
-                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-11 md:h-12 w-auto object-contain">
+        <div class="mobile-header-shell max-w-7xl mx-auto px-3 pt-1 pb-2">
+            <div class="flex items-center gap-2.5">
+                <button class="shrink-0" onclick="showPage('home')">
+                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-11 w-auto object-contain">
+                </button>
+                <div class="flex-1 min-w-0">
+                    <div class="ml-header-search bg-white h-10 rounded-[14px] flex items-center overflow-hidden">
+                        <input type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full min-w-0 h-full px-3 text-[14px] text-gray-500 bg-transparent outline-none">
+                        <button class="w-10 h-10 flex items-center justify-center text-gray-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-btn shrink-0" onclick="openMobileMenu()" aria-label="Abrir menu">
+                    <i data-lucide="menu" class="w-5 h-5 mx-auto text-gray-700"></i>
+                    <span id="mobile-menu-badge" class="mobile-menu-badge hidden">0</span>
+                </button>
+            </div>
+            <div class="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                <div class="mobile-utility-chip shrink-0 flex items-center gap-2 px-3 py-2">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-[#333]"></i>
+                    <div class="leading-none">
+                        <p class="text-[10px] text-[#666]">Enviar para</p>
+                        <p class="text-[12px] text-[#333] font-semibold">Catanduva 15804060</p>
+                    </div>
+                </div>
+                <button class="mobile-utility-chip shrink-0 px-3 py-2 text-[12px] font-semibold text-[#333]" onclick="showPage('purchases')">Minha conta</button>
+                <button class="mobile-utility-chip shrink-0 px-3 py-2 text-[12px] font-semibold text-[#333]" onclick="showPage('purchases')">Compras</button>
+            </div>
+        </div>
+        <div class="hidden md:flex max-w-7xl mx-auto px-4 flex-col gap-2">
+            <div class="flex items-center gap-2 md:gap-6">
+                <div class="flex items-center shrink-0 min-w-fit cursor-pointer" onclick="showPage('home')">
+                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-10 md:h-16 w-auto object-contain">
                 </div>
 
-                <div class="flex-1">
+                <div class="flex-1 min-w-0">
                     <div class="ml-header-search bg-white h-11 rounded-[2px] flex items-center overflow-hidden">
-                        <input type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full h-full px-4 text-[16px] md:text-[18px] text-gray-500 bg-transparent outline-none">
+                        <input type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full min-w-0 h-full px-3 md:px-4 text-[14px] md:text-[18px] text-gray-500 bg-transparent outline-none">
                         <div class="h-6 w-px bg-gray-200"></div>
-                        <button class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
+                        <button class="w-10 md:w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
                             <i data-lucide="search" class="w-5 h-5"></i>
                         </button>
                     </div>
@@ -569,13 +1052,13 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-between gap-4 text-[14px] md:text-[15px] text-[#333]">
-                <div class="flex items-center gap-6 min-w-0">
-                    <div class="hidden md:flex items-center gap-2 min-w-fit">
+            <div class="flex items-center justify-between gap-3 text-[13px] md:text-[15px] text-[#333] overflow-x-auto md:overflow-visible scrollbar-hide">
+                <div class="flex items-center gap-4 md:gap-6 min-w-0">
+                    <div class="flex items-center gap-2 min-w-fit">
                         <i data-lucide="map-pin" class="w-5 h-5 text-[#333]"></i>
                         <div class="leading-none">
                             <p class="text-[12px] text-[#666]">Enviar para</p>
-                            <p class="text-[16px] text-[#333] font-normal">Catanduva 15804060</p>
+                            <p class="text-[13px] md:text-[16px] text-[#333] font-normal">Catanduva 15804060</p>
                         </div>
                     </div>
 
@@ -618,10 +1101,65 @@
                     </nav>
                 </div>
 
-                <div class="flex items-center gap-5 md:gap-7 whitespace-nowrap">
-                    <div class="hidden md:flex items-center gap-5">
-                        <button class="nav-link hover:text-black transition-colors" onclick="openAuthPage('register', this)">Crie a sua conta</button>
-                        <button class="nav-link hover:text-black transition-colors" onclick="openAuthPage('login', this)">Entre</button>
+                <div class="flex items-center gap-4 md:gap-7 whitespace-nowrap shrink-0">
+                    <div class="hidden md:flex items-center gap-4 lg:gap-5">
+                        <button id="nav-register-btn" class="nav-link hover:text-black transition-colors" onclick="openAuthPage('register', this)">Crie a sua conta</button>
+                        <button id="nav-login-btn" class="nav-link hover:text-black transition-colors" onclick="openAuthPage('login', this)">Entre</button>
+                        <div id="nav-account-shell" class="desktop-account-shell hidden">
+                            <button id="nav-account-btn" type="button" class="desktop-account-trigger">
+                                <span class="desktop-account-avatar">
+                                    <img id="desktop-account-avatar-image" src="" alt="Avatar do usuario" class="hidden">
+                                    <span id="desktop-account-avatar-fallback">M</span>
+                                </span>
+                                <span id="desktop-account-name" class="max-w-[92px] truncate text-[13px] font-semibold text-gray-800">Minha conta</span>
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/70">
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-600"></i>
+                                </span>
+                            </button>
+                            <div id="desktop-account-menu" class="desktop-account-menu">
+                                <div class="flex items-center gap-3 px-2 pb-3 border-b border-gray-100">
+                                    <span class="desktop-account-avatar w-10 h-10 text-sm">
+                                        <img id="desktop-account-menu-avatar-image" src="" alt="Avatar do usuario" class="hidden">
+                                        <span id="desktop-account-menu-avatar-fallback">M</span>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <p id="desktop-account-menu-name" class="font-semibold text-gray-900 truncate">Minha conta</p>
+                                        <button class="text-sm text-gray-500 inline-flex items-center gap-1 mt-0.5" onclick="showPage('purchases'); closeDesktopAccountMenu();">
+                                            Meu perfil <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <a class="mobile-menu-banner mt-3" href="javascript:void(0)">
+                                    <img src="https://http2.mlstatic.com/resources/frontend/statics/loyal/partners/meliplus/drawer/pill_drawer_melimas_mp_mlb_no_price_large_new_value_prop@3x.png" alt="Meli+ banner" class="w-full h-auto block">
+                                </a>
+                                <div class="mt-3 space-y-1">
+                                    <button class="desktop-account-menu-link" onclick="showPage('purchases'); closeDesktopAccountMenu();"><span>Compras</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Historico</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('contact'); closeDesktopAccountMenu();"><span>Perguntas</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Opinioes</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                </div>
+                                <div class="desktop-account-menu-section space-y-1">
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Emprestimos</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('coupons'); closeDesktopAccountMenu();"><span>Assinaturas</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('play'); closeDesktopAccountMenu();"><span>Mercado Play</span><span class="text-[10px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRATIS</span></button>
+                                </div>
+                                <div class="desktop-account-menu-section space-y-1">
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('sell'); closeDesktopAccountMenu();"><span>Vender</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="showPage('purchases'); closeDesktopAccountMenu();"><span>Resumo</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Anuncios</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="showPage('purchases'); closeDesktopAccountMenu();"><span>Vendas</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('contact'); closeDesktopAccountMenu();"><span>Pos-venda</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Reputacao</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Publicidade</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="showPage('home'); closeDesktopAccountMenu();"><span>Minha pagina</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Central de Marketing</span><span class="text-[10px] font-bold text-white bg-[#3483fa] px-1.5 py-0.5 rounded-full">NOVO</span></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Metricas</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
+                                </div>
+                                <div class="mt-3 pt-3 border-t border-gray-100">
+                                    <button class="desktop-account-menu-link" onclick="logout(); closeDesktopAccountMenu();"><span>Sair</span><i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i></button>
+                                </div>
+                            </div>
+                        </div>
                         <button class="nav-link hover:text-black transition-colors" onclick="showPage('purchases', this)">Compras</button>
                     </div>
                     <div id="cart-btn" class="relative cursor-pointer hover:scale-110 transition-transform" onclick="toggleCart(true)">
@@ -632,6 +1170,85 @@
             </div>
         </div>
     </header>
+
+    <div id="mobile-menu-drawer" class="md:hidden fixed inset-0 z-[180] opacity-0 pointer-events-none bg-white">
+        <div class="mobile-menu-panel absolute inset-0 bg-white overflow-y-auto">
+            <div class="mobile-menu-profile px-4 pt-5 pb-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="mobile-menu-avatar">
+                            <img id="mobile-menu-avatar-image" src="" alt="Avatar do usuario" class="hidden">
+                            <span id="mobile-menu-avatar-fallback">M</span>
+                        </div>
+                        <div class="min-w-0">
+                            <p id="mobile-menu-user-name" class="font-semibold text-[22px] leading-6 text-gray-900 truncate">Minha conta</p>
+                            <button id="mobile-menu-profile-link" class="text-sm text-gray-700 mt-1 inline-flex items-center gap-1" onclick="showPage('purchases'); closeMobileMenu();">
+                                Meu perfil <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center" onclick="closeMobileMenu()" aria-label="Fechar menu">
+                        <i data-lucide="x" class="w-5 h-5 text-gray-700"></i>
+                    </button>
+                </div>
+                <a class="mobile-menu-banner mt-4" href="javascript:void(0)">
+                    <img src="https://http2.mlstatic.com/resources/frontend/statics/loyal/partners/meliplus/drawer/pill_drawer_melimas_mp_mlb_no_price_large_new_value_prop@3x.png" alt="Meli+ banner" class="w-full h-auto block">
+                </a>
+            </div>
+
+            <div class="px-4 pt-2 pb-6">
+                <button class="mobile-menu-link" onclick="showPage('home'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="house" class="w-5 h-5 text-gray-500"></i>Inicio</span>
+                </button>
+                <button class="mobile-menu-link" onclick="showPage('purchases'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="shopping-bag" class="w-5 h-5 text-gray-500"></i>Compras</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('offers'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="badge-percent" class="w-5 h-5 text-gray-500"></i>Ofertas</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('coupons'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="ticket-percent" class="w-5 h-5 text-gray-500"></i>Cupons</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('play'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="monitor-play" class="w-5 h-5 text-gray-500"></i>Mercado Play <span class="text-[10px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRATIS</span></span>
+                </button>
+                <button class="mobile-menu-link" onclick="showPage('purchases'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="circle-user" class="w-5 h-5 text-gray-500"></i>Minha conta</span>
+                </button>
+                <button class="mobile-menu-link" onclick="toggleCart(true); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="shopping-cart" class="w-5 h-5 text-gray-500"></i>Carrinho</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('categories'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="layout-grid" class="w-5 h-5 text-gray-500"></i>Categorias</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('supermarket'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="store" class="w-5 h-5 text-gray-500"></i>Supermercado</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('fashion'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="shirt" class="w-5 h-5 text-gray-500"></i>Moda</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('sell'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="briefcase-business" class="w-5 h-5 text-gray-500"></i>Vender</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('contact'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="headphones" class="w-5 h-5 text-gray-500"></i>Contato</span>
+                </button>
+                <button id="mobile-menu-login-link" class="mobile-menu-link" onclick="openAuthPage('login'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="log-in" class="w-5 h-5 text-gray-500"></i>Entrar</span>
+                </button>
+                <button id="mobile-menu-register-link" class="mobile-menu-link" onclick="openAuthPage('register'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="user-plus" class="w-5 h-5 text-gray-500"></i>Criar conta</span>
+                </button>
+                <button id="mobile-menu-logout-link" class="mobile-menu-link hidden" onclick="logout(); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="log-out" class="w-5 h-5 text-gray-500"></i>Sair</span>
+                </button>
+            </div>
+
+            <div class="mobile-menu-footer px-4 py-4 text-center text-sm text-gray-500">
+                mercadolivre.com.br
+            </div>
+        </div>
+    </div>
 
     <!-- PAGINA HOME -->
     <div id="page-home" class="page-transition">
@@ -885,85 +1502,69 @@
     </div>
 
     <!-- PAGINA AUTENTICACAO -->
-    <div id="page-auth" class="hidden min-h-screen account-hero page-transition">
-        <div class="max-w-6xl mx-auto px-4 py-6 md:py-8">
-            <button onclick="showPage('home')" class="inline-flex items-center gap-2 text-sm font-semibold text-[#2d3277] hover:translate-x-[-4px] transition-transform">
-                <i data-lucide="chevron-left" class="w-4 h-4"></i> Voltar para a home
-            </button>
-
-            <div class="mt-6 md:mt-10 grid lg:grid-cols-[220px_1fr] gap-8 items-start">
-                <div class="hidden lg:flex items-start">
-                    <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="w-[150px] object-contain">
+    <div id="page-auth" class="hidden min-h-screen bg-[#ededed] page-transition">
+        <div class="auth-login-shell">
+            <div class="auth-login-layout">
+                <div>
+                    <div class="auth-login-heading">
+                        <h1 id="auth-title" class="text-[34px] md:text-[48px] font-semibold text-gray-900 leading-[1.15]">Digite seu e-mail ou telefone para iniciar sessao</h1>
+                        <p id="auth-subtitle" class="text-gray-600 mt-4 text-base md:text-lg">Entre com seus dados para continuar a compra com seguranca.</p>
+                    </div>
+                    <button class="auth-link-button mt-5 text-sm" onclick="navigateToSection('contact')">Preciso de ajuda</button>
                 </div>
 
-                <div class="flex flex-col items-center">
-                    <div class="text-center max-w-xl mb-6 md:mb-8">
-                        <h1 id="auth-title" class="text-3xl md:text-5xl font-black text-gray-900 leading-tight">Crie sua conta e compre com frete gratis</h1>
-                        <p id="auth-subtitle" class="text-gray-700 mt-4 text-base md:text-lg">Uma experiencia inspirada na referencia que voce enviou, pronta para crescer com backend depois.</p>
+                <div class="auth-login-card w-full">
+                    <div id="auth-top-loader" class="auth-top-loader">
+                        <div class="auth-top-loader-bar"></div>
                     </div>
 
-                    <div class="account-card bg-white rounded-[1.75rem] w-full max-w-[420px] p-5 md:p-6">
-                        <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
-                            <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="w-12 h-12 object-contain rounded-full bg-[#fff8bf] p-1.5">
-                            <div>
-                                <p class="text-sm text-gray-500">Acesso seguro</p>
-                                <p class="font-bold text-gray-900">Conta Mercado Livre</p>
-                            </div>
+                    <form id="auth-form" class="auth-form space-y-4">
+                        <div id="auth-name-wrap" class="auth-field-wrap">
+                            <label class="text-sm text-gray-600 block mb-1.5">Nome</label>
+                            <input id="auth-name" type="text" class="account-input w-full rounded-xl px-4 py-3" placeholder="Seu nome completo">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600 block mb-1.5">E-mail ou telefone</label>
+                            <input id="auth-email" type="email" class="account-input w-full rounded-xl px-4 py-3" placeholder="E-mail ou telefone">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600 block mb-1.5">Senha</label>
+                            <input id="auth-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Digite sua senha">
+                        </div>
+                        <div id="auth-confirm-wrap" class="auth-field-wrap">
+                            <label class="text-sm text-gray-600 block mb-1.5">Confirmar senha</label>
+                            <input id="auth-confirm-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Confirme sua senha">
+                        </div>
+                        <div id="auth-code-wrap" class="hidden">
+                            <label class="text-sm text-gray-600 block mb-1.5">Codigo de verificacao</label>
+                            <input id="auth-code" type="text" inputmode="numeric" maxlength="6" class="account-input w-full rounded-xl px-4 py-3 tracking-[0.35em]" placeholder="000000">
+                            <p class="text-xs text-gray-400 mt-2">Enviaremos um codigo de 6 digitos para o seu e-mail.</p>
                         </div>
 
-                        <div class="mt-4">
-                            <div id="google-login-slot" class="google-shell"></div>
-                            <button id="google-fallback-btn" type="button" onclick="handleGoogleFallback()" class="hidden mt-3 w-full rounded-xl border border-gray-300 py-3 font-semibold text-gray-800 hover:bg-gray-50">
-                                Continuar com Google
-                            </button>
-                            <p id="google-login-help" class="text-xs text-gray-400 mt-2 text-center"></p>
-                        </div>
+                        <button id="auth-submit-btn" type="submit" class="auth-submit-btn w-full bg-[#3483fa] text-white rounded-xl py-3.5 font-bold hover:bg-[#2968c8] transition-colors">
+                            Continuar
+                        </button>
+                    </form>
 
-                        <div class="flex items-center gap-3 my-5">
-                            <div class="h-px flex-1 bg-gray-200"></div>
-                            <span class="text-sm text-gray-400">Ou digite seu e-mail</span>
-                            <div class="h-px flex-1 bg-gray-200"></div>
-                        </div>
+                    <p id="auth-feedback" class="auth-feedback text-sm min-h-[20px] mt-4 text-center"></p>
 
-                        <form id="auth-form" class="space-y-4">
-                            <div id="auth-name-wrap">
-                                <label class="text-sm text-gray-600 block mb-1.5">Nome</label>
-                                <input id="auth-name" type="text" class="account-input w-full rounded-xl px-4 py-3" placeholder="Seu nome completo">
-                            </div>
-                            <div>
-                                <label class="text-sm text-gray-600 block mb-1.5">E-mail</label>
-                                <input id="auth-email" type="email" class="account-input w-full rounded-xl px-4 py-3" placeholder="exemplo@email.com">
-                            </div>
-                            <div>
-                                <label class="text-sm text-gray-600 block mb-1.5">Senha</label>
-                                <input id="auth-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Digite sua senha">
-                            </div>
-                            <div id="auth-confirm-wrap">
-                                <label class="text-sm text-gray-600 block mb-1.5">Confirmar senha</label>
-                                <input id="auth-confirm-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Confirme sua senha">
-                            </div>
-                            <div id="auth-code-wrap" class="hidden">
-                                <label class="text-sm text-gray-600 block mb-1.5">Codigo de verificacao</label>
-                                <input id="auth-code" type="text" inputmode="numeric" maxlength="6" class="account-input w-full rounded-xl px-4 py-3 tracking-[0.35em]" placeholder="000000">
-                                <p class="text-xs text-gray-400 mt-2">Enviaremos um codigo de 6 digitos para o seu e-mail.</p>
-                            </div>
+                    <div class="mt-2 text-center">
+                        <button id="auth-switch-btn" type="button" class="auth-link-button text-sm" onclick="toggleAuthMode()">Criar conta</button>
+                    </div>
 
-                            <button id="auth-submit-btn" type="submit" class="w-full bg-[#3483fa] text-white rounded-xl py-3.5 font-bold hover:bg-[#2968c8] transition-colors">
-                                Criar conta
-                            </button>
-                        </form>
+                    <div class="auth-login-divider my-5">ou</div>
 
-                        <p id="auth-feedback" class="text-sm min-h-[20px] mt-4 text-center"></p>
+                    <div>
+                        <div id="google-login-slot" class="google-shell"></div>
+                        <button id="google-fallback-btn" type="button" onclick="handleGoogleFallback()" class="hidden mt-3 w-full rounded-xl border border-gray-300 py-3 font-semibold text-gray-800 hover:bg-gray-50">
+                            Continuar com Google
+                        </button>
+                        <p id="google-login-help" class="text-xs text-gray-400 mt-2 text-center"></p>
+                    </div>
 
-                        <div class="mt-5 text-center text-sm text-gray-500">
-                            <p>Voce precisa de uma conta para sua empresa?</p>
-                            <button id="auth-corporate-link" class="text-[#3483fa] font-semibold mt-1 hover:underline" onclick="navigateToSection('sell')">Crie uma conta corporativa</button>
-                        </div>
-
-                        <div class="mt-5 text-center text-sm text-gray-500">
-                            <span id="auth-switch-label">Ja tem uma conta?</span>
-                            <button id="auth-switch-btn" type="button" class="text-[#3483fa] font-semibold hover:underline" onclick="toggleAuthMode()">Entre</button>
-                        </div>
+                    <div class="mt-5 text-center text-sm text-gray-500">
+                        <span id="auth-switch-label">Ainda nao tem uma conta?</span>
+                        <button id="auth-corporate-link" class="auth-link-button ml-1" onclick="navigateToSection('sell')">Conta corporativa</button>
                     </div>
                 </div>
             </div>
@@ -1016,7 +1617,10 @@
                 <div class="max-w-[760px] mx-auto">
                     <div class="flex items-start justify-between gap-4 flex-wrap">
                         <div class="account-profile-summary">
-                            <div id="account-user-avatar" class="account-avatar">?</div>
+                            <div id="account-user-avatar" class="account-avatar overflow-hidden">
+                                <img id="account-user-avatar-image" src="" alt="Avatar do usuario" class="hidden w-full h-full object-cover">
+                                <span id="account-user-avatar-fallback">?</span>
+                            </div>
                             <div>
                                 <h1 id="account-user-name" class="text-[31px] md:text-[34px] font-semibold text-gray-900">Nenhum usuario logado</h1>
                                 <p id="account-user-email" class="text-sm text-gray-600 mt-1">Faca login para visualizar</p>
@@ -1042,9 +1646,9 @@
                         </div>
                     </div>
 
-                    <div class="grid md:grid-cols-3 gap-4 mt-8">
-                        <div class="account-grid-card is-muted p-4">
-                            <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-500"></i>
+                      <div class="grid md:grid-cols-3 gap-4 mt-8">
+                          <div class="account-grid-card is-muted p-4">
+                              <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-500"></i>
                             <p class="text-[22px] font-semibold text-gray-900 mt-7">Informacoes do seu perfil</p>
                             <p class="text-sm text-gray-500 mt-1">Dados pessoais e da conta.</p>
                         </div>
@@ -1064,11 +1668,12 @@
                             <p class="text-[22px] font-semibold text-gray-900 mt-7">Cartoes</p>
                             <p class="text-sm text-gray-500 mt-1">Cartoes salvos na sua conta.</p>
                         </div>
-                        <div class="account-grid-card p-4">
-                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-500"></i>
-                            <p class="text-[22px] font-semibold text-gray-900 mt-7">Enderecos</p>
-                            <p class="text-sm text-gray-500 mt-1">Enderecos salvos na sua conta.</p>
-                        </div>
+                          <div class="account-grid-card p-4">
+                              <i data-lucide="map-pin" class="w-5 h-5 text-gray-500"></i>
+                              <p class="text-[22px] font-semibold text-gray-900 mt-7">Enderecos</p>
+                              <p class="text-sm text-gray-500 mt-1">Enderecos salvos na sua conta.</p>
+                              <button class="mt-6 text-sm font-semibold text-[#3483fa]" onclick="document.getElementById('saved-addresses-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })">Gerenciar enderecos</button>
+                          </div>
                         <div class="account-grid-card p-4">
                             <i data-lucide="shield-check" class="w-5 h-5 text-gray-500"></i>
                             <p class="text-[22px] font-semibold text-gray-900 mt-7">Privacidade</p>
@@ -1079,10 +1684,95 @@
                             <p class="text-[22px] font-semibold text-gray-900 mt-7">Comunicacoes</p>
                             <p class="text-sm text-gray-500 mt-1">Escolha que tipo de informacao voce quer receber.</p>
                         </div>
-                    </div>
+                      </div>
 
-                    <div class="account-purchases-card mt-6 p-5">
-                        <div class="flex items-center justify-between gap-3">
+                      <div id="saved-addresses-section" class="account-purchases-card mt-6 p-5">
+                          <div class="flex items-center justify-between gap-3 flex-wrap">
+                              <div>
+                                  <p class="text-sm text-gray-500">Enderecos</p>
+                                  <h2 class="text-[24px] font-semibold text-gray-900 mt-1">Enderecos salvos</h2>
+                              </div>
+                              <p id="saved-addresses-feedback" class="text-sm text-gray-500"></p>
+                          </div>
+
+                          <div class="grid xl:grid-cols-[1.2fr_0.9fr] gap-6 mt-6">
+                              <div>
+                                  <div id="saved-addresses-list" class="space-y-4">
+                                      <div class="address-empty">
+                                          Faca login para visualizar e gerenciar seus enderecos.
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <div class="address-card">
+                                  <div class="flex items-center justify-between gap-3">
+                                      <div>
+                                          <p class="text-lg font-semibold text-gray-900">Adicionar novo endereco</p>
+                                          <p class="text-sm text-gray-500 mt-1">Salve enderecos para usar nas proximas compras.</p>
+                                      </div>
+                                      <i data-lucide="map-pinned" class="w-5 h-5 text-gray-400"></i>
+                                  </div>
+
+                                  <form id="saved-address-form" class="mt-5 space-y-4">
+                                      <div class="address-form-grid">
+                                          <div class="address-form-field">
+                                              <label for="saved-address-label">Apelido</label>
+                                              <input id="saved-address-label" type="text" placeholder="Casa, Trabalho, etc.">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-recipient">Destinatario</label>
+                                              <input id="saved-address-recipient" type="text" placeholder="Nome completo">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-phone">Telefone</label>
+                                              <input id="saved-address-phone" type="text" placeholder="(17) 99999-9999">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-cep">CEP</label>
+                                              <input id="saved-address-cep" type="text" maxlength="9" placeholder="15804-060">
+                                          </div>
+                                          <div class="address-form-field is-full">
+                                              <label for="saved-address-street">Rua / Avenida</label>
+                                              <input id="saved-address-street" type="text" placeholder="Rua ou avenida">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-number">Numero</label>
+                                              <input id="saved-address-number" type="text" placeholder="123">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-complement">Complemento</label>
+                                              <input id="saved-address-complement" type="text" placeholder="Apto, bloco, referencia">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-neighborhood">Bairro</label>
+                                              <input id="saved-address-neighborhood" type="text" placeholder="Centro">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-city">Cidade</label>
+                                              <input id="saved-address-city" type="text" placeholder="Catanduva">
+                                          </div>
+                                          <div class="address-form-field">
+                                              <label for="saved-address-state">Estado</label>
+                                              <input id="saved-address-state" type="text" placeholder="SP">
+                                          </div>
+                                      </div>
+
+                                      <label class="inline-flex items-center gap-2 text-sm text-gray-600">
+                                          <input id="saved-address-default" type="checkbox" class="rounded border-gray-300 text-[#3483fa] focus:ring-[#3483fa]">
+                                          Definir como endereco principal
+                                      </label>
+
+                                      <div class="flex items-center justify-between gap-3 flex-wrap">
+                                          <p id="saved-address-form-feedback" class="text-sm text-gray-500 min-h-[20px]"></p>
+                                          <button id="saved-address-submit-btn" type="submit" class="bg-[#3483fa] text-white px-5 py-3 rounded-xl font-semibold hover:bg-[#2968c8] transition-colors">Salvar endereco</button>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="account-purchases-card mt-6 p-5">
+                          <div class="flex items-center justify-between gap-3">
                             <div>
                                 <p class="text-sm text-gray-500">Compras</p>
                                 <h2 class="text-[24px] font-semibold text-gray-900 mt-1">Historico recente</h2>
@@ -1279,12 +1969,18 @@
     <div id="checkout-modal" class="fixed inset-0 z-[300] hidden overflow-y-auto checkout-flow-shell">
         <div class="min-h-screen">
             <div class="checkout-flow-header sticky top-0 z-10">
-                <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
+                <div class="max-w-6xl mx-auto px-4 md:px-6 py-2.5 flex items-center justify-between">
                     <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home'); closeCheckout();">
-                        <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="h-9 w-auto object-contain">
+                        <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="h-12 md:h-14 w-auto object-contain">
                     </div>
                     <div class="flex items-center gap-5 text-sm text-gray-700">
-                        <span id="checkout-user-pill" class="hidden md:inline"></span>
+                        <div id="checkout-user-pill" class="hidden md:flex checkout-user-profile">
+                            <div class="checkout-user-avatar">
+                                <img id="checkout-user-avatar-image" src="" alt="Avatar do usuario" class="hidden">
+                                <span id="checkout-user-avatar-fallback">M</span>
+                            </div>
+                            <span id="checkout-user-name">Checkout</span>
+                        </div>
                         <button onclick="closeCheckout()">Contato</button>
                     </div>
                 </div>
@@ -1536,4 +2232,3 @@
     <script src="assets/app.js"></script>
 </body>
 </html>
-

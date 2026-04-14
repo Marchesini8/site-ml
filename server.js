@@ -6,6 +6,7 @@ const cors = require('cors');
 const paymentRoutes = require('./routes/payments');
 const webhookRoutes = require('./routes/webhooks');
 const authRoutes = require('./routes/auth');
+const accountRoutes = require('./routes/account');
 const { getDatabaseDiagnostics, initDatabase } = require('./services/database');
 const { getEmailDiagnostics } = require('./services/emailService');
 
@@ -45,6 +46,7 @@ app.use(express.static(__dirname, { index: false }));
 app.use('/api/payments', paymentRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/account', accountRoutes);
 
 app.get('/health', (req, res) => {
   res.json({

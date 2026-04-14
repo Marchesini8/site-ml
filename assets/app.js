@@ -7,6 +7,7 @@ const STORAGE_KEYS = {
 const APP_CONFIG = {
     googleClientId: window.GOOGLE_CLIENT_ID || ""
 };
+const AUTH_LOADING_MIN_MS = 950;
 const products = [
     { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 0, oldPrice: 2199.99, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
     { id: 2, title: "Geladeira Electrolux Frost Free Inverter 480L", price: 0, oldPrice: 1980.0, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
@@ -33,6 +34,9 @@ const appState = {
     },
     session: null,
     purchases: [],
+    addresses: [],
+    addressesLoadedFor: "",
+    pendingCheckout: false,
     checkoutDraft: {
         paymentMethod: "pix"
     }
@@ -117,8 +121,190 @@ function loadState() {
     appState.purchases = safeParse(STORAGE_KEYS.purchases, []);
 }
 
+function getSessionEmail() {
+    return (appState.session?.email || "").trim().toLowerCase();
+}
+
+function setTextFeedback(elementId, message, tone = "neutral") {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.innerText = message || "";
+    el.className = "text-sm min-h-[20px]";
+    if (tone === "success") el.classList.add("text-green-600");
+    else if (tone === "error") el.classList.add("text-red-500");
+    else el.classList.add("text-gray-500");
+}
+
+function renderSavedAddresses() {
+    const list = document.getElementById("saved-addresses-list");
+    const form = document.getElementById("saved-address-form");
+    if (!list || !form) return;
+
+    if (!appState.session) {
+        list.innerHTML = `
+            <div class="address-empty">
+                Faca login para visualizar e gerenciar seus enderecos.
+            </div>
+        `;
+        form.classList.add("opacity-60", "pointer-events-none");
+        return;
+    }
+
+    form.classList.remove("opacity-60", "pointer-events-none");
+
+    if (!appState.addresses.length) {
+        list.innerHTML = `
+            <div class="address-empty">
+                Nenhum endereco salvo ainda. Adicione o primeiro endereco ao lado.
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = appState.addresses.map((address) => `
+        <div class="address-card">
+            <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <p class="text-lg font-semibold text-gray-900">${address.label || "Endereco"}</p>
+                        ${address.isDefault ? '<span class="text-[11px] font-bold text-[#3483fa] bg-[#eaf2ff] px-2 py-1 rounded-full">PRINCIPAL</span>' : ""}
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">${address.recipientName || ""}${address.phone ? ` • ${address.phone}` : ""}</p>
+                </div>
+                <button class="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors" onclick="deleteSavedAddress('${address.id}')">Excluir</button>
+            </div>
+            <div class="mt-4 text-sm text-gray-700 leading-6">
+                <p>${address.street}, ${address.number}${address.complement ? ` - ${address.complement}` : ""}</p>
+                <p>${address.neighborhood ? `${address.neighborhood} • ` : ""}${address.city || ""}${address.state ? ` - ${address.state}` : ""}</p>
+                <p>CEP ${address.cep}</p>
+            </div>
+        </div>
+    `).join("");
+}
+
+async function loadSavedAddresses(force = false) {
+    const email = getSessionEmail();
+    if (!email) {
+        appState.addresses = [];
+        appState.addressesLoadedFor = "";
+        renderSavedAddresses();
+        setTextFeedback("saved-addresses-feedback", "");
+        return;
+    }
+
+    if (!force && appState.addressesLoadedFor === email && appState.addresses.length) {
+        renderSavedAddresses();
+        return;
+    }
+
+    setTextFeedback("saved-addresses-feedback", "Carregando enderecos...");
+    const result = await apiRequest("/api/account/addresses/list", { email });
+    if (result?.error) {
+        appState.addresses = [];
+        appState.addressesLoadedFor = "";
+        renderSavedAddresses();
+        setTextFeedback("saved-addresses-feedback", result.error, "error");
+        return;
+    }
+
+    appState.addresses = Array.isArray(result.addresses) ? result.addresses : [];
+    appState.addressesLoadedFor = email;
+    renderSavedAddresses();
+    setTextFeedback("saved-addresses-feedback", appState.addresses.length ? `${appState.addresses.length} endereco(s) salvo(s).` : "Nenhum endereco salvo ainda.", "success");
+}
+
+function resetSavedAddressForm() {
+    document.getElementById("saved-address-form")?.reset();
+    if (appState.session?.name) {
+        const recipientInput = document.getElementById("saved-address-recipient");
+        if (recipientInput) recipientInput.value = appState.session.name;
+    }
+    setTextFeedback("saved-address-form-feedback", "");
+}
+
+async function submitSavedAddressForm(event) {
+    event.preventDefault();
+    const email = getSessionEmail();
+    if (!email) {
+        setTextFeedback("saved-address-form-feedback", "Faca login para salvar enderecos.", "error");
+        return;
+    }
+
+    const payload = {
+        email,
+        label: document.getElementById("saved-address-label")?.value?.trim() || "Casa",
+        recipientName: document.getElementById("saved-address-recipient")?.value?.trim() || "",
+        phone: document.getElementById("saved-address-phone")?.value?.trim() || "",
+        cep: document.getElementById("saved-address-cep")?.value?.trim() || "",
+        street: document.getElementById("saved-address-street")?.value?.trim() || "",
+        number: document.getElementById("saved-address-number")?.value?.trim() || "",
+        complement: document.getElementById("saved-address-complement")?.value?.trim() || "",
+        neighborhood: document.getElementById("saved-address-neighborhood")?.value?.trim() || "",
+        city: document.getElementById("saved-address-city")?.value?.trim() || "",
+        state: document.getElementById("saved-address-state")?.value?.trim() || "",
+        isDefault: Boolean(document.getElementById("saved-address-default")?.checked),
+    };
+
+    if (!payload.recipientName || !payload.cep || !payload.street || !payload.number) {
+        setTextFeedback("saved-address-form-feedback", "Preencha destinatario, CEP, rua e numero.", "error");
+        return;
+    }
+
+    setButtonLoading("saved-address-submit-btn", true, "Salvando...", "Salvar endereco");
+    const result = await apiRequest("/api/account/addresses/create", payload);
+    setButtonLoading("saved-address-submit-btn", false, "", "Salvar endereco");
+    if (result?.error) {
+        setTextFeedback("saved-address-form-feedback", result.error, "error");
+        return;
+    }
+
+    resetSavedAddressForm();
+    setTextFeedback("saved-address-form-feedback", "Endereco salvo com sucesso.", "success");
+    await loadSavedAddresses(true);
+}
+
+async function deleteSavedAddress(addressId) {
+    const email = getSessionEmail();
+    if (!email || !addressId) return;
+
+    setTextFeedback("saved-addresses-feedback", "Excluindo endereco...");
+    const result = await apiRequest("/api/account/addresses/delete", { email, addressId });
+    if (result?.error) {
+        setTextFeedback("saved-addresses-feedback", result.error, "error");
+        return;
+    }
+
+    appState.addresses = appState.addresses.filter((address) => address.id !== addressId);
+    renderSavedAddresses();
+    setTextFeedback("saved-addresses-feedback", "Endereco excluido.", "success");
+}
+
 function formatCurrency(value) {
     return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function requireAccountForPurchase() {
+    if (appState.session) return true;
+    appState.pendingCheckout = true;
+    toggleCart(false);
+    closeCheckout();
+    openAuthPage("login");
+    setAuthFeedback("Crie uma conta ou entre para comprar este produto.", "error");
+    return false;
+}
+
+function continuePendingCheckoutAfterAuth() {
+    if (!appState.pendingCheckout) {
+        showPage("home");
+        return;
+    }
+
+    appState.pendingCheckout = false;
+    setAuthFeedback("Login concluido. Vamos continuar sua compra.", "success");
+    window.setTimeout(() => {
+        showPage("home");
+        window.setTimeout(() => openCheckout(), 220);
+    }, 650);
 }
 
 function renderProductCard(product) {
@@ -216,6 +402,34 @@ function closeCategoriesMenu() {
     document.getElementById("categories-dropdown")?.classList.add("hidden");
 }
 
+function closeDesktopAccountMenu() {
+    document.getElementById("desktop-account-menu")?.classList.remove("is-open");
+}
+
+function toggleDesktopAccountMenu(event) {
+    event?.stopPropagation();
+    const menu = document.getElementById("desktop-account-menu");
+    const shell = document.getElementById("nav-account-shell");
+    if (!menu) return;
+    if (shell) shell.classList.add("is-open");
+    const willOpen = !menu.classList.contains("is-open");
+    closeDesktopAccountMenu();
+    if (willOpen) menu.classList.add("is-open");
+    lucide.createIcons();
+}
+
+function openMobileMenu() {
+    document.getElementById("mobile-menu-drawer")?.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    lucide.createIcons();
+}
+
+function closeMobileMenu() {
+    document.getElementById("mobile-menu-drawer")?.classList.remove("is-open");
+    if (!document.getElementById("checkout-modal")?.classList.contains("hidden")) return;
+    document.body.style.overflow = "auto";
+}
+
 function toggleCategoriesMenu(event, triggerEl) {
     event?.stopPropagation();
     const menu = document.getElementById("categories-dropdown");
@@ -240,6 +454,8 @@ function showPage(pageId, triggerEl = null) {
     Object.values(pageMap).forEach((page) => page?.classList.add("hidden"));
     pageMap[pageId]?.classList.remove("hidden");
     closeCategoriesMenu();
+    closeDesktopAccountMenu();
+    closeMobileMenu();
     setActiveNav(triggerEl);
     window.scrollTo({ top: 0, behavior: "smooth" });
     document.body.style.overflow = "auto";
@@ -400,6 +616,7 @@ function toggleCart(show) {
     const sidebar = document.getElementById("cart-sidebar");
     if (!sidebar) return;
     if (show) {
+        closeMobileMenu();
         sidebar.classList.remove("invisible");
         sidebar.classList.add("active");
     } else {
@@ -445,6 +662,7 @@ function remove(id) {
 function updateCartUI() {
     const container = document.getElementById("cart-items");
     const countLabel = document.getElementById("cart-count");
+    const mobileBadge = document.getElementById("mobile-menu-badge");
     const totalLabel = document.getElementById("cart-total");
     if (!container || !countLabel || !totalLabel) return;
 
@@ -478,6 +696,10 @@ function updateCartUI() {
 
     countLabel.innerText = count;
     countLabel.classList.toggle("hidden", count === 0);
+    if (mobileBadge) {
+        mobileBadge.innerText = count;
+        mobileBadge.classList.toggle("hidden", count === 0);
+    }
     totalLabel.innerText = `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     updateCheckoutSummary();
     lucide.createIcons();
@@ -512,7 +734,27 @@ function setCepStatus(message, tone = "neutral") {
 
 function hydrateCheckoutUI() {
     const userPill = document.getElementById("checkout-user-pill");
-    if (userPill) userPill.innerText = appState.session?.name || "Checkout";
+    const checkoutUserName = document.getElementById("checkout-user-name");
+    const checkoutAvatarImage = document.getElementById("checkout-user-avatar-image");
+    const checkoutAvatarFallback = document.getElementById("checkout-user-avatar-fallback");
+    const sessionName = appState.session?.name || "Checkout";
+    const sessionAvatar = appState.session?.avatar || "";
+    const avatarLetter = (appState.session?.name || appState.session?.email || "C").trim().charAt(0).toUpperCase() || "C";
+
+    if (userPill) userPill.classList.remove("hidden");
+    if (checkoutUserName) checkoutUserName.innerText = sessionName;
+    if (checkoutAvatarImage && checkoutAvatarFallback) {
+        if (sessionAvatar) {
+            checkoutAvatarImage.src = sessionAvatar;
+            checkoutAvatarImage.classList.remove("hidden");
+            checkoutAvatarFallback.classList.add("hidden");
+        } else {
+            checkoutAvatarImage.src = "";
+            checkoutAvatarImage.classList.add("hidden");
+            checkoutAvatarFallback.classList.remove("hidden");
+            checkoutAvatarFallback.innerText = avatarLetter;
+        }
+    }
     const customerName = document.getElementById("cust-name");
     if (customerName && appState.session?.name) customerName.value = appState.session.name;
     setPaymentStatusMessage("");
@@ -546,6 +788,7 @@ function updateCheckoutSummary() {
 
 function openCheckout() {
     if (appState.cart.length === 0) return;
+    if (!requireAccountForPurchase()) return;
     toggleCart(false);
     resetPaymentState();
     appState.checkoutDraft = {
@@ -701,6 +944,7 @@ async function lookupCep() {
 }
 
 async function startPixCheckout() {
+    if (!requireAccountForPurchase()) return;
     const btn = document.getElementById("checkout-confirm-btn");
     const payload = {
         items: appState.cart,
@@ -825,6 +1069,7 @@ function copyPix() {
 }
 
 function buyNow() {
+    if (!requireAccountForPurchase()) return;
     addToCart(appState.currentProdId);
     openCheckout();
 }
@@ -854,10 +1099,40 @@ function setAuthFeedback(message, tone = "neutral") {
     const el = document.getElementById("auth-feedback");
     if (!el) return;
     el.innerText = message;
-    el.className = "text-sm min-h-[20px] mt-4 text-center";
+    el.className = "auth-feedback text-sm min-h-[20px] mt-4 text-center";
     if (tone === "success") el.classList.add("text-green-600");
     else if (tone === "error") el.classList.add("text-red-500");
     else el.classList.add("text-gray-500");
+    if (message) {
+        requestAnimationFrame(() => el.classList.add("is-visible"));
+    }
+}
+
+function animateAuthCardSuccess() {
+    const card = document.querySelector(".account-card");
+    if (!card) return;
+    card.classList.remove("auth-success-flash");
+    void card.offsetWidth;
+    card.classList.add("auth-success-flash");
+}
+
+function setAuthFormBusy(isBusy) {
+    document.getElementById("auth-form")?.classList.toggle("is-submitting", isBusy);
+}
+
+function setAuthTopLoader(isActive) {
+    document.getElementById("auth-top-loader")?.classList.toggle("is-active", isActive);
+}
+
+async function withMinimumDelay(task, minDelay = AUTH_LOADING_MIN_MS) {
+    const startedAt = Date.now();
+    const result = await task();
+    const elapsed = Date.now() - startedAt;
+    const remaining = Math.max(0, minDelay - elapsed);
+    if (remaining) {
+        await new Promise((resolve) => window.setTimeout(resolve, remaining));
+    }
+    return result;
 }
 
 function resetRegisterVerificationState(clearCode = true) {
@@ -887,10 +1162,10 @@ function setRegisterVerificationState(isActive, email = "") {
 function setAuthMode(mode) {
     appState.authMode = mode;
     const isRegister = mode === "register";
-    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta e compre com frete gratis" : "Entre na sua conta para continuar comprando";
+    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta para continuar comprando" : "Digite seu e-mail ou telefone para iniciar sessao";
     document.getElementById("auth-subtitle").innerText = isRegister
         ? "Informe seus dados, receba um codigo por e-mail e finalize o cadastro com seguranca."
-        : "Seu acesso agora valida direto no backend com banco PostgreSQL online.";
+        : "Entre com seus dados para continuar a compra com seguranca.";
     document.getElementById("auth-name-wrap").classList.toggle("hidden", !isRegister);
     document.getElementById("auth-confirm-wrap").classList.toggle("hidden", !isRegister);
     resetRegisterVerificationState(true);
@@ -954,6 +1229,67 @@ function syncSession(user) {
     };
     persistState();
     renderAccountArea();
+    renderHeaderAuthState();
+    hydrateCheckoutUI();
+    resetSavedAddressForm();
+    loadSavedAddresses(true);
+}
+
+function renderHeaderAuthState() {
+    const isLoggedIn = Boolean(appState.session);
+    document.getElementById("nav-login-btn")?.classList.toggle("hidden", isLoggedIn);
+    document.getElementById("nav-account-shell")?.classList.toggle("hidden", !isLoggedIn);
+    document.getElementById("nav-register-btn")?.classList.toggle("hidden", isLoggedIn);
+    document.getElementById("mobile-menu-login-link")?.classList.toggle("hidden", isLoggedIn);
+    document.getElementById("mobile-menu-register-link")?.classList.toggle("hidden", isLoggedIn);
+    document.getElementById("mobile-menu-logout-link")?.classList.toggle("hidden", !isLoggedIn);
+
+    const mobileUserName = document.getElementById("mobile-menu-user-name");
+    const mobileAvatarImage = document.getElementById("mobile-menu-avatar-image");
+    const mobileAvatarFallback = document.getElementById("mobile-menu-avatar-fallback");
+    const fallbackLetter = (appState.session?.name || appState.session?.email || "M").trim().charAt(0).toUpperCase() || "M";
+
+    if (mobileUserName) {
+        mobileUserName.innerText = appState.session?.name || "Minha conta";
+    }
+
+    if (mobileAvatarImage && mobileAvatarFallback) {
+        if (appState.session?.avatar) {
+            mobileAvatarImage.src = appState.session.avatar;
+            mobileAvatarImage.classList.remove("hidden");
+            mobileAvatarFallback.classList.add("hidden");
+        } else {
+            mobileAvatarImage.src = "";
+            mobileAvatarImage.classList.add("hidden");
+            mobileAvatarFallback.classList.remove("hidden");
+            mobileAvatarFallback.innerText = fallbackLetter;
+        }
+    }
+
+    const desktopName = document.getElementById("desktop-account-name");
+    const desktopAvatarImage = document.getElementById("desktop-account-avatar-image");
+    const desktopAvatarFallback = document.getElementById("desktop-account-avatar-fallback");
+    const desktopMenuName = document.getElementById("desktop-account-menu-name");
+    const desktopMenuAvatarImage = document.getElementById("desktop-account-menu-avatar-image");
+    const desktopMenuAvatarFallback = document.getElementById("desktop-account-menu-avatar-fallback");
+    const accountName = appState.session?.name || "Minha conta";
+
+    if (desktopName) desktopName.innerText = accountName;
+    if (desktopMenuName) desktopMenuName.innerText = accountName;
+
+    [[desktopAvatarImage, desktopAvatarFallback], [desktopMenuAvatarImage, desktopMenuAvatarFallback]].forEach(([imageEl, fallbackEl]) => {
+        if (!imageEl || !fallbackEl) return;
+        if (appState.session?.avatar) {
+            imageEl.src = appState.session.avatar;
+            imageEl.classList.remove("hidden");
+            fallbackEl.classList.add("hidden");
+        } else {
+            imageEl.src = "";
+            imageEl.classList.add("hidden");
+            fallbackEl.classList.remove("hidden");
+            fallbackEl.innerText = fallbackLetter;
+        }
+    });
 }
 
 function validateRegisterFields(payload, confirmPassword) {
@@ -990,9 +1326,13 @@ async function registerUser() {
         && appState.authRegistration.email === payload.email;
 
     if (!verificationRequested) {
+        setAuthFormBusy(true);
+        setAuthTopLoader(true);
         setButtonLoading("auth-submit-btn", true, "Enviando codigo...", "Enviar codigo");
-        const requestResult = await apiRequest("/api/auth/register/send-code", payload);
+        const requestResult = await withMinimumDelay(() => apiRequest("/api/auth/register/send-code", payload));
         setButtonLoading("auth-submit-btn", false, "", "Enviar codigo");
+        setAuthFormBusy(false);
+        setAuthTopLoader(false);
         if (requestResult?.error) return setAuthFeedback(requestResult.error, "error");
 
         setRegisterVerificationState(true, payload.email);
@@ -1006,21 +1346,26 @@ async function registerUser() {
         return setAuthFeedback("Digite o codigo de 6 digitos enviado para o seu e-mail.", "error");
     }
 
+    setAuthFormBusy(true);
+    setAuthTopLoader(true);
     setButtonLoading("auth-submit-btn", true, "Validando codigo...", "Criar conta");
-    const serverResult = await apiRequest("/api/auth/register/verify", {
+    const serverResult = await withMinimumDelay(() => apiRequest("/api/auth/register/verify", {
         ...payload,
         code: verificationCode
-    });
+    }));
     setButtonLoading("auth-submit-btn", false, "", "Criar conta");
+    setAuthFormBusy(false);
+    setAuthTopLoader(false);
     if (serverResult?.error) return setAuthFeedback(serverResult.error, "error");
 
     const user = normalizeUser(serverResult.user);
     syncSession(user);
     persistState();
     setAuthFeedback("Conta criada com sucesso.", "success");
+    animateAuthCardSuccess();
     resetRegisterVerificationState(true);
     renderPurchaseHistory();
-    window.setTimeout(() => showPage("purchases"), 700);
+    continuePendingCheckoutAfterAuth();
 }
 
 async function loginUser() {
@@ -1028,17 +1373,22 @@ async function loginUser() {
     const password = getFieldValue("auth-password");
     if (!email || !password) return setAuthFeedback("Digite e-mail e senha.", "error");
 
+    setAuthFormBusy(true);
+    setAuthTopLoader(true);
     setButtonLoading("auth-submit-btn", true, "Entrando...", "Entrar");
-    const serverResult = await apiRequest("/api/auth/login", { email, password });
+    const serverResult = await withMinimumDelay(() => apiRequest("/api/auth/login", { email, password }));
     setButtonLoading("auth-submit-btn", false, "", "Entrar");
+    setAuthFormBusy(false);
+    setAuthTopLoader(false);
     if (serverResult?.error) return setAuthFeedback(serverResult.error, "error");
 
     const user = normalizeUser(serverResult.user);
     syncSession(user);
     persistState();
     setAuthFeedback("Login realizado com sucesso.", "success");
+    animateAuthCardSuccess();
     renderPurchaseHistory();
-    window.setTimeout(() => showPage("purchases"), 700);
+    continuePendingCheckoutAfterAuth();
 }
 
 async function submitAuthForm(event) {
@@ -1059,6 +1409,8 @@ function decodeJwtPayload(token) {
 
 async function completeGoogleLogin(profile, isDemo = false) {
     if (isDemo) {
+        setAuthTopLoader(true);
+        await withMinimumDelay(() => Promise.resolve());
         const user = normalizeUser({
             name: profile.name || "Usuario Google",
             email: profile.email || "google.demo@mercadolivre.local",
@@ -1068,16 +1420,20 @@ async function completeGoogleLogin(profile, isDemo = false) {
         syncSession(user);
         persistState();
         setAuthFeedback("Login com Google em modo demonstracao ativado.", "success");
+        animateAuthCardSuccess();
         renderPurchaseHistory();
-        window.setTimeout(() => showPage("purchases"), 700);
+        setAuthTopLoader(false);
+        continuePendingCheckoutAfterAuth();
         return;
     }
 
-    const serverResult = await apiRequest("/api/auth/google", {
+    setAuthTopLoader(true);
+    const serverResult = await withMinimumDelay(() => apiRequest("/api/auth/google", {
         name: profile.name || "Usuario Google",
         email: profile.email,
         avatar: profile.picture || ""
-    });
+    }));
+    setAuthTopLoader(false);
 
     if (serverResult?.error) return setAuthFeedback(serverResult.error, "error");
 
@@ -1085,8 +1441,9 @@ async function completeGoogleLogin(profile, isDemo = false) {
     syncSession(user);
     persistState();
     setAuthFeedback("Login com Google realizado com sucesso.", "success");
+    animateAuthCardSuccess();
     renderPurchaseHistory();
-    window.setTimeout(() => showPage("purchases"), 700);
+    continuePendingCheckoutAfterAuth();
 }
 
 function handleGoogleCredentialResponse(response) {
@@ -1120,7 +1477,7 @@ function initGoogleAuth() {
             theme: "outline",
             size: "large",
             text: "continue_with",
-            width: 380
+            width: 336
         });
     } else {
         fallbackBtn.classList.remove("hidden");
@@ -1165,14 +1522,20 @@ function renderPurchaseHistory() {
 
 function logout() {
     appState.session = null;
+    appState.addresses = [];
+    appState.addressesLoadedFor = "";
     persistState();
     renderAccountArea();
+    renderHeaderAuthState();
+    renderSavedAddresses();
+    resetSavedAddressForm();
     setAuthFeedback("Sessao encerrada.", "success");
     showPage("home");
 }
 
 function bindAuthForm() {
     document.getElementById("auth-form")?.addEventListener("submit", submitAuthForm);
+    document.getElementById("saved-address-form")?.addEventListener("submit", submitSavedAddressForm);
     ["auth-name", "auth-email", "auth-password", "auth-confirm-password"].forEach((id) => {
         document.getElementById(id)?.addEventListener("input", () => {
             if (appState.authMode === "register" && appState.authRegistration.verificationRequested) {
@@ -1185,6 +1548,14 @@ function bindAuthForm() {
     document.getElementById("auth-code")?.addEventListener("input", (event) => {
         event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
     });
+    document.getElementById("saved-address-phone")?.addEventListener("input", (event) => {
+        event.target.value = event.target.value.replace(/\D/g, "").slice(0, 11)
+            .replace(/^(\d{2})(\d)/g, "($1) $2")
+            .replace(/(\d{5})(\d)/, "$1-$2");
+    });
+    document.getElementById("saved-address-cep")?.addEventListener("input", (event) => {
+        event.target.value = event.target.value.replace(/\D/g, "").slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
+    });
 }
 
 function renderAccountArea() {
@@ -1195,11 +1566,25 @@ function renderAccountArea() {
         ? `${session.provider}${session.emailVerified ? " - email verificado" : ""}`
         : "Nao definido";
     const avatar = (session?.name || session?.email || "?").trim().charAt(0).toUpperCase() || "?";
+    const avatarImage = document.getElementById("account-user-avatar-image");
+    const avatarFallback = document.getElementById("account-user-avatar-fallback");
 
     document.getElementById("account-user-name").innerText = displayName;
     document.getElementById("account-user-email").innerText = displayEmail;
     document.getElementById("account-user-provider").innerText = provider;
-    document.getElementById("account-user-avatar").innerText = avatar;
+    if (avatarImage && avatarFallback) {
+        if (session?.avatar) {
+            avatarImage.src = session.avatar;
+            avatarImage.classList.remove("hidden");
+            avatarFallback.classList.add("hidden");
+            avatarFallback.innerText = avatar;
+        } else {
+            avatarImage.src = "";
+            avatarImage.classList.add("hidden");
+            avatarFallback.classList.remove("hidden");
+            avatarFallback.innerText = avatar;
+        }
+    }
     document.getElementById("account-security-banner-text").innerText = session
         ? "Seu acesso esta ativo. Reforce a seguranca e mantenha sua conta protegida."
         : "Crie uma senha e mantenha sua conta segura";
@@ -1207,6 +1592,12 @@ function renderAccountArea() {
         ? "Seu e-mail ja foi verificado. Revise as demais configuracoes."
         : "Voce tem configuracoes pendentes.";
     document.getElementById("logout-btn").classList.toggle("hidden", !session);
+    if (session) {
+        const recipientInput = document.getElementById("saved-address-recipient");
+        if (recipientInput && !recipientInput.value.trim()) recipientInput.value = session.name || "";
+    }
+    renderSavedAddresses();
+    loadSavedAddresses();
 }
 
 function renderPurchaseHistory() {
@@ -1242,11 +1633,20 @@ function init() {
     updateCheckoutSummary();
     bindAuthForm();
     renderAccountArea();
+    renderHeaderAuthState();
     renderPurchaseHistory();
+    renderSavedAddresses();
+    resetSavedAddressForm();
     setAuthMode("register");
     initGoogleAuth();
     initHeroCarousel();
-    document.addEventListener("click", () => closeCategoriesMenu());
+    document.getElementById("nav-account-btn")?.addEventListener("click", toggleDesktopAccountMenu);
+    document.addEventListener("click", (event) => {
+        closeCategoriesMenu();
+        if (!event.target.closest("#nav-account-shell")) {
+            closeDesktopAccountMenu();
+        }
+    });
     showPage("home");
     lucide.createIcons();
 }
@@ -1256,6 +1656,10 @@ window.moveHeroSlide = moveHeroSlide;
 window.showPage = showPage;
 window.navigateToSection = navigateToSection;
 window.toggleCategoriesMenu = toggleCategoriesMenu;
+window.toggleDesktopAccountMenu = toggleDesktopAccountMenu;
+window.closeDesktopAccountMenu = closeDesktopAccountMenu;
+window.openMobileMenu = openMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
 window.openDetails = openDetails;
 window.selectDetailImage = selectDetailImage;
 window.scrollRelatedProducts = scrollRelatedProducts;
@@ -1280,6 +1684,7 @@ window.buyNow = buyNow;
 window.openAuthPage = openAuthPage;
 window.toggleAuthMode = toggleAuthMode;
 window.handleGoogleFallback = handleGoogleFallback;
+window.deleteSavedAddress = deleteSavedAddress;
 window.logout = logout;
 window.playEmbeddedVideo = playEmbeddedVideo;
 
