@@ -10,6 +10,7 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
@@ -18,6 +19,7 @@
             --ml-yellow: #fff159;
             --ml-blue: #3483fa;
             --ml-bg: #ededed;
+            --ml-navy: #2d3277;
         }
 
         body { 
@@ -51,6 +53,348 @@
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .ml-header-logo-wordmark {
+            color: var(--ml-navy);
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+        }
+        .ml-header-search {
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+        .ml-header-search:focus-within {
+            box-shadow: inset 0 0 0 2px rgba(52, 131, 250, 0.35);
+        }
+        .ml-header-pill {
+            background: linear-gradient(90deg, #ffffff 0%, #f3f4ff 100%);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+        .hero-carousel-track {
+            transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .hero-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.65);
+            transition: all 0.25s ease;
+        }
+        .hero-dot.active {
+            width: 22px;
+            background: white;
+        }
+        .shortcut-card {
+            background: rgba(255,255,255,0.96);
+            border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(255,255,255,0.9);
+        }
+        .shortcut-cta {
+            background: #e8f0ff;
+            color: #3483fa;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.2s ease;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 100%;
+            height: 2px;
+            border-radius: 999px;
+            background: rgba(52, 131, 250, 0.75);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.is-active::after {
+            transform: scaleX(1);
+        }
+        .nav-link.is-active {
+            color: #111827;
+        }
+        .categories-menu {
+            background: #333333;
+            color: white;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+        }
+        .categories-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 11px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.18s ease;
+        }
+        .categories-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .categories-item.is-highlight {
+            background: #3483fa;
+        }
+        .account-hero {
+            background: linear-gradient(180deg, #ffe600 0%, #ffe600 52%, #f5f5f5 52%, #f5f5f5 100%);
+        }
+        .account-card {
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(209, 213, 219, 0.85);
+        }
+        .account-input {
+            border: 1px solid #d1d5db;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .account-input:focus {
+            border-color: #3483fa;
+            box-shadow: 0 0 0 4px rgba(52, 131, 250, 0.12);
+            outline: none;
+        }
+        .google-shell:empty::before {
+            content: "Continuar com Google";
+            display: inline-flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            min-height: 44px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            background: #fff;
+            color: #111827;
+            font-weight: 600;
+        }
+        .info-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+        }
+        .offer-shell {
+            background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
+            border: 1px solid rgba(226, 232, 240, 0.95);
+            box-shadow: 0 20px 46px rgba(15, 23, 42, 0.08);
+        }
+        .offer-card {
+            border: 1px solid #eceff3;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .offer-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 34px rgba(15, 23, 42, 0.1);
+        }
+        .offer-grid-card {
+            width: 100%;
+            min-width: 0;
+            border-right: 1px solid #f1f5f9;
+        }
+        .offer-grid-card:last-child {
+            border-right: 0;
+        }
+        .hero-stage {
+            background: white;
+        }
+        .hero-frame {
+            margin: 0 auto;
+            width: min(100%, 1520px);
+            padding-left: 64px;
+            padding-right: 64px;
+        }
+        .meli-plus-shell {
+            background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+            border: 1px solid rgba(226, 232, 240, 0.95);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
+        }
+        .meli-plus-divider {
+            width: 1px;
+            background: linear-gradient(180deg, transparent, rgba(125, 69, 168, 0.25), transparent);
+        }
+        .play-shell {
+            background:
+                linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.58) 36%, rgba(0, 0, 0, 0.82) 100%),
+                url("assets/mercado-play-bg.png");
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 28px 60px rgba(15, 23, 42, 0.24);
+        }
+        .related-track {
+            scroll-behavior: smooth;
+        }
+        .related-card {
+            border: 1px solid #e5e7eb;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+        }
+        @keyframes detailPageReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes detailImageSwap {
+            from {
+                opacity: 0.35;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes productClickPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.975); }
+            100% { transform: scale(1); }
+        }
+        .detail-shell {
+            background: #f5f5f5;
+        }
+        .detail-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+        .detail-animating .detail-card,
+        .detail-animating #det-breadcrumb {
+            animation: detailPageReveal 0.34s ease-out;
+        }
+        #det-main-image.is-swapping {
+            animation: detailImageSwap 0.28s ease-out;
+        }
+        .product-opening {
+            animation: productClickPulse 0.26s ease-out;
+        }
+        .detail-thumb {
+            border: 1px solid #dbeafe;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .detail-thumb.active,
+        .detail-thumb:hover {
+            border-color: #3483fa;
+            transform: translateY(-1px);
+        }
+        .detail-star {
+            color: #3483fa;
+        }
+        .detail-badge-green {
+            background: #00a650;
+            color: white;
+        }
+        .detail-store-card {
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+        .checkout-flow-shell {
+            background: #ededed;
+        }
+        @keyframes checkoutFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .checkout-flow-header {
+            background: #ffe600;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .checkout-surface {
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+        .checkout-surface:hover {
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+        }
+        .checkout-label {
+            display: block;
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .checkout-field {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            padding: 12px 14px;
+            font-size: 15px;
+            color: #111827;
+        }
+        .checkout-field:focus {
+            outline: none;
+            border-color: #3483fa;
+            box-shadow: 0 0 0 4px rgba(52, 131, 250, 0.12);
+        }
+        .checkout-option {
+            border: 1px solid #e5e7eb;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .checkout-option.selected {
+            border-color: #3483fa;
+            box-shadow: 0 0 0 3px rgba(52, 131, 250, 0.12);
+        }
+        #checkout-modal [id^="check-step-"]:not(.hidden) {
+            animation: checkoutFadeUp 0.32s ease-out;
+        }
+        .checkout-loading {
+            position: relative;
+            overflow: hidden;
+        }
+        .checkout-loading::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.1s linear infinite;
+        }
+        .checkout-help {
+            font-size: 12px;
+            color: #6b7280;
+            min-height: 18px;
+            margin-top: 6px;
+        }
+        .checkout-map {
+            width: 100%;
+            height: 320px;
+            border: 0;
+            border-radius: 8px 8px 0 0;
+            background: #f3f4f6;
+        }
+        .pix-copy-box {
+            border: 1px solid #d1d5db;
+            background: #fff;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .floating-player {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .floating-player.is-hidden {
+            transform: translateY(140%);
+            opacity: 0;
+            pointer-events: none;
+        }
         .checkout-shell {
             background:
                 radial-gradient(circle at top right, rgba(52, 131, 250, 0.18), transparent 28%),
@@ -106,6 +450,13 @@
             overscroll-behavior: contain;
         }
         @media (max-width: 767px) {
+            .hero-frame {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+            .offer-grid-card {
+                border-right: 0;
+            }
             #checkout-modal {
                 align-items: flex-start;
                 overflow-y: auto;
@@ -121,56 +472,86 @@
 <body class="text-gray-900">
 
     <!-- HEADER -->
-    <header class="bg-[#fff159] w-full pt-2 pb-3 shadow-sm sticky top-0 z-[100]">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col gap-3">
-            <div class="flex items-center justify-between gap-8">
-                <div class="flex items-center gap-4 flex-1">
-                    <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onclick="showPage('home')">
-                        <img src="https://play-lh.googleusercontent.com/iVaeA0HDw8CZjEM-K7GdLB9XYmpcwVFSuv4Q8o9uh4Br7PuKCm3QSYCVU73tr9BBXdR_7xTX4yO0azOJegRVcA" alt="Logo Mercado Livre" class="w-12 h-12 object-contain rounded-full">
-                        <div class="flex flex-col leading-none font-bold text-2xl italic text-black">
-                            <span class="tracking-tighter">MERCADO</span>
-                            <span class="tracking-tighter -mt-1">LIVRE</span>
-                        </div>
-                    </div>
-                    <div class="flex-1 max-w-2xl relative group">
-                        <input type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full bg-white py-2 px-4 pr-10 rounded-sm shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                        <div class="absolute right-0 top-0 h-full w-10 flex items-center justify-center border-l border-gray-200 group-focus-within:border-blue-500">
-                            <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
-                        </div>
+    <header class="bg-[#ffe600] w-full pt-1 pb-1.5 shadow-sm sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col gap-2">
+            <div class="flex items-center gap-3 md:gap-6">
+                <div class="flex items-center min-w-fit cursor-pointer" onclick="showPage('home')">
+                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-11 md:h-12 w-auto object-contain">
+                </div>
+
+                <div class="flex-1">
+                    <div class="ml-header-search bg-white h-11 rounded-[2px] flex items-center overflow-hidden">
+                        <input type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full h-full px-4 text-[16px] md:text-[18px] text-gray-500 bg-transparent outline-none">
+                        <div class="h-6 w-px bg-gray-200"></div>
+                        <button class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="hidden lg:block overflow-hidden rounded-lg shadow-sm w-[310px] h-[46px]">
-                    <img src="https://assets.propmark.com.br/uploads/2022/01/KV_MELI_RGB_MERCHAN_1920x1080px.jpg" alt="Banner Mercado Livre" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+
+                <div class="hidden lg:flex ml-header-pill items-center justify-center rounded-2xl px-3 py-1.5 h-[52px] min-w-[300px] overflow-hidden">
+                    <img src="https://http2.mlstatic.com/D_NQ_818238-MLA109888870887_032026-OO.webp" alt="Banner promocional Mercado Livre" class="h-full w-full object-cover rounded-xl">
                 </div>
             </div>
-            <div class="flex items-center justify-between text-xs text-gray-700">
-                <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-1 cursor-pointer group">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-gray-600 group-hover:text-black transition-colors"></i>
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-gray-500">Enviar para</span>
-                            <span class="font-medium group-hover:text-black transition-colors">Sao Paulo 01001</span>
+
+            <div class="flex items-center justify-between gap-4 text-[14px] md:text-[15px] text-[#333]">
+                <div class="flex items-center gap-6 min-w-0">
+                    <div class="hidden md:flex items-center gap-2 min-w-fit">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-[#333]"></i>
+                        <div class="leading-none">
+                            <p class="text-[12px] text-[#666]">Enviar para</p>
+                            <p class="text-[16px] text-[#333] font-normal">Catanduva 15804060</p>
                         </div>
                     </div>
-                    <nav class="hidden md:flex items-center gap-4 font-medium">
-                        <a href="#" class="hover:text-black transition-colors">Categorias</a>
-                        <a href="#" class="hover:text-black transition-colors text-blue-600">Ofertas do Dia</a>
-                        <a href="#" class="hover:text-black transition-colors">Historico</a>
-                        <a href="#" class="hover:text-black transition-colors">Vender</a>
+
+                    <nav class="hidden md:flex items-center gap-5 whitespace-nowrap relative">
+                        <div class="relative">
+                            <button id="categories-trigger" class="nav-link hover:text-black transition-colors flex items-center gap-1" onclick="toggleCategoriesMenu(event, this)">Categorias <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                            <div id="categories-dropdown" class="categories-menu hidden absolute top-[calc(100%+10px)] left-0 w-[180px] rounded-b-sm rounded-tr-sm overflow-hidden z-[130]">
+                                <button class="categories-item" onclick="navigateToSection('categories')">Veiculos</button>
+                                <button class="categories-item" onclick="navigateToSection('supermarket')">Supermercado</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Tecnologia <i data-lucide="chevron-right" class="w-4 h-4 opacity-70"></i></button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Casa e Moveis</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Eletrodomesticos</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Esportes e Fitness</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Ferramentas</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Construcao</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Industria e Comercio</button>
+                                <button class="categories-item" onclick="navigateToSection('sell')">Para seu Negocio</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Pet Shop</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Saude</button>
+                                <button class="categories-item is-highlight" onclick="navigateToSection('categories')">Acessorios para Veiculos</button>
+                                <button class="categories-item" onclick="navigateToSection('fashion')">Beleza e Cuidado Pessoal</button>
+                                <button class="categories-item" onclick="navigateToSection('fashion')">Moda</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Bebes</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Brinquedos</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Imoveis</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Internacional</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Produtos Sustentaveis</button>
+                                <button class="categories-item" onclick="navigateToSection('offers')">Mais vendidos</button>
+                                <button class="categories-item" onclick="navigateToSection('sell')">Lojas oficiais</button>
+                                <button class="categories-item" onclick="navigateToSection('categories')">Ver mais categorias</button>
+                            </div>
+                        </div>
+                        <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('offers', this)">Ofertas</button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('coupons', this)">Cupons</button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('supermarket', this)">Supermercado</button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('fashion', this)">Moda</button>
+                        <button class="nav-link hover:text-black transition-colors relative" onclick="navigateToSection('play', this)">Mercado Play <span class="absolute -top-3 right-0 text-[9px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRATIS</span></button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('sell', this)">Vender</button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('contact', this)">Contato</button>
                     </nav>
                 </div>
-                <div class="flex items-center gap-6">
-                    <div class="hidden sm:flex items-center gap-4 font-medium">
-                        <a href="#" class="hover:text-black transition-colors">Crie a sua conta</a>
-                        <a href="#" class="hover:text-black transition-colors">Entre</a>
-                        <a href="#" class="hover:text-black transition-colors">Compras</a>
+
+                <div class="flex items-center gap-5 md:gap-7 whitespace-nowrap">
+                    <div class="hidden md:flex items-center gap-5">
+                        <button class="nav-link hover:text-black transition-colors" onclick="openAuthPage('register', this)">Crie a sua conta</button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="openAuthPage('login', this)">Entre</button>
+                        <button class="nav-link hover:text-black transition-colors" onclick="showPage('purchases', this)">Compras</button>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <i data-lucide="bell" class="w-5 h-5 cursor-pointer hover:scale-110 transition-transform"></i>
-                        <div id="cart-btn" class="relative cursor-pointer hover:scale-110 transition-transform" onclick="toggleCart(true)">
-                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                            <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">0</span>
-                        </div>
+                    <div id="cart-btn" class="relative cursor-pointer hover:scale-110 transition-transform" onclick="toggleCart(true)">
+                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">0</span>
                     </div>
                 </div>
             </div>
@@ -180,99 +561,545 @@
     <!-- PAGINA HOME -->
     <div id="page-home" class="page-transition">
         <main class="pb-20">
-            <div class="w-full h-64 md:h-96 bg-gray-300 overflow-hidden relative">
-                <img src="./assets/banner-descontaco-neymar.png" class="w-full h-full object-cover" alt="Banner promocional Mercado Livre">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            <div class="hero-stage py-2 md:py-3">
+                <div class="hero-frame">
+                    <div id="hero-carousel" class="relative h-[220px] md:h-[420px] overflow-hidden">
+                        <div id="hero-carousel-track" class="hero-carousel-track flex h-full">
+                            <div class="min-w-full h-full">
+                                <img src="./assets/banner-home-1.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 1">
+                            </div>
+                            <div class="min-w-full h-full">
+                                <img src="./assets/banner-home-2.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 2">
+                            </div>
+                            <div class="min-w-full h-full">
+                                <img src="./assets/banner-home-3.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 3">
+                            </div>
+                            <div class="min-w-full h-full">
+                                <img src="./assets/banner-home-4.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 4">
+                            </div>
+                        </div>
+
+                        <button onclick="moveHeroSlide(-1)" class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
+                            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                        </button>
+                        <button onclick="moveHeroSlide(1)" class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
+                            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                        </button>
+
+                        <div id="hero-carousel-dots" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                            <button class="hero-dot active" onclick="setHeroSlide(0)" aria-label="Banner 1"></button>
+                            <button class="hero-dot" onclick="setHeroSlide(1)" aria-label="Banner 2"></button>
+                            <button class="hero-dot" onclick="setHeroSlide(2)" aria-label="Banner 3"></button>
+                            <button class="hero-dot" onclick="setHeroSlide(3)" aria-label="Banner 4"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-4 -mt-12 relative z-10">
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
-                        <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="truck" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Frete fixo R$ 49,90</span>
+            <div class="max-w-7xl mx-auto px-4 -mt-6 md:-mt-10 relative z-10">
+                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+                    <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+                        <h3 class="text-[16px] font-semibold text-[#333]">Frete gratis</h3>
+                        <div class="flex items-center justify-center h-24">
+                            <i data-lucide="package-open" class="w-16 h-16 text-[#333]"></i>
+                        </div>
+                        <p class="text-[14px] text-[#666] leading-5">Beneficio por ser sua primeira compra.</p>
+                        <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="navigateToSection('offers')">Mostrar produtos</button>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
-                        <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="credit-card" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Pagamento</span>
+                    <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+                        <h3 class="text-[16px] font-semibold text-[#333]">Entre na sua conta</h3>
+                        <div class="flex items-center justify-center h-24">
+                            <i data-lucide="id-card" class="w-16 h-16 text-[#333]"></i>
+                        </div>
+                        <p class="text-[14px] text-[#666] leading-5">Aproveite ofertas para comprar tudo que quiser.</p>
+                        <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="openAuthPage('login')">Entrar na sua conta</button>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
-                        <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="tag" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Ofertas</span>
+                    <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+                        <h3 class="text-[16px] font-semibold text-[#333]">Meios de pagamento</h3>
+                        <div class="flex items-center justify-center h-24">
+                            <i data-lucide="wallet" class="w-16 h-16 text-[#333]"></i>
+                        </div>
+                        <p class="text-[14px] text-[#666] leading-5">Pague suas compras com rapidez e seguranca.</p>
+                        <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="navigateToSection('coupons')">Mostrar meios</button>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
-                        <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="star" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Mais vendidos</span>
+                    <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+                        <h3 class="text-[16px] font-semibold text-[#333]">Menos de R$100</h3>
+                        <div class="flex items-center justify-center h-24">
+                            <i data-lucide="banknote" class="w-16 h-16 text-[#333]"></i>
+                        </div>
+                        <p class="text-[14px] text-[#666] leading-5">Confira produtos com precos baixos.</p>
+                        <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="navigateToSection('offers')">Mostrar produtos</button>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
-                        <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="zap" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Mercado Play</span>
+                    <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+                        <h3 class="text-[16px] font-semibold text-[#333]">Mais vendidos</h3>
+                        <div class="flex items-center justify-center h-24">
+                            <i data-lucide="shopping-bag" class="w-16 h-16 text-[#333]"></i>
+                        </div>
+                        <p class="text-[14px] text-[#666] leading-5">Explore os produtos que sao tendencia.</p>
+                        <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="navigateToSection('categories')">Ir para Mais vendidos</button>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm text-center flex flex-col items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-300 group">
-                        <div class="p-3 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors"><i data-lucide="user-circle" class="text-blue-500 w-7 h-7"></i></div>
-                        <span class="text-xs font-bold text-gray-700">Sua conta</span>
+                    <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+                        <h3 class="text-[16px] font-semibold text-[#333]">Compra garantida</h3>
+                        <div class="flex items-center justify-center h-24">
+                            <i data-lucide="shield-check" class="w-16 h-16 text-[#333]"></i>
+                        </div>
+                        <p class="text-[14px] text-[#666] leading-5">Voce pode devolver sua compra gratis.</p>
+                        <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="navigateToSection('contact')">Como funciona</button>
                     </div>
                 </div>
             </div>
 
             <div class="max-w-7xl mx-auto px-4 mt-16">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-2xl font-light text-gray-600">Inspirado no seu ultimo historico</h2>
-                    <a href="#" class="text-sm text-blue-600 font-medium hover:underline">Ver tudo</a>
+                <div class="offer-shell rounded-[2rem] p-4 md:p-6">
+                    <div class="grid lg:grid-cols-[320px_1fr] gap-5">
+                        <div id="featured-offer" class="offer-card rounded-[1.5rem] bg-white p-4 md:p-5"></div>
+                        <div class="offer-card rounded-[1.5rem] bg-white p-4 md:p-5">
+                            <div class="flex items-center justify-between mb-5">
+                                <div class="flex items-center gap-3">
+                                    <h2 class="text-xl font-bold text-gray-900">Ofertas</h2>
+                                    <button class="text-sm text-blue-600 font-semibold hover:underline" onclick="navigateToSection('offers')">Mostrar todas as ofertas</button>
+                                </div>
+                                <div class="hidden md:flex items-center gap-1 text-gray-300">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                </div>
+                            </div>
+                            <div id="products-list" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-0"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex gap-5 overflow-x-auto pb-8 scrollbar-hide" id="products-list"></div>
             </div>
+
+            <section id="section-categories" class="max-w-7xl mx-auto px-4 mt-8">
+                <div class="info-card rounded-[2rem] p-6 md:p-8">
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Categorias</p>
+                            <h2 class="text-3xl font-black text-gray-900">Explore por interesse</h2>
+                        </div>
+                        <button class="text-blue-600 font-semibold" onclick="openAuthPage('register')">Criar conta para salvar favoritos</button>
+                    </div>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="rounded-3xl bg-[#fef3c7] p-5"><p class="text-sm text-gray-500">Eletronicos</p><h3 class="text-xl font-bold mt-2">TVs, celulares e notebooks</h3></div>
+                        <div class="rounded-3xl bg-[#dbeafe] p-5"><p class="text-sm text-gray-500">Casa</p><h3 class="text-xl font-bold mt-2">Moveis e utilidades</h3></div>
+                        <div class="rounded-3xl bg-[#dcfce7] p-5"><p class="text-sm text-gray-500">Mercado</p><h3 class="text-xl font-bold mt-2">Compras rapidas do dia</h3></div>
+                        <div class="rounded-3xl bg-[#fae8ff] p-5"><p class="text-sm text-gray-500">Moda</p><h3 class="text-xl font-bold mt-2">Looks, calcados e acessorios</h3></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-offers" class="max-w-7xl mx-auto px-4 mt-8">
+                <div class="meli-plus-shell rounded-[2rem] overflow-hidden">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-5 md:px-8 py-4 border-b border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <img src="assets/pill-meliplus.png" alt="meli+" class="h-8 w-auto object-contain">
+                            <p class="text-lg md:text-xl font-black text-gray-900">Viva toda a experiencia Mercado Livre</p>
+                        </div>
+                        <button class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors" onclick="openAuthPage('register')">
+                            Assinar a partir de R$ 9,90
+                        </button>
+                    </div>
+
+                    <div class="grid md:grid-cols-4 gap-4 md:gap-0 px-5 md:px-8 py-6">
+                        <div class="text-center px-4 md:border-r md:border-[#ece3fb]">
+                            <img src="assets/meli-envios.png" alt="Frete gratis" class="h-28 mx-auto object-contain">
+                            <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Frete gratis rapido em produtos a partir de R$ 19</p>
+                        </div>
+                        <div class="text-center px-4 md:border-r md:border-[#ece3fb]">
+                            <img src="assets/meli-streaming.png" alt="Streaming" class="h-28 mx-auto object-contain">
+                            <p class="font-bold text-gray-900 mt-4 text-sm leading-5">As melhores plataformas de entretenimento</p>
+                        </div>
+                        <div class="text-center px-4 md:border-r md:border-[#ece3fb]">
+                            <img src="assets/meli-cashback.png" alt="Cashback" class="h-28 mx-auto object-contain">
+                            <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Ate 5% de cashback nas suas compras e pagamentos</p>
+                        </div>
+                        <div class="text-center px-4">
+                            <img src="assets/meli-rendimento.png" alt="Rendimento" class="h-28 mx-auto object-contain">
+                            <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Rendimento de 120% do CDI em Cofrinhos</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-coupons" class="max-w-7xl mx-auto px-4 mt-8">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="info-card rounded-[2rem] p-6 md:p-8">
+                        <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Cupons</p>
+                        <h2 class="text-2xl font-black mt-3 text-gray-900">Ative cupons e beneficios ao entrar na conta</h2>
+                        <p class="mt-3 text-gray-600">Os atalhos de cadastro e login continuam prontos e agora encaixam melhor com a vitrine da home.</p>
+                    </div>
+                    <div id="section-supermarket" class="info-card rounded-[2rem] p-6 md:p-8">
+                        <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Supermercado</p>
+                        <h2 class="text-2xl font-black mt-3 text-gray-900">Prateleiras, recorrencia e produtos do dia</h2>
+                        <p class="mt-3 text-gray-600">Ficou pronto para depois separar vitrines por categoria, campanha e feed de ofertas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-fashion" class="max-w-7xl mx-auto px-4 mt-8">
+                <div class="info-card rounded-[2rem] p-6 md:p-8">
+                    <div class="grid lg:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Moda</p>
+                            <h2 class="text-3xl font-black mt-3">Vitrine separada para colecoes, marcas e recomendacoes</h2>
+                            <p class="mt-3 text-gray-600">Os links do topo agora levam para secoes reais da home, sem deixar nada solto.</p>
+                        </div>
+                        <div class="rounded-[2rem] bg-[#fff7d6] p-8 border border-[#f5e39a]">
+                            <p class="text-sm text-gray-500">Pronto para evoluir</p>
+                            <p class="text-4xl font-black text-gray-900 mt-2">Landing blocks reutilizaveis</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-play" class="max-w-7xl mx-auto px-4 mt-8">
+                <div class="play-shell rounded-[2rem] overflow-hidden relative">
+                    <div class="relative grid lg:grid-cols-[0.95fr_1.05fr] gap-6 p-6 md:p-8 items-center">
+                        <div class="max-w-md">
+                            <img src="assets/mercado-livre-play-cover.png" alt="Mercado Play" class="h-10 w-auto object-contain mb-6">
+                            <h2 class="text-3xl md:text-4xl font-black text-white leading-tight">Assuma o controle. Assista o que quiser.</h2>
+                            <span class="inline-flex mt-4 bg-[#00a650] text-white text-xs font-black px-3 py-1 rounded-full">GRATIS</span>
+                            <p class="text-white/75 mt-4">O video agora roda direto no quadro da direita, dentro da area do Mercado Play que voce marcou.</p>
+                            <div class="flex flex-wrap gap-3 mt-6">
+                                <button class="bg-white text-gray-900 px-5 py-3 rounded-xl font-bold" onclick="playEmbeddedVideo()">Assistir agora</button>
+                                <a href="https://youtu.be/CI12S_1PNqc?si=P1dmP1Qfxkd3ud5k" target="_blank" rel="noreferrer" class="bg-white/10 text-white px-5 py-3 rounded-xl font-bold border border-white/15">Abrir no YouTube</a>
+                            </div>
+                        </div>
+                        <div class="relative rounded-[1.5rem] overflow-hidden border border-white/10 shadow-2xl bg-black aspect-[16/9]">
+                            <iframe
+                                id="mercado-play-embed"
+                                class="w-full h-full"
+                                src="https://www.youtube.com/embed/CI12S_1PNqc?autoplay=1&mute=1&loop=1&playlist=CI12S_1PNqc&controls=1&playsinline=1&rel=0"
+                                title="Mercado Play video"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-sell" class="max-w-7xl mx-auto px-4 mt-8">
+                <div class="info-card rounded-[2rem] p-6 md:p-8">
+                    <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Vender</p>
+                    <h2 class="text-3xl font-black mt-3">Painel inicial para futuros vendedores</h2>
+                    <p class="mt-3 text-gray-600">Ja deixei uma base de usuarios pronta para depois separar comprador, vendedor e admin com banco de dados.</p>
+                </div>
+            </section>
+
+            <section id="section-contact" class="max-w-7xl mx-auto px-4 mt-8 pb-10">
+                <div class="info-card rounded-[2rem] p-6 md:p-8">
+                    <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Contato</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-4">
+                        <div>
+                            <h2 class="text-3xl font-black text-gray-900">Central de atendimento e onboarding</h2>
+                            <p class="mt-3 text-gray-600">Use essa secao para FAQ, suporte, termos e canais de atendimento.</p>
+                        </div>
+                        <div class="rounded-[1.5rem] bg-gray-50 p-5 border border-gray-200">
+                            <p class="text-sm text-gray-500">Canal principal</p>
+                            <p class="text-xl font-bold mt-2">contato@seudominio.com</p>
+                            <p class="text-sm text-gray-500 mt-4">Horario sugerido: segunda a sexta, das 9h as 18h.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
-    <!-- PAGINA DETALHES -->
-    <div id="page-details" class="fixed inset-0 z-[150] hidden bg-white overflow-y-auto page-transition">
-        <div class="max-w-7xl mx-auto min-h-screen flex flex-col">
-            <div class="p-4 border-b flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur-md z-10">
-                <button onclick="showPage('home')" class="flex items-center gap-2 text-blue-600 font-bold hover:translate-x-[-5px] transition-transform">
-                    <i data-lucide="chevron-left"></i> VOLTAR A LISTA
-                </button>
-                <div class="flex gap-5">
-                    <i data-lucide="heart" class="w-6 h-6 text-blue-600 cursor-pointer hover:fill-blue-600 transition-all"></i>
-                    <i data-lucide="share-2" class="w-6 h-6 text-blue-600 cursor-pointer"></i>
-                </div>
-            </div>
+    <!-- PAGINA AUTENTICACAO -->
+    <div id="page-auth" class="hidden min-h-screen account-hero page-transition">
+        <div class="max-w-6xl mx-auto px-4 py-6 md:py-8">
+            <button onclick="showPage('home')" class="inline-flex items-center gap-2 text-sm font-semibold text-[#2d3277] hover:translate-x-[-4px] transition-transform">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i> Voltar para a home
+            </button>
 
-            <div class="flex-1 p-4 md:p-10 grid grid-cols-1 lg:grid-cols-3 gap-12 fade-in">
-                <div class="lg:col-span-2 flex flex-col md:flex-row gap-6">
-                    <div class="flex md:flex-col gap-3 order-2 md:order-1">
-                        <div class="w-16 h-16 border-2 border-blue-600 rounded-lg p-1 cursor-pointer"><img id="det-img-1" class="w-full h-full object-contain"></div>
-                    </div>
-                    <div class="flex-1 order-1 md:order-2 bg-white rounded-2xl flex items-center justify-center p-4 border border-gray-100">
-                        <img id="det-main-image" class="max-h-[550px] object-contain hover:scale-105 transition-transform duration-500">
-                    </div>
+            <div class="mt-6 md:mt-10 grid lg:grid-cols-[220px_1fr] gap-8 items-start">
+                <div class="hidden lg:flex items-start">
+                    <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="w-[150px] object-contain">
                 </div>
 
-                <div class="flex flex-col gap-5 h-fit sticky top-28">
-                    <div class="border border-gray-200 rounded-2xl p-8 bg-white shadow-sm">
-                        <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Novo | +50 mil vendidos</span>
-                        <h1 id="det-title" class="text-2xl font-bold mt-2 leading-tight text-gray-800"></h1>
-                        <div class="flex items-center gap-2 mt-3 text-blue-600">
-                            <span class="font-bold">4.9</span>
-                            <div class="flex"><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i></div>
-                        </div>
-                        <div class="mt-6">
-                            <span id="det-old-price" class="text-sm text-gray-400"></span>
-                            <div class="flex items-baseline gap-3">
-                                <span id="det-price" class="text-4xl font-light"></span>
-                                <span class="text-green-500 font-bold text-sm">45% OFF</span>
+                <div class="flex flex-col items-center">
+                    <div class="text-center max-w-xl mb-6 md:mb-8">
+                        <h1 id="auth-title" class="text-3xl md:text-5xl font-black text-gray-900 leading-tight">Crie sua conta e compre com frete gratis</h1>
+                        <p id="auth-subtitle" class="text-gray-700 mt-4 text-base md:text-lg">Uma experiencia inspirada na referencia que voce enviou, pronta para crescer com backend depois.</p>
+                    </div>
+
+                    <div class="account-card bg-white rounded-[1.75rem] w-full max-w-[420px] p-5 md:p-6">
+                        <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
+                            <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="w-12 h-12 object-contain rounded-full bg-[#fff8bf] p-1.5">
+                            <div>
+                                <p class="text-sm text-gray-500">Acesso seguro</p>
+                                <p class="font-bold text-gray-900">Conta Mercado Livre</p>
                             </div>
-                            <p class="text-sm text-gray-600 mt-1">em 10x R$ <span id="det-parcel"></span> sem juros</p>
                         </div>
-                        <div class="flex flex-col gap-3 mt-8">
-                            <button onclick="buyNow()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-100">Comprar agora</button>
-                            <button id="det-add-cart" class="w-full bg-blue-50 text-blue-600 py-4 rounded-xl font-bold hover:bg-blue-100 active:scale-95 transition-all">Adicionar ao carrinho</button>
+
+                        <div class="mt-4">
+                            <div id="google-login-slot" class="google-shell"></div>
+                            <button id="google-fallback-btn" type="button" onclick="handleGoogleFallback()" class="hidden mt-3 w-full rounded-xl border border-gray-300 py-3 font-semibold text-gray-800 hover:bg-gray-50">
+                                Continuar com Google
+                            </button>
+                            <p id="google-login-help" class="text-xs text-gray-400 mt-2 text-center"></p>
+                        </div>
+
+                        <div class="flex items-center gap-3 my-5">
+                            <div class="h-px flex-1 bg-gray-200"></div>
+                            <span class="text-sm text-gray-400">Ou digite seu e-mail</span>
+                            <div class="h-px flex-1 bg-gray-200"></div>
+                        </div>
+
+                        <form id="auth-form" class="space-y-4">
+                            <div id="auth-name-wrap">
+                                <label class="text-sm text-gray-600 block mb-1.5">Nome</label>
+                                <input id="auth-name" type="text" class="account-input w-full rounded-xl px-4 py-3" placeholder="Seu nome completo">
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600 block mb-1.5">E-mail</label>
+                                <input id="auth-email" type="email" class="account-input w-full rounded-xl px-4 py-3" placeholder="exemplo@email.com">
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600 block mb-1.5">Senha</label>
+                                <input id="auth-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Digite sua senha">
+                            </div>
+                            <div id="auth-confirm-wrap">
+                                <label class="text-sm text-gray-600 block mb-1.5">Confirmar senha</label>
+                                <input id="auth-confirm-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Confirme sua senha">
+                            </div>
+                            <div id="auth-code-wrap" class="hidden">
+                                <label class="text-sm text-gray-600 block mb-1.5">Codigo de verificacao</label>
+                                <input id="auth-code" type="text" inputmode="numeric" maxlength="6" class="account-input w-full rounded-xl px-4 py-3 tracking-[0.35em]" placeholder="000000">
+                                <p class="text-xs text-gray-400 mt-2">Enviaremos um codigo de 6 digitos para o seu e-mail.</p>
+                            </div>
+
+                            <button id="auth-submit-btn" type="submit" class="w-full bg-[#3483fa] text-white rounded-xl py-3.5 font-bold hover:bg-[#2968c8] transition-colors">
+                                Criar conta
+                            </button>
+                        </form>
+
+                        <p id="auth-feedback" class="text-sm min-h-[20px] mt-4 text-center"></p>
+
+                        <div class="mt-5 text-center text-sm text-gray-500">
+                            <p>Voce precisa de uma conta para sua empresa?</p>
+                            <button id="auth-corporate-link" class="text-[#3483fa] font-semibold mt-1 hover:underline" onclick="navigateToSection('sell')">Crie uma conta corporativa</button>
+                        </div>
+
+                        <div class="mt-5 text-center text-sm text-gray-500">
+                            <span id="auth-switch-label">Ja tem uma conta?</span>
+                            <button id="auth-switch-btn" type="button" class="text-[#3483fa] font-semibold hover:underline" onclick="toggleAuthMode()">Entre</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="max-w-4xl p-10 border-t border-gray-100 bg-white mx-auto w-full">
-                <h2 class="text-2xl font-bold mb-8 text-gray-800">Descricao do Produto</h2>
-                <p id="det-description" class="text-gray-600 leading-relaxed text-lg whitespace-pre-line"></p>
+        </div>
+    </div>
+
+    <!-- PAGINA COMPRAS -->
+    <div id="page-purchases" class="hidden min-h-screen bg-[#f5f5f5] page-transition">
+        <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Minha conta</p>
+                    <h1 class="text-3xl md:text-4xl font-black text-gray-900 mt-2">Compras e dados do usuario</h1>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-5 py-3 rounded-xl bg-white border border-gray-200 font-semibold text-gray-700" onclick="showPage('home')">Voltar para home</button>
+                    <button class="px-5 py-3 rounded-xl bg-[#3483fa] text-white font-semibold" onclick="openAuthPage(window.appState && window.appState.session ? 'login' : 'register')">Gerenciar acesso</button>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
+                <div class="info-card rounded-[2rem] p-6 md:p-8">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-sm text-gray-500">Sessao atual</p>
+                            <h2 id="account-user-name" class="text-2xl font-black text-gray-900 mt-2">Nenhum usuario logado</h2>
+                        </div>
+                        <button id="logout-btn" class="hidden px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-semibold" onclick="logout()">Sair</button>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4 mt-6">
+                        <div class="rounded-2xl bg-gray-50 border border-gray-200 p-5">
+                            <p class="text-sm text-gray-500">E-mail</p>
+                            <p id="account-user-email" class="font-bold text-gray-900 mt-2">Faça login para visualizar</p>
+                        </div>
+                        <div class="rounded-2xl bg-gray-50 border border-gray-200 p-5">
+                            <p class="text-sm text-gray-500">Provedor</p>
+                            <p id="account-user-provider" class="font-bold text-gray-900 mt-2">Nao definido</p>
+                        </div>
+                    </div>
+                    <div class="rounded-[1.5rem] bg-[#fff8d9] border border-[#f4e38e] p-5 mt-6">
+                        <p class="text-sm text-gray-600">Base pronta para integrar</p>
+                        <p class="font-bold text-gray-900 mt-2">Backend com rotas de cadastro, login e Google pode ser conectado a banco depois sem refazer a tela.</p>
+                    </div>
+                </div>
+
+                <div class="info-card rounded-[2rem] p-6 md:p-8">
+                    <p class="text-sm text-gray-500">Historico</p>
+                    <h2 class="text-2xl font-black text-gray-900 mt-2">Ultimas compras</h2>
+                    <div id="purchase-history" class="mt-6 space-y-3">
+                        <div class="rounded-2xl border border-dashed border-gray-300 p-5 text-gray-500">
+                            Nenhuma compra registrada ainda. Quando voce integrar banco de dados, esse painel ja pode receber pedidos reais.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGINA DETALHES -->
+    <div id="page-details" class="fixed left-0 right-0 bottom-0 top-[88px] md:top-[92px] z-[90] hidden detail-shell overflow-y-auto page-transition">
+        <div class="max-w-6xl mx-auto min-h-screen px-4 md:px-6 py-4 md:py-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 text-sm mb-4">
+                <div class="flex flex-wrap items-center gap-3 text-blue-600">
+                    <button onclick="showPage('home')" class="font-semibold hover:underline">Voltar a lista</button>
+                    <span class="text-gray-300">|</span>
+                    <p id="det-breadcrumb" class="text-gray-500">Eletronicos, Audio e Video &gt; Televisores</p>
+                </div>
+                <div class="flex items-center gap-4 text-blue-600">
+                    <button class="text-sm font-medium hover:underline">Vender um igual</button>
+                    <button class="text-sm font-medium hover:underline">Compartilhar</button>
+                </div>
+            </div>
+
+            <div class="detail-card rounded-lg overflow-hidden">
+                <div class="grid lg:grid-cols-[1.15fr_0.95fr_360px] gap-0">
+                    <div class="p-4 md:p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
+                        <div class="flex gap-4">
+                            <div id="det-thumbs" class="hidden md:flex flex-col gap-3"></div>
+                            <div class="flex-1 min-h-[480px] flex items-center justify-center">
+                                <img id="det-main-image" class="max-h-[520px] object-contain hover:scale-105 transition-transform duration-500" alt="Produto">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
+                        <p class="text-xs text-blue-600 font-semibold mb-3" id="det-brand-link">Conferir mais produtos da marca</p>
+                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                            <span id="det-condition">Novo</span>
+                            <span>|</span>
+                            <span id="det-sold">+10 mil vendidos</span>
+                        </div>
+                        <div class="flex items-start justify-between gap-3">
+                            <h1 id="det-title" class="text-[29px] font-normal leading-9 text-gray-800"></h1>
+                            <button class="text-blue-600 hover:text-blue-700 transition-colors">
+                                <i data-lucide="heart" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 mt-4">
+                            <span id="det-rating-score" class="text-sm font-medium text-gray-700">4.9</span>
+                            <div id="det-stars" class="flex items-center gap-0.5 detail-star"></div>
+                            <span id="det-reviews" class="text-sm text-gray-400">(4452)</span>
+                        </div>
+                        <div class="mt-5">
+                            <span id="det-old-price" class="text-sm text-gray-400"></span>
+                            <div class="flex items-end gap-3 flex-wrap mt-1">
+                                <span id="det-price" class="text-[44px] leading-none font-light text-gray-800"></span>
+                                <span id="det-off-badge" class="text-green-500 font-medium text-base">17% OFF</span>
+                                <span class="text-green-500 text-sm font-medium">com PIX ou saldo no Mercado Pago</span>
+                            </div>
+                            <p class="text-lg text-gray-700 mt-2">ou R$ <span id="det-cash-price"></span> em <span class="text-green-600 font-medium">10x R$ <span id="det-parcel"></span> sem juros</span></p>
+                            <button class="text-sm text-blue-600 mt-2 hover:underline">Ver meios de pagamento e promocoes</button>
+                        </div>
+
+                        <div class="mt-8">
+                            <h3 class="text-base font-semibold text-gray-800 mb-4">O que voce precisa saber sobre este produto</h3>
+                            <ul id="det-highlights" class="space-y-2 text-sm text-gray-700 list-disc pl-5"></ul>
+                            <button class="text-sm text-blue-600 mt-4 hover:underline">Ver caracteristicas</button>
+                        </div>
+
+                        <div class="mt-8">
+                            <p class="text-sm text-gray-500">Opcoes de compra:</p>
+                            <button id="det-option-count" class="text-sm text-blue-600 font-medium hover:underline mt-1">20 produtos novos a partir de R$ 2.299</button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 flex flex-col gap-5">
+                        <div class="detail-store-card rounded-lg p-4">
+                            <div class="inline-flex detail-badge-green text-[11px] font-bold px-2 py-1 rounded mb-3" id="det-shipping-badge">FRETE GRATIS ACIMA DE R$ 19</div>
+                            <p id="det-shipping-line" class="text-[22px] leading-7 text-green-600 font-medium">Chegara gratis quinta-feira 30 de abril</p>
+                            <p id="det-shipping-sub" class="text-sm text-gray-500 mt-1">por ser sua primeira compra</p>
+                            <button class="text-sm text-blue-600 mt-2 hover:underline">Mais detalhes e formas de entrega</button>
+
+                            <div class="mt-6">
+                                <p class="text-lg text-gray-800 font-medium">Estoque disponivel</p>
+                                <p class="text-xs text-gray-400 mt-1">Armazenado e enviado pelo <span class="text-green-600 font-bold">FULL</span></p>
+                                <p class="text-sm text-gray-700 mt-3">Quantidade: <span id="det-qty" class="font-semibold">1 unidade</span> <span id="det-stock" class="text-gray-400">(+50 disponiveis)</span></p>
+                            </div>
+
+                            <div class="flex flex-col gap-3 mt-6">
+                                <button onclick="buyNow()" class="w-full bg-blue-600 text-white py-4 rounded-md font-bold hover:bg-blue-700 active:scale-95 transition-all">Comprar agora</button>
+                                <button id="det-add-cart" class="w-full bg-blue-50 text-blue-600 py-4 rounded-md font-bold hover:bg-blue-100 active:scale-95 transition-all">Adicionar ao carrinho</button>
+                            </div>
+
+                            <div class="mt-6 pt-5 border-t border-gray-100 space-y-4 text-sm text-gray-600">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="rotate-ccw" class="w-4 h-4 text-gray-400 mt-0.5"></i>
+                                    <p><span class="text-blue-600 font-medium">Devolucao gratis</span> Voce tem 30 dias a partir da data de recebimento.</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-gray-400 mt-0.5"></i>
+                                    <p><span class="text-blue-600 font-medium">Compra Garantida.</span> Receba o produto que esta esperando ou devolvemos o dinheiro.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-store-card rounded-lg p-4">
+                            <div class="rounded-lg bg-[#fff8d9] border border-[#f4e38e] h-28 flex items-center justify-center">
+                                <img src="assets/mercado-livre-logo.png" alt="Loja oficial" class="h-16 object-contain">
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[22px] leading-7 font-medium text-gray-800" id="det-seller-name">Mercado Livre</p>
+                                        <p class="text-sm text-gray-500">Loja oficial do Mercado Livre</p>
+                                    </div>
+                                    <button class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1 rounded-md">Seguir</button>
+                                </div>
+                                <p class="text-sm text-green-600 font-semibold mt-4">MercadoLider Platinum</p>
+                                <p class="text-xs text-gray-500">E um dos melhores do site!</p>
+                                <div class="grid grid-cols-3 gap-3 mt-5 text-center">
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-800" id="det-seller-sales">+1 M</p>
+                                        <p class="text-xs text-gray-500">Vendas</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-800">Bom</p>
+                                        <p class="text-xs text-gray-500">atendimento</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-800">No prazo</p>
+                                        <p class="text-xs text-gray-500">Entrega</p>
+                                    </div>
+                                </div>
+                                <button class="w-full mt-5 bg-blue-50 text-blue-600 py-3 rounded-md font-semibold hover:bg-blue-100 transition-colors">Ir para a loja oficial</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-6xl p-6 md:p-10 border-t border-gray-100 bg-white mx-auto w-full">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-800">Descricao do Produto</h2>
+                    <p id="det-description" class="text-gray-600 leading-relaxed text-lg whitespace-pre-line"></p>
+
+                    <div class="mt-14 border-t border-gray-100 pt-8">
+                        <div class="flex items-center justify-between gap-4 mb-6">
+                            <div class="flex items-center gap-3">
+                                <h2 class="text-[32px] font-light text-gray-800">Produtos relacionados</h2>
+                                <span class="text-xs text-gray-400 uppercase tracking-[0.2em]">Ad</span>
+                            </div>
+                            <div class="hidden md:flex items-center gap-3">
+                                <button onclick="scrollRelatedProducts(-1)" class="w-11 h-11 rounded-full border border-gray-200 text-blue-600 hover:bg-blue-50 transition-colors">
+                                    <i data-lucide="chevron-left" class="w-5 h-5 mx-auto"></i>
+                                </button>
+                                <button onclick="scrollRelatedProducts(1)" class="w-11 h-11 rounded-full border border-gray-200 text-blue-600 hover:bg-blue-50 transition-colors">
+                                    <i data-lucide="chevron-right" class="w-5 h-5 mx-auto"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="related-products-list" class="related-track flex gap-4 overflow-x-auto pb-4 scrollbar-hide"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -294,496 +1121,266 @@
     </div>
 
     <!-- MODAL CHECKOUT -->
-    <div id="checkout-modal" class="fixed inset-0 z-[300] hidden flex items-start md:items-center justify-center p-2 md:p-4 overflow-y-auto">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-md" onclick="closeCheckout()"></div>
-        <div class="modal-container checkout-modal-scroll checkout-shell bg-white w-full max-w-4xl max-h-[calc(100dvh-1rem)] md:max-h-[calc(100dvh-2rem)] rounded-[2rem] shadow-2xl overflow-y-auto overflow-x-hidden relative z-[301]">
-            <div class="checkout-hero px-8 md:px-10 pt-8 pb-7 text-white">
-                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+    <div id="checkout-modal" class="fixed inset-0 z-[300] hidden overflow-y-auto checkout-flow-shell">
+        <div class="min-h-screen">
+            <div class="checkout-flow-header sticky top-0 z-10">
+                <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home'); closeCheckout();">
+                        <img src="assets/mercado-livre-logo.png" alt="Mercado Livre" class="h-9 w-auto object-contain">
+                    </div>
+                    <div class="flex items-center gap-5 text-sm text-gray-700">
+                        <span id="checkout-user-pill" class="hidden md:inline"></span>
+                        <button onclick="closeCheckout()">Contato</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-6xl mx-auto px-4 md:px-6 py-8">
+                <div class="grid lg:grid-cols-[1fr_280px] gap-6 items-start">
                     <div>
-                        <p class="text-[11px] uppercase tracking-[0.3em] text-white/65 font-bold mb-3">Checkout seguro</p>
-                        <h2 class="text-3xl md:text-4xl font-black leading-tight">Produtos gratis, pague so o frete</h2>
-                        <p class="text-white/75 mt-3 max-w-2xl">Compra protegida, dados validados e confirmacao rapida direto pelo Mercado Livre.</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <div id="step-pill-1" class="step-pill-active px-4 py-3 rounded-2xl flex items-center gap-3">
-                            <span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center text-sm font-bold">1</span>
-                            <div><p class="text-[10px] uppercase tracking-[0.2em] opacity-70">Dados</p><p class="font-bold text-sm">Cliente</p></div>
+                        <div id="check-step-address" class="hidden">
+                            <h2 class="text-[20px] font-semibold text-gray-900 mb-5">Adicione um endereco</h2>
+                            <div class="checkout-surface rounded-lg p-6 md:p-9 max-w-[700px]">
+                                <div class="grid md:grid-cols-[1fr_160px] gap-4">
+                                    <div>
+                                        <label class="checkout-label">CEP</label>
+                                        <input id="ship-cep" type="text" maxlength="9" oninput="formatCEP(this)" onblur="lookupCep()" placeholder="Ex.: 05410001" class="checkout-field">
+                                        <p id="checkout-cep-status" class="checkout-help"></p>
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button class="text-sm text-blue-600 font-medium mb-3">Nao sei meu CEP</button>
+                                    </div>
+                                </div>
+
+                                <div class="grid md:grid-cols-[1fr_220px] gap-4 mt-6">
+                                    <div>
+                                        <label class="checkout-label">Rua / Avenida</label>
+                                        <input id="ship-address" type="text" placeholder="Ex.: Avenida los Leones, 4563" class="checkout-field">
+                                    </div>
+                                    <div>
+                                        <label class="checkout-label">Numero</label>
+                                        <input id="ship-number" type="text" placeholder="Ex.: 1234" class="checkout-field">
+                                    </div>
+                                </div>
+
+                                <div class="mt-6">
+                                    <label class="checkout-label">Complemento (opcional)</label>
+                                    <input id="ship-complement" type="text" placeholder="Ex: 201" class="checkout-field max-w-[260px]">
+                                </div>
+
+                                <div class="mt-8">
+                                    <h3 class="text-[20px] font-semibold text-gray-900">Dados de contato</h3>
+                                    <p class="text-xs text-gray-400 mt-1">Se houver algum problema no envio, voce recebera uma ligacao neste numero.</p>
+                                </div>
+
+                                <div class="mt-6">
+                                    <label class="checkout-label">Nome completo</label>
+                                    <input id="cust-name" type="text" placeholder="Seu nome completo" class="checkout-field">
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-4 mt-6">
+                                    <div>
+                                        <label class="checkout-label">CPF</label>
+                                        <input id="cust-cpf" type="text" maxlength="14" oninput="formatCPF(this)" placeholder="000.000.000-00" class="checkout-field">
+                                    </div>
+                                    <div>
+                                        <label class="checkout-label">Telefone de contato</label>
+                                        <input id="cust-phone" type="text" oninput="formatPhone(this)" placeholder="(17) 99742-4883" class="checkout-field">
+                                    </div>
+                                </div>
+
+                                <div class="mt-8 flex justify-end">
+                                    <button id="checkout-address-btn" onclick="submitAddressStep()" class="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-blue-700 transition-all hover:translate-y-[-1px]">Salvar</button>
+                                </div>
+                            </div>
                         </div>
-                        <div id="step-pill-2" class="step-pill-idle px-4 py-3 rounded-2xl flex items-center gap-3">
-                            <span class="w-7 h-7 rounded-full bg-black/5 flex items-center justify-center text-sm font-bold">2</span>
-                            <div><p class="text-[10px] uppercase tracking-[0.2em] opacity-70">Pagamento</p><p class="font-bold text-sm">PIX</p></div>
+
+                        <div id="check-step-map" class="hidden">
+                            <h2 class="text-[20px] font-semibold text-gray-900 mb-5">Revise o endereco</h2>
+                            <div class="checkout-surface rounded-lg overflow-hidden max-w-[700px]">
+                                <iframe id="checkout-map-frame" class="checkout-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <div class="p-4 flex items-center justify-between gap-4 border-t border-gray-100">
+                                    <div class="flex items-start gap-3 text-gray-700">
+                                        <i data-lucide="map-pin" class="w-4 h-4 mt-0.5"></i>
+                                        <p id="checkout-map-address-text" class="text-sm"></p>
+                                    </div>
+                                    <button class="text-sm text-blue-600 font-medium">Editar</button>
+                                </div>
+                                <div class="px-4 pb-4 flex justify-end gap-2">
+                                    <button onclick="goToCheckStep('address')" class="bg-gray-100 text-blue-600 px-5 py-3 rounded-md font-semibold transition-all hover:translate-y-[-1px]">Ocultar</button>
+                                    <button id="checkout-map-btn" onclick="advanceCheckoutStep('checkout-map-btn', 'shipping-review', 'Salvando endereco...')" class="bg-blue-600 text-white px-5 py-3 rounded-md font-semibold transition-all hover:translate-y-[-1px]">Salvar endereco</button>
+                                </div>
+                            </div>
                         </div>
-                        <div id="step-pill-3" class="step-pill-idle px-4 py-3 rounded-2xl flex items-center gap-3">
-                            <span class="w-7 h-7 rounded-full bg-black/5 flex items-center justify-center text-sm font-bold">3</span>
-                            <div><p class="text-[10px] uppercase tracking-[0.2em] opacity-70">Status</p><p class="font-bold text-sm">Pedido</p></div>
+
+                        <div id="check-step-shipping-review" class="hidden">
+                            <h2 class="text-[20px] font-semibold text-gray-900 mb-5">Confira a forma de entrega</h2>
+                            <div class="checkout-surface rounded-lg p-0 max-w-[700px] overflow-hidden">
+                                <div class="p-5 flex items-start justify-between gap-4">
+                                    <div class="flex items-start gap-3">
+                                        <input type="radio" checked class="mt-1">
+                                        <div>
+                                            <p class="font-semibold text-gray-900">Enviar no meu endereco</p>
+                                            <p id="checkout-shipping-address" class="text-sm text-gray-700 mt-2"></p>
+                                            <p class="text-sm text-gray-400 mt-2">Residencial</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-green-600 font-semibold">Gratis</p>
+                                </div>
+                                <div class="border-t border-gray-100 px-5 py-4">
+                                    <button onclick="goToCheckStep('address')" class="text-sm text-blue-600 font-medium">Alterar ou escolher outro endereco</button>
+                                </div>
+                            </div>
+                            <div class="max-w-[700px] flex justify-end mt-5">
+                                <button id="checkout-shipping-btn" onclick="advanceCheckoutStep('checkout-shipping-btn', 'payment', 'Carregando entrega...')" class="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold transition-all hover:translate-y-[-1px]">Continuar</button>
+                            </div>
+                        </div>
+
+                        <div id="check-step-payment" class="hidden">
+                            <h2 class="text-[20px] font-semibold text-gray-900 mb-5">Escolha como pagar</h2>
+                            <div class="space-y-4 max-w-[700px]">
+                                <div class="checkout-surface rounded-lg p-4 flex items-center justify-between">
+                                    <p class="text-gray-700">Combinar 2 meios de pagamento</p>
+                                    <div class="w-10 h-6 rounded-full bg-gray-200"></div>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase mb-3">Recomendados</p>
+                                    <button id="pix-option-card" onclick="selectPaymentMethod('pix')" class="checkout-option selected checkout-surface rounded-lg p-4 w-full text-left flex items-center gap-4">
+                                        <div class="w-5 h-5 rounded-full border-2 border-[#3483fa] flex items-center justify-center">
+                                            <div class="w-2.5 h-2.5 rounded-full bg-[#3483fa]"></div>
+                                        </div>
+                                        <div class="w-9 h-9 rounded-full bg-[#e9fbf8] flex items-center justify-center overflow-hidden">
+                                            <img src="assets/pix-logo.jpg" alt="Pix" class="w-6 h-6 object-contain">
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-900">Pix</p>
+                                            <p class="text-sm text-gray-400">Aprovacao imediata</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="max-w-[700px] flex justify-end mt-5">
+                                <button id="checkout-payment-btn" onclick="advanceCheckoutStep('checkout-payment-btn', 'review', 'Preparando revisao...')" class="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold transition-all hover:translate-y-[-1px]">Continuar</button>
+                            </div>
+                        </div>
+
+                        <div id="check-step-review" class="hidden">
+                            <h2 class="text-[20px] font-semibold text-gray-900 mb-5">Revise e confirme</h2>
+                            <div class="space-y-4 max-w-[700px]">
+                                <div class="checkout-surface rounded-lg overflow-hidden">
+                                    <div class="p-4 border-b border-gray-100">
+                                        <p class="font-semibold text-gray-900">Faturamento</p>
+                                    </div>
+                                    <div class="p-4">
+                                        <p id="review-billing-name" class="font-semibold text-gray-900"></p>
+                                        <p id="review-billing-cpf" class="text-sm text-gray-500 mt-1"></p>
+                                    </div>
+                                </div>
+                                <div class="checkout-surface rounded-lg overflow-hidden">
+                                    <div class="p-4 border-b border-gray-100">
+                                        <p class="font-semibold text-gray-900">Detalhe da entrega</p>
+                                    </div>
+                                    <div class="p-4">
+                                        <p id="review-address-line" class="font-semibold text-gray-900"></p>
+                                        <p class="text-sm text-gray-500 mt-1">Envio no meu endereco</p>
+                                    </div>
+                                </div>
+                                <div class="checkout-surface rounded-lg overflow-hidden">
+                                    <div class="p-4 border-b border-gray-100">
+                                        <p class="font-semibold text-gray-900">Detalhe do pagamento</p>
+                                    </div>
+                                    <div class="p-4 flex items-start gap-4">
+                                        <div class="w-9 h-9 rounded-full bg-[#e9fbf8] flex items-center justify-center overflow-hidden">
+                                            <img src="assets/pix-logo.jpg" alt="Pix" class="w-6 h-6 object-contain">
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-gray-900">Pix</p>
+                                            <p id="review-payment-total" class="text-sm text-gray-500 mt-1"></p>
+                                            <p class="text-xs text-gray-400 mt-3">Ao confirmar a compra, voce tera as informacoes para pagar.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="max-w-[700px] flex justify-end mt-5">
+                                <button id="checkout-confirm-btn" onclick="startPixCheckout()" class="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold transition-all hover:translate-y-[-1px]">Confirmar a compra</button>
+                            </div>
+                        </div>
+
+                        <div id="check-step-pix" class="hidden">
+                            <div class="max-w-[450px] mx-auto">
+                                <div class="checkout-surface rounded-lg p-8 text-center relative">
+                                    <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full border-2 border-[#16a34a] bg-white flex items-center justify-center">
+                                        <i data-lucide="wallet-cards" class="w-7 h-7 text-[#16a34a]"></i>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-4">Falta pouco!</p>
+                                    <h2 class="text-[18px] md:text-[20px] font-semibold text-gray-900 mt-3">Pague <span id="pix-screen-total"></span> via Pix para concluir sua compra</h2>
+                                </div>
+
+                                <div class="checkout-surface rounded-lg p-6 mt-6">
+                                    <h3 class="text-[18px] font-semibold text-gray-900">Escaneie um codigo QR para pagar</h3>
+                                    <ol class="mt-4 space-y-3 text-sm text-gray-700">
+                                        <li>1. Acesse seu Internet Banking ou app de pagamentos.</li>
+                                        <li>2. Escolha pagar via Pix.</li>
+                                        <li>3. Escaneie o seguinte codigo:</li>
+                                    </ol>
+                                    <div class="mt-5 flex justify-center">
+                                        <img id="pix-qr-image" alt="QR Code PIX" class="hidden w-40 h-40 object-contain">
+                                        <div id="pix-qr-placeholder" class="w-40 h-40 bg-gray-50 rounded-lg flex items-center justify-center">
+                                            <i data-lucide="qr-code" class="w-24 h-24 text-gray-700"></i>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-700 mt-5">Pague e sera creditado na hora.</p>
+                                    <div class="mt-4 bg-[#f6f8fb] border-l-4 border-blue-500 rounded-r-md px-4 py-3 text-sm text-gray-600">
+                                        Confirmaremos a data de entrega quando o pagamento for aprovado.
+                                    </div>
+                                    <div class="mt-6 pt-5 border-t border-gray-100">
+                                        <h3 class="text-[18px] font-semibold text-gray-900">Ou copie este codigo para fazer o pagamento</h3>
+                                        <p class="text-sm text-gray-500 mt-3">Escolha pagar via Pix pelo seu Internet Banking ou app de pagamentos. Depois, cole o seguinte codigo:</p>
+                                        <div class="pix-copy-box mt-4">
+                                            <textarea readonly id="pix-code" class="w-full min-h-[84px] resize-none outline-none text-sm text-gray-500 bg-transparent"></textarea>
+                                        </div>
+                                        <div class="flex items-center gap-4 mt-4">
+                                            <button id="checkout-copy-btn" onclick="copyPix()" class="bg-blue-600 text-white px-5 py-3 rounded-md font-semibold transition-all hover:translate-y-[-1px]">Copiar codigo</button>
+                                            <button onclick="confirmPayment()" id="payment-validated-btn" class="text-blue-600 font-semibold">Ir para Minhas compras</button>
+                                        </div>
+                                        <span id="copy-feedback" class="text-[12px] text-green-600 font-bold hidden mt-3 inline-block">Copiado com sucesso!</span>
+                                        <p id="payment-status-message" class="text-sm text-gray-500 min-h-[20px] mt-3"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="check-step-success" class="hidden">
+                            <div class="checkout-surface rounded-lg p-10 max-w-[520px] text-center mx-auto">
+                                <div class="w-20 h-20 rounded-full bg-green-100 mx-auto flex items-center justify-center">
+                                    <i data-lucide="check-circle" class="w-10 h-10 text-green-600"></i>
+                                </div>
+                                <h2 class="text-3xl font-semibold text-gray-900 mt-6">Pedido confirmado!</h2>
+                                <p class="text-gray-500 mt-3">Seu pedido foi registrado e agora esta aguardando a confirmacao do pagamento.</p>
+                                <button onclick="closeCheckout()" class="mt-8 bg-blue-600 text-white px-8 py-3 rounded-md font-semibold">Voltar a loja</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Passo 1: Dados do Comprador -->
-            <div id="check-step-1" class="p-8 md:p-10">
-                <div class="grid md:grid-cols-3 gap-3 mb-8">
-                    <div class="checkout-chip rounded-2xl px-4 py-4">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Protecao</p>
-                        <p class="font-bold text-gray-900">Compra 100% segura</p>
-                    </div>
-                    <div class="checkout-chip rounded-2xl px-4 py-4">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Envio</p>
-                        <p class="font-bold text-gray-900">Despacho prioritario</p>
-                    </div>
-                    <div class="checkout-chip rounded-2xl px-4 py-4">
-                        <p class="text-[11px] uppercase tracking-[0.22em] text-gray-400 font-bold mb-1">Pagamento</p>
-                        <p class="font-bold text-gray-900">PIX com aprovacao rapida</p>
-                    </div>
-                </div>
-                <h2 class="text-2xl font-bold mb-8 flex items-center gap-3"><i data-lucide="user" class="text-blue-600"></i> Dados do Comprador</h2>
-                <div class="flex flex-col gap-5">
-                    <input type="text" id="cust-name" placeholder="Nome Completo" class="field-shell p-4 rounded-2xl outline-none transition-all text-base font-medium">
-                    <input type="text" id="cust-cpf" placeholder="CPF" class="field-shell p-4 rounded-2xl outline-none transition-all text-base font-medium" maxlength="14" oninput="formatCPF(this)">
-                    <input type="email" id="cust-email" placeholder="E-mail" class="field-shell p-4 rounded-2xl outline-none transition-all text-base font-medium">
-                    <div class="checkout-card rounded-[1.75rem] p-5 text-sm text-gray-600">
-                        <div class="flex items-center justify-between gap-4 mb-3">
-                            <p class="font-bold text-gray-900">Resumo do pedido</p>
-                            <p id="checkout-total-inline" class="text-lg font-black text-blue-600">R$ 0,00</p>
+                    <aside id="checkout-summary-sidebar" class="checkout-surface rounded-lg p-4 sticky top-24">
+                        <p class="font-semibold text-gray-800 mb-4">Resumo da compra</p>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-center justify-between"><span>Produto</span><span id="summary-product-total">R$ 0,00</span></div>
+                            <div class="flex items-center justify-between"><span>Frete</span><span id="summary-shipping-total" class="text-green-600">Gratis</span></div>
+                            <div id="summary-coupon-row" class="hidden flex items-center justify-between"><span>Cupons</span><span class="text-blue-600">(1 para aplicar)</span></div>
+                            <div class="border-t border-gray-100 pt-3 flex items-center justify-between font-semibold text-[16px]"><span id="summary-total-label">Total</span><span id="summary-grand-total">R$ 0,00</span></div>
                         </div>
-                        <div id="checkout-items-inline" class="space-y-2"></div>
-                    </div>
-                    <button onclick="validateCustomerStep()" class="bg-blue-600 text-white py-5 rounded-2xl font-bold mt-2 hover:bg-blue-700 active:scale-95 transition-all shadow-[0_16px_35px_rgba(52,131,250,0.28)]">
-                        Continuar para Entrega
-                    </button>
+                    </aside>
                 </div>
-            </div>
-
-            <!-- Passo 2: Dados de Entrega -->
-            <div id="check-step-delivery" class="p-8 md:p-10 hidden">
-                <h2 class="text-2xl font-bold mb-8 flex items-center gap-3"><i data-lucide="truck" class="text-blue-600"></i> Dados para Entrega</h2>
-                <div class="flex flex-col gap-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="ship-cep" placeholder="CEP" class="field-shell p-4 rounded-2xl outline-none transition-all text-base font-medium" maxlength="9" oninput="formatCEP(this)">
-                        <input type="text" id="ship-country" placeholder="Pais" value="Brasil" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
-                    </div>
-                    <input type="text" id="ship-address" placeholder="Endereco (Rua/Avenida)" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
-                    <div class="grid grid-cols-3 gap-4">
-                        <input type="text" id="ship-number" placeholder="Numero da Casa" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
-                        <input type="text" id="ship-city" placeholder="Cidade" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all col-span-2">
-                    </div>
-                    <input type="text" id="ship-complement" placeholder="Complemento (Opcional)" class="border-2 border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all">
-                    
-                    <button onclick="processIronPay()" id="pay-btn" class="bg-blue-600 text-white py-5 rounded-2xl font-bold mt-4 hover:bg-blue-700 active:scale-95 transition-all">
-                        Ir para pagamento do frete (R$ 49,90)
-                    </button>
-                    <button onclick="goToCheckStep(1)" class="text-gray-400 text-sm font-bold hover:text-gray-600 transition-all">Voltar</button>
-                </div>
-            </div>
-
-            <!-- Passo 3: PIX -->
-            <div id="check-step-2" class="p-8 md:p-10 hidden text-center">
-                <h2 class="text-2xl font-bold mb-4 flex items-center justify-center gap-3"><i data-lucide="zap" class="text-blue-600"></i> Pague o frete com PIX</h2>
-                <p class="text-gray-500 mb-8">Aprovacao instantanea via Iron Pay!</p>
-                <div class="checkout-card p-6 rounded-[2rem] mb-6 inline-block min-w-[260px]">
-                    <img id="pix-qr-image" alt="QR Code PIX" class="hidden w-48 h-48 mx-auto object-contain rounded-2xl bg-white p-3">
-                    <div id="pix-qr-placeholder">
-                        <i data-lucide="qr-code" class="w-48 h-48 mx-auto text-gray-800"></i>
-                    </div>
-                </div>
-                
-                <div class="flex flex-col gap-3 mb-8">
-                    <p class="text-xs font-bold text-gray-400 uppercase">PIX Copia e Cola</p>
-                    <div class="flex gap-2 bg-gray-100 p-3 rounded-xl items-center border border-gray-200">
-                        <input type="text" readonly id="pix-code" value="Gerando codigo..." class="bg-transparent text-xs text-gray-500 flex-1 outline-none">
-                        <button onclick="copyPix()" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-all" title="Copiar">
-                            <i data-lucide="copy" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                    <span id="copy-feedback" class="text-[10px] text-green-600 font-bold hidden">Copiado com sucesso!</span>
-                </div>
-
-                <div class="bg-blue-600 p-5 rounded-2xl font-bold text-white text-2xl mb-4 shadow-lg shadow-blue-200" id="check-total-display"></div>
-                <p class="text-sm text-gray-500 mb-8">Assim que o pagamento for feito, a confirmacao costuma acontecer em segundos.</p>
-                <button onclick="goToCheckStep(3)" class="w-full bg-green-600 text-white py-5 rounded-2xl font-bold hover:bg-green-700 active:scale-95 transition-all">Ja realizei o pagamento</button>
-            </div>
-
-            <!-- Passo 4: Sucesso -->
-            <div id="check-step-3" class="p-12 hidden text-center fade-in">
-                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i data-lucide="check-circle" class="w-12 h-12 text-green-600"></i>
-                </div>
-                <h2 class="text-3xl font-bold mb-4 text-gray-800">Pedido Confirmado!</h2>
-                <p class="text-gray-500 mb-10">Obrigado por comprar conosco. Seu pedido ja esta sendo processado.</p>
-                <button onclick="closeCheckout()" class="bg-blue-600 text-white px-12 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all">Voltar a Loja</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- Banco de Dados ---
-        const FIXED_SHIPPING = 49.90;
-        const products = [
-            { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 0, oldPrice: 2199.99, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
-            { id: 2, title: 'Geladeira Electrolux Frost Free Inverter 480L', price: 0, oldPrice: 1980.00, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
-            { id: 3, title: "Apple iPhone 15 (128 GB) - Preto", price: 0, oldPrice: 2099.00, image: "https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX342_SY445_QL70_ML2_.jpg", description: "O iPhone 15 traz a Dynamic Island, c\u00E2mera de 48 MP e USB-C." },
-            { id: 4, title: "Philips Walita Airfryer XL Digital 6.2L", price: 0, oldPrice: 460.00, image: "https://m.media-amazon.com/images/I/51i3nkPbZ-L._AC_SX679_.jpg", description: "Cozinhe de forma saud\u00E1vel com at\u00E9 90% menos gordura." },
-            { id: 5, title: "Jogo de Panelas 13 Pe\u00E7as Antiaderente com Panela de Press\u00E3o", price: 0, oldPrice: 329.00, image: "https://m.media-amazon.com/images/I/61MUlJ3X-jL._AC_SX679_.jpg", description: "Conjunto completo antiaderente com 13 pe\u00E7as, incluindo panela de press\u00E3o, ideal para equipar sua cozinha." },
-            { id: 6, title: "SUGGAR FOG\u00C3O COOK GLASS PRETO MESA DE VIDRO 5 BOCAS MEGA CHAMA TREMPE 6 APOIOS ACENDIMENTO AUTOM\u00C1TICO FGVCG510PT", price: 0, oldPrice: 899.00, image: "https://m.media-amazon.com/images/I/51Llc-bUtRL._AC_SX522_.jpg", description: "Fog\u00E3o 5 bocas com mesa de vidro, mega chama, trempes com 6 apoios e acendimento autom\u00E1tico." },
-            { id: 7, title: "JBL, Caixa de Som, PartyBox Stage 520, Bluetooth, Port\u00E1til, Show de Luzes, At\u00E9 15 horas de reprodu\u00E7\u00E3o", price: 0, oldPrice: 1999.99, image: "https://m.media-amazon.com/images/I/61zm6pi9ziL._AC_SX679_.jpg", description: "Caixa de som Bluetooth port\u00E1til com show de luzes e at\u00E9 15 horas de reprodu\u00E7\u00E3o para animar qualquer ambiente." },
-            { id: 8, title: "Samsung Galaxy Book4 Intel Core i5-1335U, Windows 11 Home, 8GB, 512GB SSD, Iris Xe, 15.6'' Full HD LED, 1.55kg", price: 0, oldPrice: 2200.00, image: "https://m.media-amazon.com/images/I/51lGW2nP9qL._AC_SX522_.jpg", description: "Notebook leve com Intel Core i5, 8GB de RAM, SSD de 512GB e tela Full HD de 15,6 polegadas." }
-        ];
-
-        let cart = [];
-        let currentProdId = null;
-
-        function init() {
-            const list = document.getElementById("products-list");
-            products.forEach((p) => {
-                list.innerHTML += `
-                    <div class="product-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col gap-3 min-w-[260px] cursor-pointer fade-in" onclick="openDetails(${p.id})">
-                        <div class="h-52 flex items-center justify-center overflow-hidden rounded-xl bg-gray-50">
-                            <img src="${p.image}" class="max-h-full object-contain p-2">
-                        </div>
-                        <div class="flex flex-col gap-1 flex-1">
-                            <h4 class="text-sm text-gray-700 line-clamp-2 h-10 font-medium leading-snug">${p.title}</h4>
-                            <div class="mt-2">
-                                <p class="text-sm text-gray-400">De <span class="line-through">R$ ${p.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></p>
-                                <p class="text-2xl font-bold text-gray-900">por R$ ${p.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                                <p class="text-[11px] text-green-600 font-bold">Produto gratis <span class="bg-green-600 text-white px-1 rounded-sm text-[9px] italic">FULL</span></p>
-                            </div>
-                        </div>
-                        <button onclick="event.stopPropagation(); addToCart(${p.id})" class="mt-2 w-full bg-blue-600 text-white py-3 rounded-xl text-xs font-bold hover:bg-blue-700 active:scale-95 transition-all">Adicionar</button>
-                    </div>
-                `;
-            });
-            hydrateCheckoutUI();
-            updateCheckoutSummary();
-            lucide.createIcons();
-        }
-
-        function showPage(pageId) {
-            const home = document.getElementById('page-home');
-            const details = document.getElementById('page-details');
-            window.scrollTo(0, 0);
-            if(pageId === 'home') { details.classList.add('hidden'); home.classList.remove('hidden'); document.body.style.overflow = 'auto'; }
-            else { home.classList.add('hidden'); details.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-            lucide.createIcons();
-        }
-
-        function openDetails(id) {
-            const p = products.find(prod => prod.id === id);
-            currentProdId = id;
-            document.getElementById('det-title').innerText = p.title;
-            document.getElementById('det-price').innerText = `por R$ ${p.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('det-old-price').innerHTML = `De <span class="line-through">R$ ${p.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
-            document.getElementById('det-parcel').innerText = (FIXED_SHIPPING / 10).toLocaleString("pt-BR", {minimumFractionDigits: 2});
-            document.getElementById('det-main-image').src = p.image;
-            document.getElementById('det-img-1').src = p.image;
-            document.getElementById('det-description').innerText = p.description;
-            document.getElementById('det-add-cart').onclick = () => addToCart(id);
-            showPage('details');
-        }
-
-        function toggleCart(show) {
-            const sidebar = document.getElementById("cart-sidebar");
-            if(show) { sidebar.classList.remove("invisible"); sidebar.classList.add("active"); }
-            else { sidebar.classList.remove("active"); setTimeout(() => sidebar.classList.add("invisible"), 400); }
-        }
-
-        function addToCart(id) {
-            const p = products.find(prod => prod.id === id);
-            const inCart = cart.find(i => i.id === id);
-            if (inCart) inCart.qty++; else cart.push({ ...p, qty: 1 });
-            const btn = document.getElementById('cart-btn');
-            btn.classList.add('bump'); setTimeout(() => btn.classList.remove('bump'), 300);
-            updateCartUI();
-            toggleCart(true);
-        }
-
-        function updateCartUI() {
-            const container = document.getElementById("cart-items");
-            const countLabel = document.getElementById("cart-count");
-            const totalLabel = document.getElementById("cart-total");
-            container.innerHTML = cart.length === 0 ? '<div class="flex flex-col items-center justify-center h-64 text-gray-400 gap-4"><i data-lucide="shopping-bag" class="w-12 h-12 opacity-20"></i><p>Seu carrinho esta vazio</p></div>' : "";
-            let total = 0, count = 0;
-            cart.forEach((item) => {
-                total += item.price * item.qty;
-                count += item.qty;
-                container.innerHTML += `
-                    <div class="flex gap-4 border-b border-gray-50 pb-6 fade-in">
-                        <img src="${item.image}" class="w-20 h-20 object-contain rounded-xl p-2 border bg-gray-50">
-                        <div class="flex-1">
-                            <h3 class="text-sm font-bold line-clamp-1 text-gray-800">${item.title}</h3>
-                            <p class="text-lg font-bold text-blue-600 mt-1">R$ ${item.price.toLocaleString("pt-BR")}</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <div class="flex items-center bg-gray-100 rounded-lg px-2">
-                                    <button onclick="updateQty(${item.id}, -1)" class="p-1 hover:text-blue-600"><i data-lucide="minus" class="w-3 h-3"></i></button>
-                                    <span class="px-4 text-sm font-bold">${item.qty}</span>
-                                    <button onclick="updateQty(${item.id}, 1)" class="p-1 hover:text-blue-600"><i data-lucide="plus" class="w-3 h-3"></i></button>
-                                </div>
-                                <button onclick="remove(${item.id})" class="text-[10px] font-bold text-red-400 hover:text-red-600 uppercase">Remover</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            countLabel.innerText = count;
-            countLabel.classList.toggle("hidden", count === 0);
-            totalLabel.innerText = `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById("check-total-display").innerText = `FRETE FIXO: ${formatCurrency(FIXED_SHIPPING)}`;
-            updateCheckoutSummary();
-            lucide.createIcons();
-        }
-
-        function updateQty(id, delta) {
-            const item = cart.find(i => i.id === id);
-            item.qty = Math.max(1, item.qty + delta);
-            updateCartUI();
-        }
-
-        function remove(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
-
-        function openCheckout() {
-            if(cart.length === 0) return;
-            toggleCart(false);
-            const modal = document.getElementById("checkout-modal");
-            hydrateCheckoutUI();
-            updateCheckoutSummary();
-            modal.classList.remove("hidden");
-            document.body.style.overflow = 'hidden';
-            modal.scrollTop = 0;
-            const container = modal.querySelector('.modal-container');
-            if (container) container.scrollTop = 0;
-            setTimeout(() => modal.classList.add("modal-active"), 10);
-            goToCheckStep(1);
-        }
-
-        function closeCheckout() {
-            const modal = document.getElementById("checkout-modal");
-            modal.classList.remove("modal-active");
-            document.body.style.overflow = 'auto';
-            setTimeout(() => modal.classList.add("hidden"), 400);
-            showPage('home');
-        }
-
-        function goToCheckStep(step) {
-            const steps = ['check-step-1', 'check-step-delivery', 'check-step-2', 'check-step-3'];
-            steps.forEach(s => document.getElementById(s).classList.add('hidden'));
-            updateStepper(step);
-            
-            if(step === 'delivery') document.getElementById('check-step-delivery').classList.remove('hidden');
-            else if(step === 1) document.getElementById('check-step-1').classList.remove('hidden');
-            else if(step === 2) document.getElementById('check-step-2').classList.remove('hidden');
-            else if(step === 3) { document.getElementById('check-step-3').classList.remove('hidden'); cart = []; updateCartUI(); }
-            lucide.createIcons();
-        }
-
-        function getFieldValue(id) {
-            const field = document.getElementById(id);
-            return field ? field.value.trim() : '';
-        }
-
-        function hydrateCheckoutUI() {
-            const deliveryIds = ['ship-country', 'ship-address', 'ship-number', 'ship-city', 'ship-complement'];
-            deliveryIds.forEach((id) => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                el.className = 'field-shell p-4 rounded-2xl outline-none transition-all text-base font-medium' + (id === 'ship-city' ? ' col-span-2' : '');
-            });
-
-            const modal = document.querySelector('#checkout-modal .modal-container');
-            if (modal) modal.classList.add('shadow-[0_40px_120px_rgba(15,23,42,0.22)]');
-
-            const pixCodeWrap = document.getElementById('pix-code')?.parentElement;
-            if (pixCodeWrap) pixCodeWrap.className = 'flex gap-2 bg-gray-100 p-3 rounded-2xl items-center border border-gray-200 shadow-inner';
-
-            const payBtn = document.getElementById('pay-btn');
-            if (payBtn) payBtn.innerText = `Ir para pagamento do frete (${formatCurrency(FIXED_SHIPPING)})`;
-        }
-
-        function updateCheckoutSummary() {
-            const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-            const inlineList = document.getElementById('checkout-items-inline');
-            const inlineTotal = document.getElementById('checkout-total-inline');
-
-            if (inlineTotal) inlineTotal.innerText = formatCurrency(FIXED_SHIPPING);
-
-            if (inlineList) {
-                inlineList.innerHTML = cart.length
-                    ? `
-                        ${cart.map((item) => `
-                        <div class="flex items-center justify-between gap-3 py-2 border-b border-gray-100 last:border-b-0">
-                            <div class="min-w-0">
-                                <p class="font-semibold text-gray-900 text-sm line-clamp-1">${item.title}</p>
-                                <p class="text-xs text-gray-400">Qtd ${item.qty} - Produto gratis</p>
-                            </div>
-                            <p class="font-bold text-sm text-gray-900">${formatCurrency(0)}</p>
-                        </div>
-                    `).join('')}
-                        <div class="flex items-center justify-between gap-3 py-3 border-b border-gray-100">
-                            <div class="min-w-0">
-                                <p class="font-semibold text-gray-900 text-sm">Frete fixo</p>
-                                <p class="text-xs text-gray-400">Cobrado apos o preenchimento do envio</p>
-                            </div>
-                            <p class="font-bold text-sm text-blue-600">${formatCurrency(FIXED_SHIPPING)}</p>
-                        </div>
-                        <div class="flex items-center justify-between gap-3 pt-2">
-                            <div class="min-w-0">
-                                <p class="font-semibold text-gray-900 text-sm">Produtos</p>
-                                <p class="text-xs text-gray-400">Todos os itens com valor zerado</p>
-                            </div>
-                            <p class="font-bold text-sm text-gray-900">${formatCurrency(total)}</p>
-                        </div>
-                    `
-                    : '<p class="text-sm text-gray-400">Seu carrinho sera exibido aqui.</p>';
-            }
-
-            const totalDisplay = document.getElementById('check-total-display');
-            if (totalDisplay) totalDisplay.innerText = `FRETE FIXO: ${formatCurrency(FIXED_SHIPPING)}`;
-        }
-
-        function updateStepper(step) {
-            const normalized = step === 'delivery' ? 1 : step;
-            [1, 2, 3].forEach((index) => {
-                const pill = document.getElementById(`step-pill-${index}`);
-                if (!pill) return;
-                pill.classList.remove('step-pill-active', 'step-pill-idle', 'step-pill-done');
-                if (index === normalized) pill.classList.add('step-pill-active');
-                else if (index < normalized) pill.classList.add('step-pill-done');
-                else pill.classList.add('step-pill-idle');
-            });
-        }
-
-        function validateCustomerStep() {
-            const missingFields = [];
-
-            if (!getFieldValue('cust-name')) missingFields.push('nome');
-            if (!getFieldValue('cust-cpf')) missingFields.push('CPF');
-            if (!getFieldValue('cust-email')) missingFields.push('e-mail');
-
-            if (missingFields.length) {
-                alert(`Preencha: ${missingFields.join(', ')}`);
-                return;
-            }
-
-            goToCheckStep('delivery');
-        }
-
-        async function processIronPay() {
-            const btn = document.getElementById('pay-btn');
-            const name = getFieldValue('cust-name');
-            const cpf = getFieldValue('cust-cpf');
-            const email = getFieldValue('cust-email');
-            
-            const cep = getFieldValue('ship-cep');
-            const address = getFieldValue('ship-address');
-            const number = getFieldValue('ship-number');
-            const city = getFieldValue('ship-city');
-            const complement = getFieldValue('ship-complement');
-            const missingFields = [];
-
-            if (!name) missingFields.push('nome');
-            if (!cpf) missingFields.push('CPF');
-            if (!email) missingFields.push('e-mail');
-            if (!cep) missingFields.push('CEP');
-            if (!address) missingFields.push('endereco');
-            if (!number) missingFields.push('numero');
-            if (!city) missingFields.push('cidade');
-
-            if (missingFields.length) return alert(`Preencha: ${missingFields.join(', ')}`);
-
-            if(!name || !cpf || !email || !cep || !address || !number || !city) return alert('Preencha todos os campos obrigatorios!');
-
-            btn.disabled = true;
-            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i> Gerando PIX do frete...';
-            lucide.createIcons();
-
-            try {
-                // Chamada para o SEU servidor (Seguro)
-                const response = await fetch('/api/payments/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        items: cart, 
-                        customer: { name, cpf, email },
-                        delivery: { cep, address, number, city, complement }
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Falha ao gerar pagamento');
-                }
-
-                if(data.pix_code || data.pix_qr_code) {
-                    const pixCode = data.pix_code || data.pix_qr_code;
-                    document.getElementById('pix-code').value = pixCode;
-                    renderPixQr(data.pix_base64, pixCode);
-                    goToCheckStep(2);
-                } else if (data.transaction_hash) {
-                    const pixCode = "PIX_HASH_" + data.transaction_hash;
-                    document.getElementById('pix-code').value = pixCode;
-                    renderPixQr(null, pixCode);
-                    goToCheckStep(2);
-                } else {
-                    throw new Error('A IronPay nao retornou um codigo PIX valido.');
-                }
-            } catch (e) {
-                console.error(e);
-                alert('Erro de conexao com o servidor.');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = `Ir para pagamento do frete (${formatCurrency(FIXED_SHIPPING)})`;
-                lucide.createIcons();
-            }
-        }
-
-        function formatCurrency(value) {
-            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-
-        function formatCPF(input) {
-            let value = input.value.replace(/\D/g, '').slice(0, 11);
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            input.value = value;
-        }
-
-        function formatCEP(input) {
-            let value = input.value.replace(/\D/g, '').slice(0, 8);
-            value = value.replace(/(\d{5})(\d)/, '$1-$2');
-            input.value = value;
-        }
-
-        function renderPixQr(base64Qr, pixCode) {
-            const image = document.getElementById('pix-qr-image');
-            const placeholder = document.getElementById('pix-qr-placeholder');
-
-            if (!image || !placeholder) return;
-
-            image.src = base64Qr
-                ? (base64Qr.startsWith('data:image') ? base64Qr : `data:image/png;base64,${base64Qr}`)
-                : `https://quickchart.io/qr?size=320&text=${encodeURIComponent(pixCode)}`;
-
-            image.classList.remove('hidden');
-            placeholder.classList.add('hidden');
-        }
-
-        function copyPix() {
-            const input = document.getElementById('pix-code');
-            input.select();
-            navigator.clipboard.writeText(input.value);
-            const feedback = document.getElementById('copy-feedback');
-            feedback.classList.remove('hidden');
-            setTimeout(() => feedback.classList.add('hidden'), 2000);
-        }
-
-        function buyNow() { addToCart(currentProdId); openCheckout(); }
-
-        init();
+        window.GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || "";
     </script>
+    <script src="assets/app.js"></script>
 </body>
 </html>
-
 
 
 

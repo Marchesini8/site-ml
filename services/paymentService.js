@@ -1,4 +1,5 @@
 const axios = require('axios');
+const paymentStatusStore = require('./paymentStatusStore');
 
 const FIXED_SHIPPING_AMOUNT = 49.9;
 const SHIPPING_ITEM_TITLE = 'Frete fixo';
@@ -89,6 +90,12 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
       response.data.pix?.pix_qr_code ||
       response.data.pix_qr_code ||
       null;
+    const transactionHash =
+      response.data.transaction_hash ||
+      response.data.transactionHash ||
+      response.data.pix?.transaction_hash ||
+      response.data.pix?.transactionHash ||
+      null;
 
     if (!pixCode) {
       const invalidResponseError = new Error(
@@ -98,7 +105,19 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
       throw invalidResponseError;
     }
 
+    if (transactionHash) {
+      paymentStatusStore.savePayment(transactionHash, {
+        status: response.data.status || 'pending',
+        amount: response.data.amount || totalInCents,
+        paymentMethod: 'pix',
+        isPaid: response.data.status === 'paid',
+        pixCode,
+      });
+    }
+
     return {
+      transaction_hash: transactionHash,
+      status: response.data.status || 'pending',
       pix_code: pixCode,
       pix_base64:
         response.data.qr_code ||
@@ -125,3 +144,4 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
 };
 
 exports.FIXED_SHIPPING_AMOUNT = FIXED_SHIPPING_AMOUNT;
+exports.getPaymentStatus = (transactionHash) => paymentStatusStore.getPayment(transactionHash);

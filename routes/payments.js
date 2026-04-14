@@ -25,4 +25,24 @@ router.post('/checkout', async (req, res) => {
   }
 });
 
+router.get('/status/:transactionHash', (req, res) => {
+  try {
+    const payment = paymentService.getPaymentStatus(req.params.transactionHash);
+
+    if (!payment) {
+      return res.json({
+        transactionHash: req.params.transactionHash,
+        status: 'pending',
+        isPaid: false,
+      });
+    }
+
+    return res.json(payment);
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      error: error.message || 'Erro ao consultar pagamento',
+    });
+  }
+});
+
 module.exports = router;

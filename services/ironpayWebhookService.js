@@ -1,3 +1,5 @@
+const paymentStatusStore = require('./paymentStatusStore');
+
 function validateWebhookKey(receivedKey) {
   const expectedKey = process.env.IRONPAY_WEBHOOK_SECRET || process.env.PAYMENT_API_KEY;
 
@@ -39,6 +41,7 @@ function processWebhook(payload) {
   };
 
   console.log('Webhook IronPay recebido:', normalized);
+  paymentStatusStore.savePayment(normalized.transactionHash, normalized);
 
   return normalized;
 }
