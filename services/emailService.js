@@ -1,36 +1,19 @@
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
-let transporter;
+let isConfigured = false;
 
-function createTransporter() {
-  const host = process.env.EMAIL_SMTP_HOST;
-  const port = Number(process.env.EMAIL_SMTP_PORT || 587);
-  const user = process.env.EMAIL_SMTP_USER;
-  const pass = process.env.EMAIL_SMTP_PASS;
-
-  if (!host || !user || !pass) {
-    const error = new Error("Configure EMAIL_SMTP_HOST, EMAIL_SMTP_PORT, EMAIL_SMTP_USER e EMAIL_SMTP_PASS para enviar o codigo de verificacao.");
+function ensureSendGridConfigured() {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  if (!apiKey) {
+    const error = new Error("Configure SENDGRID_API_KEY para enviar o codigo de verificacao.");
     error.statusCode = 500;
     throw error;
   }
 
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: {
-      user,
-      pass,
-    },
-  });
-}
-
-function getTransporter() {
-  if (!transporter) {
-    transporter = createTransporter();
+  if (!isConfigured) {
+    sgMail.setApiKey(apiKey);
+    isConfigured = true;
   }
-
-  return transporter;
 }
 
 async function sendVerificationCodeEmail({ email, name, code }) {
@@ -44,7 +27,9 @@ async function sendVerificationCodeEmail({ email, name, code }) {
   const appName = process.env.EMAIL_APP_NAME || "Site ML";
   const safeName = name || "cliente";
 
-  await getTransporter().sendMail({
+  ensureSendGridConfigured();
+
+  await sgMail.send({
     from,
     to: email,
     subject: `${appName}: codigo de verificacao`,
@@ -74,11 +59,8 @@ async function sendVerificationCodeEmail({ email, name, code }) {
 function getEmailDiagnostics() {
   return {
     hasEmailFrom: Boolean(process.env.EMAIL_FROM),
-    hasSmtpHost: Boolean(process.env.EMAIL_SMTP_HOST),
-    smtpHost: process.env.EMAIL_SMTP_HOST || null,
-    smtpPort: Number(process.env.EMAIL_SMTP_PORT || 587),
-    hasSmtpUser: Boolean(process.env.EMAIL_SMTP_USER),
-    hasSmtpPass: Boolean(process.env.EMAIL_SMTP_PASS),
+    hasSendGridApiKey: Boolean(process.env.SENDGRID_API_KEY),
+    emailProvider: "sendgrid",
   };
 }
 

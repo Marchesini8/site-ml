@@ -26,11 +26,8 @@ function logStartupDiagnostics() {
 
   const email = getEmailDiagnostics();
   console.log(`[startup] EMAIL_FROM presente=${email.hasEmailFrom}`);
-  console.log(`[startup] EMAIL_SMTP_HOST presente=${email.hasSmtpHost}`);
-  console.log(`[startup] EMAIL_SMTP_HOST valor=${email.smtpHost || 'ausente'}`);
-  console.log(`[startup] EMAIL_SMTP_PORT=${email.smtpPort}`);
-  console.log(`[startup] EMAIL_SMTP_USER presente=${email.hasSmtpUser}`);
-  console.log(`[startup] EMAIL_SMTP_PASS presente=${email.hasSmtpPass}`);
+  console.log(`[startup] EMAIL_PROVIDER=${email.emailProvider}`);
+  console.log(`[startup] SENDGRID_API_KEY presente=${email.hasSendGridApiKey}`);
 }
 
 app.use(cors());
