@@ -8,7 +8,7 @@ router.post('/register/send-code', async (req, res) => {
     return res.status(202).json(result);
   } catch (error) {
     return res.status(error.statusCode || 500).json({
-      error: error.message || 'Erro ao enviar codigo de verificacao',
+      error: error.message || 'Erro ao enviar código de verificação',
     });
   }
 });

@@ -1,40 +1,59 @@
 const axios = require('axios');
 const paymentStatusStore = require('./paymentStatusStore');
 
-const FIXED_SHIPPING_AMOUNT = 49.9;
-const SHIPPING_ITEM_TITLE = 'Frete fixo';
+const FIXED_SHIPPING_AMOUNT = 0;
+const SHIPPING_ITEM_TITLE = 'Frete grátis';
+
+function normalizeItemPrice(item) {
+  const directPrice = Number(item?.price || 0);
+  if (directPrice > 0) return directPrice;
+  const unitPrice = Number(item?.unitPrice || 0);
+  if (unitPrice > 0) return unitPrice;
+  return Number(item?.oldPrice || 0);
+}
 
 exports.createPixPayment = async ({ items, customer, delivery }) => {
-  const totalInCents = Math.round(FIXED_SHIPPING_AMOUNT * 100);
+  const normalizedItems = Array.isArray(items) ? items : [];
+  const productTotal = normalizedItems.reduce((sum, item) => {
+    return sum + normalizeItemPrice(item) * Number(item?.qty || item?.quantity || 1);
+  }, 0);
+  const totalAmount = productTotal + FIXED_SHIPPING_AMOUNT;
+  const totalInCents = Math.round(totalAmount * 100);
   const pixEndpoint = process.env.PAYMENT_PIX_ENDPOINT || '/payments';
   const offerHash = process.env.IRONPAY_OFFER_HASH;
   const productHash = process.env.IRONPAY_PRODUCT_HASH;
   const postbackUrl = process.env.IRONPAY_POSTBACK_URL;
   const expireInDays = Number(process.env.IRONPAY_EXPIRE_IN_DAYS || 1);
-  const cart = [{
+  const cart = normalizedItems.map((item) => ({
     product_hash: productHash,
-    title: SHIPPING_ITEM_TITLE,
-    cover: null,
-    price: totalInCents,
-    quantity: 1,
+    title: item.title || SHIPPING_ITEM_TITLE,
+    cover: item.image || null,
+    price: Math.round(normalizeItemPrice(item) * 100),
+    quantity: Number(item?.qty || item?.quantity || 1),
     operation_type: 1,
     tangible: false,
-  }];
+  }));
+
+  if (!cart.length || totalInCents <= 0) {
+    const error = new Error('Carrinho inválido para gerar o pagamento.');
+    error.statusCode = 400;
+    throw error;
+  }
 
   if (!process.env.PAYMENT_API_URL || !process.env.PAYMENT_API_KEY) {
-    const error = new Error('PAYMENT_API_URL ou PAYMENT_API_KEY nao configurado no .env');
+  const error = new Error('PAYMENT_API_URL ou PAYMENT_API_KEY não configurado no .env');
     error.statusCode = 500;
     throw error;
   }
 
   if (!offerHash) {
-    const error = new Error('IRONPAY_OFFER_HASH nao configurado no .env');
+  const error = new Error('IRONPAY_OFFER_HASH não configurado no .env');
     error.statusCode = 500;
     throw error;
   }
 
   if (!productHash) {
-    const error = new Error('IRONPAY_PRODUCT_HASH nao configurado no .env');
+  const error = new Error('IRONPAY_PRODUCT_HASH não configurado no .env');
     error.statusCode = 500;
     throw error;
   }
@@ -99,7 +118,7 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
 
     if (!pixCode) {
       const invalidResponseError = new Error(
-        `IronPay respondeu sem codigo PIX valido: ${JSON.stringify(response.data)}`
+      `IronPay respondeu sem código PIX válido: ${JSON.stringify(response.data)}`
       );
       invalidResponseError.statusCode = 502;
       throw invalidResponseError;
@@ -125,8 +144,8 @@ exports.createPixPayment = async ({ items, customer, delivery }) => {
         response.data.qrCode ||
         response.data.pix?.qr_code_base64 ||
         null,
-      charged_total: FIXED_SHIPPING_AMOUNT,
-      product_total: 0,
+      charged_total: totalAmount,
+      product_total: productTotal,
       shipping_total: FIXED_SHIPPING_AMOUNT,
       source: 'ironpay',
       raw: response.data,

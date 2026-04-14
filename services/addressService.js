@@ -46,12 +46,12 @@ async function findUserByEmail(email) {
 async function listAddresses({ email }) {
   const normalizedEmail = normalizeEmail(email);
   if (!normalizedEmail) {
-    throw buildError("E-mail do usuario e obrigatorio", 400);
+    throw buildError("E-mail do usuário é obrigatório", 400);
   }
 
   const user = await findUserByEmail(normalizedEmail);
   if (!user) {
-    throw buildError("Usuario nao encontrado", 404);
+    throw buildError("Usuário não encontrado", 404);
   }
 
   const result = await query(
@@ -68,12 +68,12 @@ async function listAddresses({ email }) {
 async function createAddress({ email, label, recipientName, phone, cep, street, number, complement, neighborhood, city, state, isDefault }) {
   const normalizedEmail = normalizeEmail(email);
   if (!normalizedEmail) {
-    throw buildError("E-mail do usuario e obrigatorio", 400);
+    throw buildError("E-mail do usuário é obrigatório", 400);
   }
 
   const user = await findUserByEmail(normalizedEmail);
   if (!user) {
-    throw buildError("Usuario nao encontrado", 404);
+    throw buildError("Usuário não encontrado", 404);
   }
 
   const payload = {
@@ -91,7 +91,7 @@ async function createAddress({ email, label, recipientName, phone, cep, street, 
   };
 
   if (!payload.recipientName || !payload.cep || !payload.street || !payload.number) {
-    throw buildError("Preencha destinatario, CEP, rua e numero", 400);
+    throw buildError("Preencha destinatário, CEP, rua e número", 400);
   }
 
   if (payload.isDefault) {
@@ -133,12 +133,12 @@ async function createAddress({ email, label, recipientName, phone, cep, street, 
 async function removeAddress({ email, addressId }) {
   const normalizedEmail = normalizeEmail(email);
   if (!normalizedEmail || !addressId) {
-    throw buildError("Usuario e endereco sao obrigatorios", 400);
+    throw buildError("Usuário e endereço são obrigatórios", 400);
   }
 
   const user = await findUserByEmail(normalizedEmail);
   if (!user) {
-    throw buildError("Usuario nao encontrado", 404);
+    throw buildError("Usuário não encontrado", 404);
   }
 
   const result = await query(
@@ -149,7 +149,7 @@ async function removeAddress({ email, addressId }) {
   );
 
   if (!result.rows[0]) {
-    throw buildError("Endereco nao encontrado", 404);
+    throw buildError("Endereço não encontrado", 404);
   }
 
   return { success: true };

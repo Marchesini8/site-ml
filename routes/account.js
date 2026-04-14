@@ -10,7 +10,7 @@ router.post("/addresses/list", async (req, res) => {
     return res.json({ addresses });
   } catch (error) {
     return res.status(error.statusCode || 500).json({
-      error: error.message || "Erro ao listar enderecos",
+      error: error.message || "Erro ao listar endereços",
     });
   }
 });
@@ -21,7 +21,7 @@ router.post("/addresses/create", async (req, res) => {
     return res.status(201).json({ address });
   } catch (error) {
     return res.status(error.statusCode || 500).json({
-      error: error.message || "Erro ao salvar endereco",
+      error: error.message || "Erro ao salvar endereço",
     });
   }
 });
@@ -32,7 +32,7 @@ router.post("/addresses/delete", async (req, res) => {
     return res.json(result);
   } catch (error) {
     return res.status(error.statusCode || 500).json({
-      error: error.message || "Erro ao excluir endereco",
+      error: error.message || "Erro ao excluir endereço",
     });
   }
 });

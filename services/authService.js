@@ -62,7 +62,7 @@ async function requestRegisterCode({ name, email, password }) {
 
   const existingUser = await findUserByEmail(normalizedEmail);
   if (existingUser) {
-    throw buildError("Usuario ja cadastrado", 409);
+    throw buildError("Usuário já cadastrado", 409);
   }
 
   const code = generateVerificationCode();
@@ -97,7 +97,7 @@ async function requestRegisterCode({ name, email, password }) {
 async function verifyRegisterCode({ name, email, password, code }) {
   const normalizedEmail = normalizeEmail(email);
   if (!name || !normalizedEmail || !password || !code) {
-    throw buildError("Nome, e-mail, senha e codigo sao obrigatorios", 400);
+    throw buildError("Nome, e-mail, senha e código são obrigatórios", 400);
   }
 
   if (String(password).length < 6) {
@@ -106,7 +106,7 @@ async function verifyRegisterCode({ name, email, password, code }) {
 
   const existingUser = await findUserByEmail(normalizedEmail);
   if (existingUser) {
-    throw buildError("Usuario ja cadastrado", 409);
+    throw buildError("Usuário já cadastrado", 409);
   }
 
   const codeResult = await query(
@@ -122,15 +122,15 @@ async function verifyRegisterCode({ name, email, password, code }) {
 
   const verification = codeResult.rows[0];
   if (!verification) {
-    throw buildError("Solicite um novo codigo de verificacao", 404);
+    throw buildError("Solicite um novo código de verificação", 404);
   }
 
   if (new Date(verification.expires_at).getTime() < Date.now()) {
-    throw buildError("O codigo expirou. Solicite um novo codigo", 410);
+    throw buildError("O código expirou. Solicite um novo código", 410);
   }
 
   if (verification.code_hash !== hashVerificationCode(code)) {
-    throw buildError("Codigo de verificacao invalido", 401);
+    throw buildError("Código de verificação inválido", 401);
   }
 
   const passwordHash = await bcrypt.hash(String(password), 10);
@@ -161,7 +161,7 @@ async function login({ email, password }) {
 
   const user = await findUserByEmail(normalizedEmail);
   if (!user) {
-    throw buildError("Usuario nao encontrado", 404);
+    throw buildError("Usuário não encontrado", 404);
   }
 
   if (user.provider === "email") {
@@ -182,7 +182,7 @@ async function loginWithGoogle({ name, email, avatar = "" }) {
 
   const existing = await findUserByEmail(normalizedEmail);
   if (existing) {
-    const nextName = (name || existing.name || "Usuario Google").trim();
+    const nextName = (name || existing.name || "Usuário Google").trim();
     const nextAvatar = avatar || existing.avatar || "";
     const nextProvider = existing.provider === "email" ? existing.provider : "google";
 
@@ -205,7 +205,7 @@ async function loginWithGoogle({ name, email, avatar = "" }) {
     `INSERT INTO users (id, name, email, password_hash, provider, avatar, email_verified)
      VALUES ($1, $2, $3, $4, $5, $6, $7)
      RETURNING id, name, email, provider, avatar, email_verified, created_at`,
-    [userId, (name || "Usuario Google").trim(), normalizedEmail, "", "google", avatar || "", true]
+    [userId, (name || "Usuário Google").trim(), normalizedEmail, "", "google", avatar || "", true]
   );
 
   return sanitizeUser(insertResult.rows[0]);

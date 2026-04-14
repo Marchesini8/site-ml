@@ -6,7 +6,7 @@ let initPromise;
 function createConfig() {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
-    const error = new Error("DATABASE_URL nao configurada. Conecte um PostgreSQL online no Railway.");
+  const error = new Error("DATABASE_URL não configurada. Conecte um PostgreSQL online no Railway.");
     error.statusCode = 500;
     throw error;
   }
@@ -39,7 +39,7 @@ async function query(text, params) {
 async function initDatabase() {
   if (!initPromise) {
     initPromise = (async () => {
-      console.log("[startup] Iniciando conexao com PostgreSQL...");
+  console.log("[startup] Iniciando conexão com PostgreSQL...");
       await query(`
         CREATE TABLE IF NOT EXISTS users (
           id VARCHAR(64) PRIMARY KEY,
