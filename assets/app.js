@@ -1369,7 +1369,11 @@ async function startPixCheckout() {
     if (!requireAccountForPurchase()) return;
     const btn = document.getElementById("checkout-confirm-btn");
     const payload = {
-        items: appState.cart,
+        items: appState.cart.map((item) => ({
+            ...item,
+            price: getEffectivePrice(item),
+            unitPrice: getEffectivePrice(item)
+        })),
         customer: {
             name: appState.checkoutDraft.name,
             cpf: appState.checkoutDraft.cpf,

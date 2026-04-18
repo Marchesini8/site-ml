@@ -5,10 +5,10 @@ const FIXED_SHIPPING_AMOUNT = 0;
 const SHIPPING_ITEM_TITLE = 'Frete grátis';
 
 function normalizeItemPrice(item) {
-  const directPrice = Number(item?.price || 0);
-  if (directPrice > 0) return directPrice;
   const unitPrice = Number(item?.unitPrice || 0);
   if (unitPrice > 0) return unitPrice;
+  const directPrice = Number(item?.price || 0);
+  if (directPrice > 0) return directPrice;
   return Number(item?.oldPrice || 0);
 }
 
