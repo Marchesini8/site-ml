@@ -1,5 +1,6 @@
 const FIXED_SHIPPING = 49.9;
 const FULL_DISCOUNT_LABEL = "100% OFF";
+const GLOBAL_DISCOUNT_RATE = 0.85;
 const STORAGE_KEYS = {
     session: "ml_session",
     purchases: "ml_purchases",
@@ -290,12 +291,25 @@ function formatCurrency(value) {
     return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-function getEffectivePrice(product) {
+function getBasePrice(product) {
+    const oldPrice = Number(product?.oldPrice || 0);
+    if (oldPrice > 0) return oldPrice;
     const explicitPrice = Number(product?.price || 0);
     if (explicitPrice > 0) return explicitPrice;
-    const unitPrice = Number(product?.unitPrice || 0);
-    if (unitPrice > 0) return unitPrice;
-    return Number(product?.oldPrice || 0);
+    return Number(product?.unitPrice || 0);
+}
+
+function getEffectivePrice(product) {
+    const basePrice = getBasePrice(product);
+    if (basePrice <= 0) return 0;
+    return Number((basePrice * (1 - GLOBAL_DISCOUNT_RATE)).toFixed(2));
+}
+
+function getDiscountPercentage(product) {
+    const basePrice = getBasePrice(product);
+    const currentPrice = getEffectivePrice(product);
+    if (!basePrice || currentPrice >= basePrice) return 0;
+    return Math.round((1 - currentPrice / basePrice) * 100);
 }
 
 function getPreferredLocationLabel() {
@@ -342,7 +356,7 @@ function continuePendingCheckoutAfterAuth() {
 
 function renderProductCard(product) {
     const currentPrice = getEffectivePrice(product);
-    const discount = product.oldPrice ? Math.max(1, Math.round((1 - currentPrice / product.oldPrice) * 100)) : 40;
+    const discount = getDiscountPercentage(product);
     return `
         <div class="offer-grid-card px-3 md:px-4 py-3 md:py-4 bg-white cursor-pointer" onclick="openDetails(${product.id}, this)">
             <div class="h-32 md:h-36 flex items-center justify-center overflow-hidden rounded-md bg-[#f7f7f7]">
@@ -364,7 +378,7 @@ function renderProductCard(product) {
 
 function renderMobileProductCard(product) {
     const currentPrice = getEffectivePrice(product);
-    const discount = product.oldPrice ? Math.max(1, Math.round((1 - currentPrice / product.oldPrice) * 100)) : 40;
+    const discount = getDiscountPercentage(product);
     return `
         <div class="mobile-product-card cursor-pointer" onclick="openDetails(${product.id}, this)">
             <div class="mobile-product-image flex items-center justify-center overflow-hidden">
@@ -440,7 +454,7 @@ function renderProducts() {
 
         const product = featuredProduct;
         const currentPrice = getEffectivePrice(product);
-        const discount = product.oldPrice ? Math.max(1, Math.round((1 - currentPrice / product.oldPrice) * 100)) : 27;
+        const discount = getDiscountPercentage(product);
         featured.innerHTML = `
             <p class="text-2xl font-light text-gray-700 mb-4">${appState.searchQuery ? "Resultado em destaque" : "Oferta do dia"}</p>
             <div class="rounded-[1.25rem] overflow-hidden bg-gray-50 h-[300px] flex items-center justify-center">
@@ -785,7 +799,7 @@ function openDetails(id, triggerEl = null, options = {}) {
     const meta = getProductDetailMeta(product);
     const currentPrice = getEffectivePrice(product);
     const pixPrice = currentPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const discount = product.oldPrice ? Math.max(1, Math.round((1 - currentPrice / product.oldPrice) * 100)) : 17;
+    const discount = getDiscountPercentage(product);
 
     appState.currentProdId = id;
     recordViewedProduct(id);
@@ -836,7 +850,7 @@ function renderRelatedProducts(currentId) {
     const related = products.filter((item) => item.id !== currentId).slice(0, 6);
     container.innerHTML = related.map((product) => {
         const currentPrice = getEffectivePrice(product);
-        const discount = product.oldPrice ? Math.max(1, Math.round((1 - currentPrice / product.oldPrice) * 100)) : 17;
+        const discount = getDiscountPercentage(product);
         return `
             <div class="related-card min-w-[240px] max-w-[240px] rounded-2xl bg-white p-4 cursor-pointer" onclick="openDetails(${product.id}, this)">
                 <div class="h-36 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -942,7 +956,7 @@ function renderCartPage() {
 
     itemsWrap.innerHTML = appState.cart.map((item) => {
         const price = getEffectivePrice(item);
-        const discount = item.oldPrice ? Math.max(1, Math.round((1 - price / item.oldPrice) * 100)) : 17;
+        const discount = getDiscountPercentage(item);
         return `
             <div class="cart-page-line">
                 <span class="cart-page-check"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>
@@ -2111,7 +2125,7 @@ function renderHistoryPage() {
             <div class="history-grid">
                 ${group.items.map(({ product }) => {
                     const currentPrice = getEffectivePrice(product);
-                    const discount = product.oldPrice ? Math.max(1, Math.round((1 - currentPrice / product.oldPrice) * 100)) : 0;
+                    const discount = getDiscountPercentage(product);
                     return `
                         <article class="history-card" onclick="openDetails(${product.id})">
                             <div class="history-card-media">
