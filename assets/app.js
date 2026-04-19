@@ -28,8 +28,8 @@ const products = [
         id: 1,
         category: "casa-moveis",
         title: "Sofa 3 Lugares Clean Retratil Reclinavel Cama Inbox - Cinza - Liso",
-        price: 75.0,
-        oldPrice: 500.0,
+        price: 900.0,
+        oldPrice: 4500.0,
         image: "https://http2.mlstatic.com/D_NQ_NP_2X_973369-MLA97351737569_112025-F.webp",
         description: "Sofa de 3 lugares com assento retratil, encosto reclinavel e visual clean para sala."
     },
