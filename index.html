@@ -85,6 +85,89 @@
         .ml-header-search:focus-within {
             box-shadow: inset 0 0 0 2px rgba(52, 131, 250, 0.35);
         }
+        .search-shell {
+            position: relative;
+        }
+        .search-suggestions {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 20px 48px rgba(15, 23, 42, 0.16);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            z-index: 150;
+            opacity: 0;
+            transform: translateY(6px) scale(0.98);
+            transform-origin: top center;
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .search-suggestions.is-open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .search-suggestion-item {
+            display: grid;
+            grid-template-columns: 18px minmax(0, 1fr);
+            gap: 10px;
+            width: 100%;
+            padding: 11px 14px;
+            background: white;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: searchSuggestionRise 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            transition: background-color 0.18s ease, transform 0.18s ease;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .search-suggestion-item:last-child {
+            border-bottom: 0;
+        }
+        .search-suggestion-item:hover {
+            background: #f8fafc;
+            transform: translateX(2px);
+        }
+        .search-suggestion-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .search-suggestion-empty {
+            padding: 16px;
+            font-size: 14px;
+            color: #6b7280;
+            animation: searchSuggestionFade 0.24s ease forwards;
+        }
+        @keyframes searchSuggestionRise {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes searchSuggestionFade {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         .ml-header-pill {
             background: linear-gradient(90deg, #ffffff 0%, #f3f4ff 100%);
             box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -189,6 +272,69 @@
         }
         .desktop-account-shell {
             position: relative;
+        }
+        .desktop-header-actions {
+            display: none;
+        }
+        .desktop-header-bar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 14px;
+        }
+        .desktop-header-navzone {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            min-width: 0;
+        }
+        .desktop-primary-nav {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+            white-space: nowrap;
+        }
+        .desktop-primary-nav .nav-link,
+        .desktop-header-actions .nav-link,
+        #favorites-btn {
+            font-size: 13px;
+            line-height: 1;
+        }
+        .desktop-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 0;
+            padding-left: 14px;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        @media (min-width: 768px) {
+            .desktop-header-actions {
+                display: flex;
+            }
+            .desktop-header-bar {
+                gap: 16px;
+            }
+            .desktop-header-navzone {
+                gap: 20px;
+            }
+        }
+        @media (min-width: 1280px) {
+            .desktop-primary-nav {
+                gap: 18px;
+            }
+            .desktop-primary-nav .nav-link,
+            .desktop-header-actions .nav-link,
+            #favorites-btn {
+                font-size: 14px;
+            }
+            .desktop-header-right {
+                gap: 16px;
+                padding-left: 18px;
+            }
         }
         .desktop-account-trigger {
             display: inline-flex;
@@ -1511,13 +1657,14 @@
                 <button class="shrink-0" onclick="showPage('home')">
                     <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-11 w-auto object-contain">
                 </button>
-                <div class="flex-1 min-w-0">
+                <div class="search-shell flex-1 min-w-0">
                     <div class="ml-header-search bg-white h-10 rounded-[14px] flex items-center overflow-hidden">
                         <input id="mobile-search-input" type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full min-w-0 h-full px-3 text-[14px] text-gray-500 bg-transparent outline-none">
                         <button class="w-10 h-10 flex items-center justify-center text-gray-400">
                             <i data-lucide="search" class="w-4 h-4"></i>
                         </button>
                     </div>
+                    <div id="mobile-search-suggestions" class="search-suggestions hidden"></div>
                 </div>
                 <button class="mobile-menu-btn shrink-0" onclick="openMobileMenu()" aria-label="Abrir menu">
                     <i data-lucide="menu" class="w-5 h-5 mx-auto text-gray-700"></i>
@@ -1542,7 +1689,7 @@
                     <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-10 md:h-16 w-auto object-contain">
                 </div>
 
-                <div class="flex-1 min-w-0">
+                <div class="search-shell flex-1 min-w-0">
                     <div class="ml-header-search bg-white h-11 rounded-[2px] flex items-center overflow-hidden">
                         <input id="desktop-search-input" type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full min-w-0 h-full px-3 md:px-4 text-[14px] md:text-[18px] text-gray-500 bg-transparent outline-none">
                         <div class="h-6 w-px bg-gray-200"></div>
@@ -1550,15 +1697,16 @@
                             <i data-lucide="search" class="w-5 h-5"></i>
                         </button>
                     </div>
+                    <div id="desktop-search-suggestions" class="search-suggestions hidden"></div>
                 </div>
 
                 <div class="hidden lg:flex ml-header-pill items-center justify-center rounded-2xl px-3 py-1.5 h-[52px] min-w-[300px] overflow-hidden">
-                    <img src="https://http2.mlstatic.com/D_NQ_818238-MLA109888870887_032026-OO.webp" alt="Banner promocional Mercado Livre" class="h-full w-full object-cover rounded-xl">
+                    <img src="https://http2.mlstatic.com/D_NQ_965966-MLA110467212691_042026-OO.webp" alt="Banner promocional Mercado Livre" class="h-full w-full object-cover rounded-xl">
                 </div>
             </div>
 
-            <div class="flex items-center justify-between gap-4 text-[13px] md:text-[15px] text-[#333] overflow-x-auto md:overflow-visible scrollbar-hide">
-                <div class="flex items-center gap-5 md:gap-6 min-w-0">
+            <div class="desktop-header-bar text-[13px] md:text-[15px] text-[#333]">
+                <div class="desktop-header-navzone">
                     <div class="flex items-center gap-2.5 min-w-fit">
                         <i data-lucide="map-pin" class="w-5 h-5 text-[#333]"></i>
                         <div class="leading-[1.05]">
@@ -1567,7 +1715,7 @@
                         </div>
                     </div>
 
-                    <nav class="hidden md:flex items-center gap-5 whitespace-nowrap relative self-center">
+                    <nav class="desktop-primary-nav hidden md:flex relative self-center">
                         <div class="relative">
                             <button id="categories-trigger" class="nav-link hover:text-black transition-colors flex items-center gap-1.5 leading-none" onclick="toggleCategoriesMenu(event, this)">Categorias <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
                             <div id="categories-dropdown" class="categories-menu hidden absolute top-[calc(100%+12px)] left-0 w-[210px] rounded-b-sm rounded-tr-sm overflow-hidden z-[130]">
@@ -1575,8 +1723,8 @@
                                 <button class="categories-item" onclick="navigateToSection('supermarket')">Supermercado</button>
                                 <button class="categories-item" onclick="navigateToSection('categories')">Tecnologia <i data-lucide="chevron-right" class="w-4 h-4 opacity-70"></i></button>
                                 <button class="categories-item" onclick="navigateToSection('categories')">Casa e Móveis</button>
-                                <button class="categories-item" onclick="navigateToSection('categories')">Eletrodomesticos</button>
-                                <button class="categories-item" onclick="navigateToSection('categories')">Esportes e Fitness</button>
+                                <button class="categories-item" onclick="navigateToSection('eletrodomesticos')">Eletrodomesticos</button>
+                                <button class="categories-item" onclick="navigateToSection('esportes-fitness')">Esportes e Fitness</button>
                                 <button class="categories-item" onclick="navigateToSection('categories')">Ferramentas</button>
                                 <button class="categories-item" onclick="navigateToSection('categories')">Construção</button>
                                 <button class="categories-item" onclick="navigateToSection('categories')">Indústria e Comércio</button>
@@ -1606,10 +1754,12 @@
                     </nav>
                 </div>
 
-                <div class="flex items-center gap-4 md:gap-7 whitespace-nowrap shrink-0">
-                    <div class="hidden md:flex items-center gap-4 lg:gap-5">
+                <div class="desktop-header-right">
+                    <div id="nav-guest-actions" class="desktop-header-actions items-center gap-4 lg:gap-5 shrink-0">
                         <button id="nav-register-btn" class="nav-link hover:text-black transition-colors" onclick="openAuthPage('register', this)">Crie a sua conta</button>
                         <button id="nav-login-btn" class="nav-link hover:text-black transition-colors" onclick="openAuthPage('login', this)">Entre</button>
+                    </div>
+                    <div id="nav-user-actions" class="desktop-header-actions items-center gap-4 lg:gap-5 shrink-0">
                         <div id="nav-account-shell" class="desktop-account-shell hidden">
                             <button id="nav-account-btn" type="button" class="desktop-account-trigger">
                                 <span class="desktop-account-avatar">
@@ -1663,6 +1813,27 @@
                                 <div class="mt-3 pt-3 border-t border-gray-100">
                                     <button class="desktop-account-menu-link" onclick="logout(); closeDesktopAccountMenu();"><span>Sair</span><i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i></button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="nav-common-actions" class="desktop-header-actions items-center gap-4 lg:gap-5 shrink-0">
+                        <div id="favorites-shell" class="desktop-account-shell">
+                            <button id="favorites-btn" type="button" class="nav-link hover:text-black transition-colors relative" onclick="toggleFavoritesMenu(event)">
+                                Favoritos
+                                <span id="favorites-count" class="hidden absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">0</span>
+                            </button>
+                            <div id="favorites-menu" class="desktop-account-menu">
+                                <div class="flex items-center justify-between gap-3 px-2 pb-3 border-b border-gray-100">
+                                    <div>
+                                        <p class="font-semibold text-gray-900">Favoritos</p>
+                                        <p class="text-sm text-gray-500">Produtos salvos no coracao</p>
+                                    </div>
+                                    <i data-lucide="heart" class="w-5 h-5 text-pink-500 fill-current"></i>
+                                </div>
+                                <div id="favorites-menu-empty" class="px-2 py-5 text-sm text-gray-500">
+                                    Nenhum produto salvo ainda.
+                                </div>
+                                <div id="favorites-menu-list" class="mt-2 space-y-1"></div>
                             </div>
                         </div>
                         <button class="nav-link hover:text-black transition-colors" onclick="showPage('orders', this)">Compras</button>
@@ -1729,6 +1900,18 @@
                 <button class="mobile-menu-link" onclick="navigateToSection('categories'); closeMobileMenu();">
                     <span class="flex items-center gap-3"><i data-lucide="layout-grid" class="w-5 h-5 text-gray-500"></i>Categorias</span>
                 </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('tecnologia'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="laptop" class="w-5 h-5 text-gray-500"></i>Tecnologia</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('eletrodomesticos'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="washing-machine" class="w-5 h-5 text-gray-500"></i>Eletrodomesticos</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('casa-moveis'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="sofa" class="w-5 h-5 text-gray-500"></i>Casa e Moveis</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('esportes-fitness'); closeMobileMenu();">
+                    <span class="flex items-center gap-3"><i data-lucide="dumbbell" class="w-5 h-5 text-gray-500"></i>Esportes e Fitness</span>
+                </button>
                 <button class="mobile-menu-link" onclick="navigateToSection('supermarket'); closeMobileMenu();">
                     <span class="flex items-center gap-3"><i data-lucide="store" class="w-5 h-5 text-gray-500"></i>Supermercado</span>
                 </button>
@@ -1764,17 +1947,7 @@
             <div class="hero-stage py-2 md:py-3">
                 <div class="hero-frame">
                     <div id="hero-carousel" class="relative h-[220px] md:h-[420px] overflow-hidden">
-                        <div id="hero-carousel-track" class="hero-carousel-track flex h-full">
-                            <div class="min-w-full h-full">
-                                <img src="./assets/banner-home-2.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 2">
-                            </div>
-                            <div class="min-w-full h-full">
-                                <img src="./assets/banner-home-3.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 3">
-                            </div>
-                            <div class="min-w-full h-full">
-                                <img src="./assets/banner-home-4.png" class="w-full h-full object-cover" alt="Banner Mercado Livre 4">
-                            </div>
-                        </div>
+                        <div id="hero-carousel-track" class="hero-carousel-track flex h-full"></div>
 
                         <button onclick="moveHeroSlide(-1)" class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
                             <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -1783,11 +1956,7 @@
                             <i data-lucide="chevron-right" class="w-6 h-6"></i>
                         </button>
 
-                        <div id="hero-carousel-dots" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                            <button class="hero-dot active" onclick="setHeroSlide(0)" aria-label="Banner 1"></button>
-                            <button class="hero-dot" onclick="setHeroSlide(1)" aria-label="Banner 2"></button>
-                            <button class="hero-dot" onclick="setHeroSlide(2)" aria-label="Banner 3"></button>
-                        </div>
+                        <div id="hero-carousel-dots" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2"></div>
                     </div>
                 </div>
             </div>
@@ -1804,7 +1973,7 @@
             </section>
 
             <div id="home-shortcuts" class="max-w-7xl mx-auto px-4 -mt-6 md:-mt-10 relative z-10">
-                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+                <div id="home-shortcuts-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
                     <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
                         <h3 class="text-[16px] font-semibold text-[#333]">Frete grátis</h3>
                         <div class="flex items-center justify-center h-24">
@@ -1855,6 +2024,29 @@
                     </div>
                 </div>
             </div>
+
+            <section id="inspired-section" class="hidden max-w-7xl mx-auto px-4 mt-10">
+                <div class="offer-shell rounded-[2rem] p-4 md:p-6">
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 id="inspired-last-title" class="text-xl font-bold text-gray-900">Inspirado no ultimo visto</h2>
+                        <div id="inspired-section-dots" class="hidden md:flex items-center gap-1 text-gray-300"></div>
+                    </div>
+                    <div id="inspired-products-list" class="related-track flex gap-4 overflow-x-auto pb-4 scrollbar-hide"></div>
+                </div>
+            </section>
+
+            <section id="search-results-section" class="hidden max-w-7xl mx-auto px-4 mt-10">
+                <div class="offer-shell rounded-[2rem] p-4 md:p-6">
+                    <div class="flex items-center justify-between mb-5 gap-4">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.2em] text-gray-400 font-bold">Busca</p>
+                            <h2 id="search-results-title" class="text-2xl font-bold text-gray-900">Resultados</h2>
+                        </div>
+                        <button class="text-sm text-blue-600 font-semibold hover:underline" onclick="applySearchQuery('')">Limpar busca</button>
+                    </div>
+                    <div id="search-results-list" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"></div>
+                </div>
+            </section>
 
             <div class="desktop-offers-shell max-w-7xl mx-auto px-4 mt-16">
                 <div class="offer-shell desktop-offers-shell rounded-[2rem] p-4 md:p-6">
@@ -2013,6 +2205,115 @@
                     </div>
                 </div>
             </section>
+        </main>
+    </div>
+
+    <div id="page-electrodomesticos" class="hidden min-h-screen bg-white page-transition">
+        <main class="pb-20">
+            <div class="max-w-[1420px] mx-auto px-0 md:px-4 pt-4 md:pt-6">
+                <div id="electro-carousel" class="relative overflow-hidden rounded-[0] md:rounded-[6px] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08)] md:h-[500px]">
+                    <div id="electro-carousel-track" class="hero-carousel-track flex h-full"></div>
+
+                    <button onclick="moveElectroSlide(-1)" class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+                    <button onclick="moveElectroSlide(1)" class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+
+                    <div id="electro-carousel-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2"></div>
+                </div>
+
+                <section class="mt-6 max-w-[1140px] mx-auto px-4 md:px-0">
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <h2 class="text-[28px] font-semibold tracking-[-0.03em] text-[#333]">MELHORES OFERTAS</h2>
+                        <button class="text-[#3483fa] text-[18px] font-medium" onclick="showPage('electrodomesticos')">Ver mais</button>
+                    </div>
+                    <div id="electro-products-list" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4"></div>
+                </section>
+
+                <section class="mt-8 max-w-[1140px] mx-auto px-4 md:px-0">
+                    <div id="electro-promo-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="page-esportes-fitness" class="hidden min-h-screen bg-[#f5f5f5] page-transition">
+        <main class="pb-20">
+            <div class="max-w-[1460px] mx-auto px-0 md:px-4 pt-4 md:pt-6">
+                <div id="sports-carousel" class="relative overflow-hidden rounded-[0] md:rounded-[24px] bg-white shadow-[0_10px_35px_rgba(15,23,42,0.08)] md:h-[500px]">
+                    <div id="sports-carousel-track" class="hero-carousel-track flex h-full"></div>
+
+                    <button onclick="moveSportsSlide(-1)" class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+                    <button onclick="moveSportsSlide(1)" class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+
+                    <div id="sports-carousel-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2"></div>
+                </div>
+
+                <section class="mt-6 max-w-[1180px] mx-auto px-4 md:px-0">
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.28em] text-[#6b7280] font-bold">Esportes e Fitness</p>
+                            <h2 class="text-[28px] font-semibold tracking-[-0.03em] text-[#333]">MELHORES OFERTAS</h2>
+                        </div>
+                        <button class="text-[#3483fa] text-[18px] font-medium" onclick="showPage('esportes-fitness')">Ver mais</button>
+                    </div>
+                    <div id="sports-products-list" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4"></div>
+                </section>
+
+                <section class="mt-8 max-w-[1180px] mx-auto px-4 md:px-0">
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.28em] text-[#6b7280] font-bold">Parte 1</p>
+                            <h2 class="text-[28px] font-semibold tracking-[-0.03em] text-[#333]">COMPRE POR ESTILO</h2>
+                        </div>
+                    </div>
+                    <div id="sports-quick-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"></div>
+                </section>
+
+                <section class="mt-8 max-w-[1180px] mx-auto px-4 md:px-0">
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.28em] text-[#6b7280] font-bold">Parte 2</p>
+                            <h2 class="text-[28px] font-semibold tracking-[-0.03em] text-[#333]">MODALIDADES EM DESTAQUE</h2>
+                        </div>
+                    </div>
+                    <div id="sports-lifestyle-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+                </section>
+
+                <section class="mt-8 max-w-[1180px] mx-auto px-4 md:px-0">
+                    <div class="rounded-[30px] bg-[#171717] p-4 md:p-6 shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+                        <div class="flex items-center justify-between gap-4 mb-4 text-white">
+                            <div>
+                                <p class="text-sm uppercase tracking-[0.28em] text-white/60 font-bold">Parte 3</p>
+                                <h2 class="text-[28px] font-semibold tracking-[-0.03em]">TIRO ESPORTIVO</h2>
+                            </div>
+                        </div>
+                        <div id="sports-shooting-banner" class="overflow-hidden rounded-[24px]"></div>
+                        <div id="sports-shooting-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5"></div>
+                    </div>
+                </section>
+
+                <section class="mt-8 max-w-[1180px] mx-auto px-4 md:px-0">
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <div>
+                            <p class="text-sm uppercase tracking-[0.28em] text-[#6b7280] font-bold">Parte 4</p>
+                            <h2 class="text-[28px] font-semibold tracking-[-0.03em] text-[#333]">FUTEBOL, SKATE E TREINO</h2>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div id="sports-skate-banner" class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_34px_rgba(15,23,42,0.08)]"></div>
+                        <div id="sports-football-banner" class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_34px_rgba(15,23,42,0.08)]"></div>
+                        <div id="sports-football-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4"></div>
+                        <div id="sports-action-promos" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
 
@@ -2506,8 +2807,8 @@
                         </div>
                         <div class="flex items-start justify-between gap-3">
                             <h1 id="det-title" class="text-[29px] font-normal leading-9 text-gray-800"></h1>
-                            <button class="text-blue-600 hover:text-blue-700 transition-colors">
-                                <i data-lucide="heart" class="w-6 h-6"></i>
+                            <button id="det-favorite-btn" class="text-blue-600 hover:text-blue-700 transition-colors">
+                                <i id="det-favorite-icon" data-lucide="heart" class="w-6 h-6"></i>
                             </button>
                         </div>
                         <div class="flex items-center gap-2 mt-4">

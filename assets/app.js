@@ -4,13 +4,15 @@ const GLOBAL_DISCOUNT_RATE = 0.85;
 const STORAGE_KEYS = {
     session: "ml_session",
     purchases: "ml_purchases",
-    history: "ml_history"
+    history: "ml_history",
+    searchHistory: "ml_search_history",
+    favorites: "ml_favorites"
 };
 const APP_CONFIG = {
     googleClientId: window.GOOGLE_CLIENT_ID || ""
 };
 const AUTH_LOADING_MIN_MS = 950;
-const products = [
+const legacyProducts = [
     { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 1499.99, oldPrice: 2199.0, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
     { id: 2, title: "Geladeira Electrolux Frost Free Inverter 480L", price: 1999.99, oldPrice: 3798.0, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
     { id: 3, title: "Apple iPhone 15 (128 GB) - Preto", price: 2399.0, oldPrice: 4394.0, image: "https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX342_SY445_QL70_ML2_.jpg", description: "O iPhone 15 traz a Dynamic Island, camera de 48 MP e USB-C." },
@@ -21,13 +23,301 @@ const products = [
     { id: 8, title: "Samsung Galaxy Book4 Intel Core i5", price: 0, oldPrice: 2200.0, image: "https://m.media-amazon.com/images/I/51lGW2nP9qL._AC_SX522_.jpg", description: "Notebook leve com Intel Core i5, 8GB de RAM, SSD de 512GB e tela Full HD de 15,6 polegadas." }
 ];
 
+const products = [
+    {
+        id: 1,
+        category: "casa-moveis",
+        title: "Sofa 3 Lugares Clean Retratil Reclinavel Cama Inbox - Cinza - Liso",
+        price: 75.0,
+        oldPrice: 500.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_973369-MLA97351737569_112025-F.webp",
+        description: "Sofa de 3 lugares com assento retratil, encosto reclinavel e visual clean para sala."
+    },
+    {
+        id: 2,
+        category: "eletrodomesticos",
+        title: "Fritadeira Eletrica AFON-12L-BG Forno Oven 12 Litros Preto Mondial",
+        price: 118.5,
+        oldPrice: 790.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_654188-MLA110122213881_042026-F.webp",
+        description: "Air fryer oven Mondial de 12 litros para assar, gratinar e fritar com menos oleo."
+    },
+    {
+        id: 3,
+        category: "eletrodomesticos",
+        title: "Lava e Seca Hisense 11kg Titanium Conectada Cinza-escuro",
+        price: 494.85,
+        oldPrice: 3299.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_984896-MLA99461746270_112025-F.webp",
+        description: "Lava e seca conectada com 11 kg de capacidade, acabamento titanium e recursos inteligentes."
+    },
+    {
+        id: 4,
+        category: "eletrodomesticos",
+        title: "Maquina de Lavar Consul CWB09BB 9kg Branca com Dosagem Economica e Ciclo Edredom",
+        price: 269.85,
+        oldPrice: 1799.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_692762-MLA99477486134_112025-F.webp",
+        description: "Lavadora Consul 9 kg com dosagem economica e ciclo edredom para a rotina da casa."
+    },
+    {
+        id: 5,
+        category: "tecnologia",
+        title: "Notebook Acer Aspire Go 15 Intel Core i3 1215U 8GB 256GB SSD Linux Prateado",
+        price: 764.85,
+        oldPrice: 5099.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_848539-MLA109167669761_032026-O.jpg",
+        description: "Notebook Acer com tela de 15 polegadas, Intel Core i3, 8 GB de RAM e SSD de 256 GB."
+    },
+    {
+        id: 6,
+        category: "tecnologia",
+        title: "Console PlayStation 5 Slim Disk - Pacote Astro Bot e Gran Turismo 7 Branco",
+        price: 525.0,
+        oldPrice: 3500.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_945456-MLA99456386724_112025-O.jpg",
+        description: "PS5 Slim com leitor de disco e pacote com Astro Bot e Gran Turismo 7."
+    },
+    {
+        id: 7,
+        category: "tecnologia",
+        title: "Apple AirPods Pro 3 - Distribuidor Autorizado",
+        price: 404.85,
+        oldPrice: 2699.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_983699-MLA96154876825_102025-F.webp",
+        description: "Fones sem fio da Apple com estojo de recarga e experiencia premium para o dia a dia."
+    },
+    {
+        id: 8,
+        category: "eletrodomesticos",
+        title: "Lava e Seca 10,5kg Healthguard Titanium Conectada Midea",
+        price: 736.6,
+        oldPrice: 3683.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_892603-MLB89091208423_082025-F-lava-e-seca-105kg-healthguard-titanium-conectada-midea.webp",
+        description: "Lava e seca Midea com 10,5 kg, tecnologia Healthguard, conectividade e acabamento titanium."
+    },
+    {
+        id: 9,
+        category: "eletrodomesticos",
+        title: "Ventilador De Teto Natuvent Dahlia Led 4 Pas Madeira Freijo",
+        price: 451.15,
+        oldPrice: 1289.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_780740-MLB90768574509_082025-F-ventilador-de-teto-natuvent-dahlia-led-4-pas-madeira-freijo.webp",
+        description: "Ventilador de teto com iluminacao LED, 4 pas em madeira freijo e visual sofisticado."
+    },
+    {
+        id: 10,
+        category: "eletrodomesticos",
+        title: "Depurador e Exaustor Slim Touch 80cm DE81THPT Suggar",
+        price: 196.0,
+        oldPrice: 980.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_943717-MLA99471133198_112025-F.webp",
+        description: "Depurador e exaustor slim touch Suggar de 80 cm para cozinhas modernas e funcionais."
+    },
+    {
+        id: 11,
+        category: "eletrodomesticos",
+        title: "Ar Condicionado Split Hi Wall TCL T-Pro 2.0 Inverter 9.000 Btus Frio R-32",
+        price: 749.75,
+        oldPrice: 2999.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_851669-MLA99906883721_112025-F.webp",
+        description: "Ar-condicionado split TCL inverter 9.000 BTUs com ciclo frio e gas R-32."
+    },
+    {
+        id: 12,
+        category: "esportes-fitness",
+        title: "Hoverboard Skate Eletrico 6.5 Polegadas Com Led e Bluetooth Cor Roxo Galaxia Brinovar",
+        price: 348.6,
+        oldPrice: 996.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_948014-MLA109035887982_032026-F.webp",
+        description: "Hoverboard com rodas de 6,5 polegadas, iluminacao LED e Bluetooth em acabamento roxo galaxia."
+    },
+    {
+        id: 13,
+        category: "esportes-fitness",
+        title: "Alca Paracord Garrafa Agua Termica Suporte Portatil Cordao",
+        price: 9.99,
+        oldPrice: 31.9,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_836840-MLB84762789585_052025-F.webp",
+        description: "Suporte com alca paracord para transportar garrafas e copos termicos com mais praticidade."
+    },
+    {
+        id: 14,
+        category: "esportes-fitness",
+        title: "Bola Adidas Trionda League 5 WC 2026 Copa do Mundo FIFA",
+        price: 99.99,
+        oldPrice: 299.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_993670-MLB93538426506_102025-F.webp",
+        description: "Bola Adidas inspirada na Copa do Mundo FIFA 2026 para treinos e partidas com visual oficial."
+    },
+    {
+        id: 15,
+        category: "esportes-fitness",
+        title: "Bicicleta Aro 26 Dropp Freeride 21 Vel Freio a Disco VikingX Vermelha Quadro 13.5",
+        price: 559.0,
+        oldPrice: 1399.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_762018-MLA100014649909_122025-F.webp",
+        description: "Bike aro 26 com 21 velocidades e freio a disco para pedal urbano e trilhas leves."
+    },
+    {
+        id: 16,
+        category: "esportes-fitness",
+        title: "Bicicleta Eletrica 800W Astur Aro 24 Suspensao Acelerador Preto",
+        price: 3299.0,
+        oldPrice: 7499.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_914909-MLA105823359345_012026-F.webp",
+        description: "Bicicleta eletrica Astur com motor de 800W, aro 24, suspensao e acelerador."
+    },
+    {
+        id: 17,
+        category: "esportes-fitness",
+        title: "Bicicleta Ergometrica para Spinning Mecanica 8kg Odin Fit Preto/Vermelho",
+        price: 1190.0,
+        oldPrice: 2299.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_698827-MLA99367807330_112025-F.webp",
+        description: "Bike de spinning mecanica com roda de inercia de 8 kg para treinos em casa."
+    },
+    {
+        id: 18,
+        category: "esportes-fitness",
+        title: "Kit Halteres 6 em 1 Ate 40kg Ajustavel Halter Kettlebell Anilha Preto Vermelho",
+        price: 299.0,
+        oldPrice: 1649.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_723293-MLA101063609196_122025-F.webp",
+        description: "Kit multifuncional 6 em 1 para musculacao com configuracoes de halter, kettlebell e anilhas."
+    },
+    {
+        id: 19,
+        category: "esportes-fitness",
+        title: "Mono Cross Over Polia Parede Academia Musculacao WCT Fitness",
+        price: 1429.0,
+        oldPrice: 2977.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_915889-MLB90216840573_082025-F.webp",
+        description: "Estacao mono cross over para parede pensada para treinos de musculacao em academia ou home gym."
+    },
+    {
+        id: 20,
+        category: "esportes-fitness",
+        title: "Esteira Eletrica Dream Fitness Concept 2.1 Preto e Verde",
+        price: 1420.0,
+        oldPrice: 3082.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_625495-MLU72527055714_102023-F.webp",
+        description: "Esteira eletrica Dream Fitness para caminhadas e corridas com design preto e verde."
+    },
+    {
+        id: 21,
+        category: "esportes-fitness",
+        title: "Carabina Espingarda de Pressao CBC New Jade 5.5 + Super Combo",
+        price: 449.0,
+        oldPrice: 1199.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_968405-MLB92438466400_092025-F.webp",
+        description: "Carabina de pressao CBC New Jade 5.5 acompanhada de super combo para tiro esportivo."
+    },
+    {
+        id: 22,
+        category: "esportes-fitness",
+        title: "Carabina Rifle Pressao CBC Jade 5.5 Preta + Capa + Chumbo",
+        price: 545.0,
+        oldPrice: 959.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_772435-MLB92445295136_092025-F.webp",
+        description: "Kit com carabina CBC Jade 5.5, capa e chumbo para pratica esportiva."
+    }
+];
+
+const electroPromoTiles = [
+    "https://http2.mlstatic.com/D_NQ_NP_2X_851669-MLA99906883721_112025-F.webp",
+    "https://http2.mlstatic.com/D_NQ_NP887410-MLA94263488132_102025-B.webp",
+    "https://http2.mlstatic.com/D_NQ_NP966738-MLA94692492411_102025-B.webp",
+    "https://http2.mlstatic.com/D_NQ_NP906445-MLA94692593391_102025-B.webp",
+    "https://http2.mlstatic.com/D_NQ_NP723603-MLA94696018473_102025-B.webp",
+    "https://http2.mlstatic.com/D_NQ_NP911670-MLA94696018299_102025-B.webp"
+];
+
+const homeHeroSlides = [
+    { image: "./assets/banner-home-1.png", alt: "Banner principal Mercado Livre 1" },
+    { image: "./assets/banner-home-2.png", alt: "Banner principal Mercado Livre 2" },
+    { image: "./assets/banner-home-3.png", alt: "Banner principal Mercado Livre 3" },
+    { image: "./assets/banner-home-4.png", alt: "Banner principal Mercado Livre 4" },
+    { image: "./assets/banner-home-5.png", alt: "Banner principal Mercado Livre 5" },
+    { image: "./assets/banner-home-6.webp", alt: "Banner principal Mercado Livre 6" }
+];
+
+const electrodomesticosHeroSlides = [
+    { image: "./assets/banner-eletro-1.png", alt: "Banner de eletrodomesticos Wap Week" },
+    { image: "./assets/banner-eletro-2.png", alt: "Banner de eletrodomesticos Arno" },
+    { image: "./assets/banner-eletro-3.png", alt: "Banner de eletrodomesticos renove sua casa" }
+];
+
+const sportsFitnessHeroSlides = [
+    { image: "./assets/sports/Captura de tela 2026-04-19 000627.png", alt: "Banner o melhor do esporte" },
+    { image: "./assets/sports/Captura de tela 2026-04-19 000648.png", alt: "Banner o melhor do ciclismo" },
+    { image: "./assets/sports/Captura de tela 2026-04-19 000712.png", alt: "Banner grandes marcas de tenis" },
+    { image: "./assets/sports/Captura de tela 2026-04-19 000728.png", alt: "Banner monte sua academia" },
+    { image: "./assets/sports/Captura de tela 2026-04-19 000749.png", alt: "Banner aventura ao ar livre" },
+    { image: "./assets/sports/Captura de tela 2026-04-19 000805.png", alt: "Banner diversao garantida" }
+];
+
+const sportsQuickAccessTiles = [
+    { title: "Bikes", image: "./assets/sports/Captura de tela 2026-04-19 000821.png" },
+    { title: "Copos", image: "./assets/sports/Captura de tela 2026-04-19 000841.png" },
+    { title: "Spinning", image: "./assets/sports/Captura de tela 2026-04-19 000855.png" },
+    { title: "Patins", image: "./assets/sports/Captura de tela 2026-04-19 000907.png" },
+    { title: "Barracas", image: "./assets/sports/Captura de tela 2026-04-19 000919.png" },
+    { title: "Skates", image: "./assets/sports/Captura de tela 2026-04-19 000931.png" },
+    { title: "Beach tennis", image: "./assets/sports/Captura de tela 2026-04-19 000942.png" },
+    { title: "Esteiras", image: "./assets/sports/Captura de tela 2026-04-19 000955.png" },
+    { title: "Relogios", image: "./assets/sports/Captura de tela 2026-04-19 001016.png" },
+    { title: "Futebol", image: "./assets/sports/Captura de tela 2026-04-19 001028.png" }
+];
+
+const sportsLifestyleTiles = [
+    { title: "Ciclismo", image: "./assets/sports/Captura de tela 2026-04-19 001040.png" },
+    { title: "Fitness", image: "./assets/sports/Captura de tela 2026-04-19 001053.png" },
+    { title: "Camping", image: "./assets/sports/Captura de tela 2026-04-19 001106.png" },
+    { title: "Pesca", image: "./assets/sports/Captura de tela 2026-04-19 001120.png" },
+    { title: "Cardiovasculares", image: "./assets/sports/Captura de tela 2026-04-19 001224.png" },
+    { title: "Musculacao", image: "./assets/sports/Captura de tela 2026-04-19 001239.png" },
+    { title: "Pilates & ioga", image: "./assets/sports/Captura de tela 2026-04-19 001252.png" },
+    { title: "Artes marciais", image: "./assets/sports/Captura de tela 2026-04-19 001317.png" },
+    { title: "Termicos", image: "./assets/sports/Captura de tela 2026-04-19 001340.png" },
+    { title: "Barracas", image: "./assets/sports/Captura de tela 2026-04-19 001351.png" },
+    { title: "Acessorios", image: "./assets/sports/Captura de tela 2026-04-19 001402.png" },
+    { title: "Copos & garrafas", image: "./assets/sports/Captura de tela 2026-04-19 001502.png" }
+];
+
+const sportsShootingAssets = {
+    banner: "./assets/sports/Captura de tela 2026-04-19 001516.png",
+    tiles: [
+        { title: "Carabinas e kits", image: "./assets/sports/Captura de tela 2026-04-19 001527.png" },
+        { title: "Acessorios", image: "./assets/sports/Captura de tela 2026-04-19 001539.png" },
+        { title: "Arcos e balestras", image: "./assets/sports/Captura de tela 2026-04-19 001551.png" }
+    ]
+};
+
+const sportsActionAssets = {
+    skateBanner: "./assets/sports/Captura de tela 2026-04-19 001712.png",
+    footballBanner: "./assets/sports/Captura de tela 2026-04-19 001724.png",
+    productTiles: [
+        { title: "Bolas", image: "./assets/sports/Captura de tela 2026-04-19 001744.png" },
+        { title: "Luvas", image: "./assets/sports/Captura de tela 2026-04-19 001806.png" },
+        { title: "Caneleiras", image: "./assets/sports/Captura de tela 2026-04-19 001905.png" },
+        { title: "Bolsas", image: "./assets/sports/Captura de tela 2026-04-19 001941.png" },
+        { title: "Jaquetas", image: "./assets/sports/Captura de tela 2026-04-19 001953.png" },
+        { title: "Chuteiras", image: "./assets/sports/Captura de tela 2026-04-19 002006.png" }
+    ],
+    promoBanners: [
+        { title: "Fanzone", image: "./assets/sports/Captura de tela 2026-04-19 002016.png" },
+        { title: "Treino Nike", image: "./assets/sports/Captura de tela 2026-04-19 002028.png" }
+    ]
+};
+
 const appState = {
     cart: [],
     currentProdId: null,
     currentPayment: null,
     currentHeroSlide: 0,
     heroCarouselInterval: null,
-    heroSlideCount: 3,
+    heroSlideCount: homeHeroSlides.length,
     currentCheckoutStep: "address",
     authMode: "register",
     authRegistration: {
@@ -37,16 +327,24 @@ const appState = {
     session: null,
     purchases: [],
     history: [],
+    searchHistory: [],
+    favorites: [],
     addresses: [],
     addressesLoadedFor: "",
     pendingCheckout: false,
     searchQuery: "",
+    currentElectroSlide: 0,
+    electroCarouselInterval: null,
+    electroSlideCount: electrodomesticosHeroSlides.length,
+    currentSportsSlide: 0,
+    sportsCarouselInterval: null,
+    sportsSlideCount: sportsFitnessHeroSlides.length,
     checkoutDraft: {
         paymentMethod: "pix"
     }
 };
 
-const productDetailMap = {
+const legacyProductDetailMap = {
     1: {
         brand: "Samsung",
         breadcrumb: "Eletronicos, Audio e Video > Televisores",
@@ -103,6 +401,405 @@ const productDetailMap = {
     }
 };
 
+const productDetailMap = {
+    1: {
+        brand: "Inbox",
+        breadcrumb: "Casa e Moveis > Sofas",
+        sold: "+500 vendidos",
+        rating: 4.7,
+        reviews: 118,
+        shippingText: "Entrega agendada e frete gratis na primeira compra",
+        sellerName: "Loja oficial Inbox",
+        sellerSales: "+5 mil",
+        optionText: "12 produtos novos a partir de R$ 500",
+        highlights: [
+            "Sofa de 3 lugares com visual clean.",
+            "Assento retratil para mais conforto.",
+            "Encosto reclinavel para descanso.",
+            "Acabamento liso na cor cinza.",
+            "Ideal para salas compactas ou medias."
+        ]
+    },
+    2: {
+        brand: "Mondial",
+        breadcrumb: "Eletrodomesticos > Fritadeiras",
+        sold: "+3 mil vendidos",
+        rating: 4.8,
+        reviews: 624,
+        shippingText: "Chegara rapido com envio full",
+        sellerName: "Loja oficial Mondial",
+        sellerSales: "+80 mil",
+        optionText: "22 produtos novos a partir de R$ 790",
+        highlights: [
+            "Capacidade total de 12 litros.",
+            "Funciona como fritadeira e forno.",
+            "Ideal para receitas de maior volume.",
+            "Design preto para cozinhas modernas.",
+            "Versatil para assar, gratinar e aquecer."
+        ]
+    },
+    3: {
+        brand: "Hisense",
+        breadcrumb: "Eletrodomesticos > Lava e Seca",
+        sold: "+900 vendidos",
+        rating: 4.8,
+        reviews: 207,
+        shippingText: "Entrega agendada com cobertura para grandes centros",
+        sellerName: "Loja oficial Hisense",
+        sellerSales: "+20 mil",
+        optionText: "8 produtos novos a partir de R$ 3.299",
+        highlights: [
+            "Capacidade de 11 kg para lavar e secar.",
+            "Acabamento titanium moderno.",
+            "Recursos conectados para mais controle.",
+            "Boa opcao para apartamentos e casas.",
+            "Pensada para rotina de lavanderia completa."
+        ]
+    },
+    4: {
+        brand: "Consul",
+        breadcrumb: "Eletrodomesticos > Maquinas de Lavar",
+        sold: "+2 mil vendidos",
+        rating: 4.7,
+        reviews: 391,
+        shippingText: "Chegara em poucos dias com frete gratis na campanha",
+        sellerName: "Loja oficial Consul",
+        sellerSales: "+100 mil",
+        optionText: "15 produtos novos a partir de R$ 1.799",
+        highlights: [
+            "Capacidade de 9 kg para o uso diario.",
+            "Dosagem economica para reduzir desperdicio.",
+            "Ciclo edredom para pecas maiores.",
+            "Visual branco classico.",
+            "Boa relacao custo-beneficio."
+        ]
+    },
+    5: {
+        brand: "Acer",
+        breadcrumb: "Tecnologia > Notebooks",
+        sold: "+1 mil vendidos",
+        rating: 4.8,
+        reviews: 264,
+        shippingText: "Receba com envio rapido e compra protegida",
+        sellerName: "Loja oficial Acer",
+        sellerSales: "+60 mil",
+        optionText: "19 produtos novos a partir de R$ 5.099",
+        highlights: [
+            "Intel Core i3 de 12a geracao.",
+            "8 GB de memoria RAM.",
+            "SSD de 256 GB para inicializacao rapida.",
+            "Tela de 15 polegadas para estudo e trabalho.",
+            "Acabamento prateado discreto."
+        ]
+    },
+    6: {
+        brand: "Sony",
+        breadcrumb: "Tecnologia > Games > Consoles",
+        sold: "+4 mil vendidos",
+        rating: 4.9,
+        reviews: 1432,
+        shippingText: "Entrega expressa para varias regioes",
+        sellerName: "Loja oficial PlayStation",
+        sellerSales: "+300 mil",
+        optionText: "11 produtos novos a partir de R$ 3.500",
+        highlights: [
+            "Versao Slim com leitor de disco.",
+            "Inclui Astro Bot e Gran Turismo 7.",
+            "Console para jogos de nova geracao.",
+            "Design branco com acabamento moderno.",
+            "Excelente opcao para entretenimento."
+        ]
+    },
+    7: {
+        brand: "Apple",
+        breadcrumb: "Tecnologia > Audio > Fones de Ouvido",
+        sold: "+6 mil vendidos",
+        rating: 4.9,
+        reviews: 987,
+        shippingText: "Chegara rapido com nota fiscal e garantia",
+        sellerName: "Distribuidor autorizado Apple",
+        sellerSales: "+250 mil",
+        optionText: "16 produtos novos a partir de R$ 2.699",
+        highlights: [
+            "Audio sem fio com experiencia premium.",
+            "Estojo de recarga incluso.",
+            "Ideal para chamadas, musica e video.",
+            "Integracao forte com ecossistema Apple.",
+            "Produto vendido por distribuidor autorizado."
+        ]
+    },
+    8: {
+        brand: "Midea",
+        breadcrumb: "Eletrodomesticos > Lava e Seca",
+        sold: "+700 vendidos",
+        rating: 4.8,
+        reviews: 163,
+        shippingText: "Entrega agendada com instalacao facilitada",
+        sellerName: "Loja oficial Midea",
+        sellerSales: "+40 mil",
+        optionText: "9 produtos novos a partir de R$ 3.683",
+        highlights: [
+            "Capacidade de 10,5 kg para lavar e secar.",
+            "Tecnologia Healthguard para mais cuidado.",
+            "Acabamento titanium conectado.",
+            "Boa opcao para rotina de lavanderia completa.",
+            "Visual premium para ambientes modernos."
+        ]
+    },
+    9: {
+        brand: "Natuvent",
+        breadcrumb: "Eletrodomesticos > Ventilacao > Ventiladores de Teto",
+        sold: "+500 vendidos",
+        rating: 4.7,
+        reviews: 94,
+        shippingText: "Receba com entrega full em regioes selecionadas",
+        sellerName: "Loja oficial Natuvent",
+        sellerSales: "+12 mil",
+        optionText: "14 produtos novos a partir de R$ 1.289",
+        highlights: [
+            "Ventilador de teto com 4 pas em madeira freijo.",
+            "Iluminacao LED integrada.",
+            "Visual elegante para sala e quarto.",
+            "Boa circulacao de ar com design decorativo.",
+            "Ideal para projetos residenciais modernos."
+        ]
+    },
+    10: {
+        brand: "Suggar",
+        breadcrumb: "Eletrodomesticos > Cozinha > Depuradores",
+        sold: "+1 mil vendidos",
+        rating: 4.7,
+        reviews: 188,
+        shippingText: "Chegara rapido com compra protegida",
+        sellerName: "Loja oficial Suggar",
+        sellerSales: "+70 mil",
+        optionText: "17 produtos novos a partir de R$ 980",
+        highlights: [
+            "Modelo slim touch de 80 cm.",
+            "Funciona como depurador e exaustor.",
+            "Visual clean para cozinhas planejadas.",
+            "Boa opcao para fogoes maiores.",
+            "Painel touch com acabamento moderno."
+        ]
+    },
+    11: {
+        brand: "TCL",
+        breadcrumb: "Eletrodomesticos > Ar e Ventilacao > Ar-condicionado",
+        sold: "+2 mil vendidos",
+        rating: 4.8,
+        reviews: 276,
+        shippingText: "Entrega agendada com cobertura para grandes centros",
+        sellerName: "Loja oficial TCL",
+        sellerSales: "+90 mil",
+        optionText: "13 produtos novos a partir de R$ 2.999",
+        highlights: [
+            "Split inverter de 9.000 BTUs.",
+            "Ciclo frio com gas R-32.",
+            "Linha T-Pro 2.0 da TCL.",
+            "Boa eficiencia energetica para uso diario.",
+            "Ideal para ambientes compactos e medios."
+        ]
+    },
+    12: {
+        brand: "Brinovar",
+        breadcrumb: "Esportes e Fitness > Skates e Patins > Hoverboards",
+        sold: "+900 vendidos",
+        rating: 4.7,
+        reviews: 138,
+        shippingText: "Chegara rapido com envio full",
+        sellerName: "Loja oficial Brinovar",
+        sellerSales: "+15 mil",
+        optionText: "10 produtos novos a partir de R$ 996",
+        highlights: [
+            "Hoverboard com rodas de 6,5 polegadas.",
+            "Iluminacao LED integrada.",
+            "Bluetooth para trilha sonora no passeio.",
+            "Acabamento roxo galaxia.",
+            "Boa opcao para lazer e diversao."
+        ]
+    },
+    13: {
+        brand: "Paracord",
+        breadcrumb: "Esportes e Fitness > Termicos > Acessorios",
+        sold: "+4 mil vendidos",
+        rating: 4.8,
+        reviews: 412,
+        shippingText: "Receba com compra protegida e frete rapido",
+        sellerName: "Loja parceira Mercado Livre",
+        sellerSales: "+40 mil",
+        optionText: "24 produtos novos a partir de R$ 31",
+        highlights: [
+            "Alca paracord para transporte facil.",
+            "Compatível com diversos modelos de garrafa.",
+            "Ideal para rotina esportiva e trilhas.",
+            "Leve, resistente e facil de prender.",
+            "Boa opcao para copos e termicos grandes."
+        ]
+    },
+    14: {
+        brand: "Adidas",
+        breadcrumb: "Esportes e Fitness > Futebol > Bolas",
+        sold: "+2 mil vendidos",
+        rating: 4.9,
+        reviews: 286,
+        shippingText: "Chegara com envio full para regioes selecionadas",
+        sellerName: "Loja oficial Adidas",
+        sellerSales: "+120 mil",
+        optionText: "14 produtos novos a partir de R$ 299",
+        highlights: [
+            "Visual inspirado na Copa do Mundo FIFA 2026.",
+            "Modelo league tamanho 5.",
+            "Boa para treinos e partidas recreativas.",
+            "Acabamento com identidade Adidas.",
+            "Excelente opcao para colecao e uso."
+        ]
+    },
+    15: {
+        brand: "VikingX",
+        breadcrumb: "Esportes e Fitness > Ciclismo > Bicicletas",
+        sold: "+1 mil vendidos",
+        rating: 4.7,
+        reviews: 173,
+        shippingText: "Entrega agendada com cobertura em varias cidades",
+        sellerName: "Loja oficial VikingX",
+        sellerSales: "+18 mil",
+        optionText: "11 produtos novos a partir de R$ 1.399",
+        highlights: [
+            "Bicicleta aro 26 com 21 velocidades.",
+            "Freios a disco para mais controle.",
+            "Quadro 13.5 em acabamento vermelho.",
+            "Boa para passeios e trilhas leves.",
+            "Conjunto versatil para iniciantes."
+        ]
+    },
+    16: {
+        brand: "Astur",
+        breadcrumb: "Esportes e Fitness > Ciclismo > Bicicletas Eletricas",
+        sold: "+300 vendidos",
+        rating: 4.8,
+        reviews: 59,
+        shippingText: "Entrega programada com compra protegida",
+        sellerName: "Loja oficial Astur",
+        sellerSales: "+6 mil",
+        optionText: "7 produtos novos a partir de R$ 7.499",
+        highlights: [
+            "Motor de 800W com acelerador.",
+            "Aro 24 e suspensao para mais conforto.",
+            "Ideal para deslocamentos e lazer.",
+            "Acabamento preto moderno.",
+            "Boa autonomia para uso urbano."
+        ]
+    },
+    17: {
+        brand: "Odin Fit",
+        breadcrumb: "Esportes e Fitness > Fitness > Bikes de Spinning",
+        sold: "+700 vendidos",
+        rating: 4.8,
+        reviews: 145,
+        shippingText: "Receba com envio rapido e garantia",
+        sellerName: "Loja oficial Odin Fit",
+        sellerSales: "+22 mil",
+        optionText: "9 produtos novos a partir de R$ 2.299",
+        highlights: [
+            "Bike de spinning mecanica.",
+            "Roda de inercia de 8 kg.",
+            "Boa opcao para cardio em casa.",
+            "Estrutura em preto e vermelho.",
+            "Pensada para treinos regulares."
+        ]
+    },
+    18: {
+        brand: "WCT Fitness",
+        breadcrumb: "Esportes e Fitness > Musculacao > Halteres",
+        sold: "+3 mil vendidos",
+        rating: 4.8,
+        reviews: 521,
+        shippingText: "Chegara rapido com envio full",
+        sellerName: "Loja oficial WCT Fitness",
+        sellerSales: "+55 mil",
+        optionText: "16 produtos novos a partir de R$ 1.649",
+        highlights: [
+            "Kit 6 em 1 com diversas montagens.",
+            "Ajustavel ate 40 kg.",
+            "Pode virar halter, kettlebell e anilhas.",
+            "Acompanha e-book.",
+            "Boa opcao para home gym."
+        ]
+    },
+    19: {
+        brand: "WCT Fitness",
+        breadcrumb: "Esportes e Fitness > Musculacao > Estacoes",
+        sold: "+400 vendidos",
+        rating: 4.7,
+        reviews: 71,
+        shippingText: "Entrega agendada com compra protegida",
+        sellerName: "Loja oficial WCT Fitness",
+        sellerSales: "+55 mil",
+        optionText: "8 produtos novos a partir de R$ 2.977",
+        highlights: [
+            "Mono cross over para parede.",
+            "Estrutura ideal para home gym.",
+            "Boa variedade de exercicios com polia.",
+            "Acabamento robusto para treino intenso.",
+            "Pensado para musculacao funcional."
+        ]
+    },
+    20: {
+        brand: "Dream Fitness",
+        breadcrumb: "Esportes e Fitness > Fitness > Esteiras",
+        sold: "+900 vendidos",
+        rating: 4.7,
+        reviews: 164,
+        shippingText: "Chegara com envio rapido para varias regioes",
+        sellerName: "Loja oficial Dream Fitness",
+        sellerSales: "+34 mil",
+        optionText: "13 produtos novos a partir de R$ 3.082",
+        highlights: [
+            "Esteira eletrica para caminhadas e corridas leves.",
+            "Linha Concept 2.1 em preto e verde.",
+            "Boa opcao para treinar em casa.",
+            "Design compacto para ambiente interno.",
+            "Pratica para manter a rotina ativa."
+        ]
+    },
+    21: {
+        brand: "CBC",
+        breadcrumb: "Esportes e Fitness > Tiro Esportivo > Carabinas",
+        sold: "+1 mil vendidos",
+        rating: 4.8,
+        reviews: 204,
+        shippingText: "Entrega com compra protegida em canais autorizados",
+        sellerName: "Loja parceira CBC",
+        sellerSales: "+12 mil",
+        optionText: "9 produtos novos a partir de R$ 1.199",
+        highlights: [
+            "Modelo New Jade calibre 5.5.",
+            "Acompanha super combo.",
+            "Indicada para pratica esportiva.",
+            "Boa opcao para iniciantes e entusiastas.",
+            "Kit completo para uso recreativo."
+        ]
+    },
+    22: {
+        brand: "CBC",
+        breadcrumb: "Esportes e Fitness > Tiro Esportivo > Carabinas",
+        sold: "+800 vendidos",
+        rating: 4.8,
+        reviews: 151,
+        shippingText: "Receba com envio rapido e compra protegida",
+        sellerName: "Loja parceira CBC",
+        sellerSales: "+12 mil",
+        optionText: "11 produtos novos a partir de R$ 959",
+        highlights: [
+            "Carabina Jade 5.5 na cor preta.",
+            "Acompanha capa e chumbo.",
+            "Kit pensado para tiro esportivo.",
+            "Boa relacao custo-beneficio para o segmento.",
+            "Entrega em vendedores autorizados."
+        ]
+    }
+};
+
 window.appState = appState;
 
 function safeParse(key, fallback) {
@@ -119,12 +816,16 @@ function persistState() {
     localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(appState.session));
     localStorage.setItem(STORAGE_KEYS.purchases, JSON.stringify(appState.purchases));
     localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(appState.history));
+    localStorage.setItem(STORAGE_KEYS.searchHistory, JSON.stringify(appState.searchHistory));
+    localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(appState.favorites));
 }
 
 function loadState() {
     appState.session = safeParse(STORAGE_KEYS.session, null);
     appState.purchases = safeParse(STORAGE_KEYS.purchases, []);
     appState.history = safeParse(STORAGE_KEYS.history, []);
+    appState.searchHistory = safeParse(STORAGE_KEYS.searchHistory, []);
+    appState.favorites = safeParse(STORAGE_KEYS.favorites, []);
 }
 
 function getSessionEmail() {
@@ -421,14 +1122,343 @@ function getFilteredProducts() {
     });
 }
 
+function findProductsByQuery(rawQuery = "") {
+    const query = normalizeSearchText(rawQuery);
+    if (!query) return [];
+
+    return products.filter((product) => {
+        const meta = getProductDetailMeta(product);
+        const haystack = normalizeSearchText([
+            product.title,
+            product.description,
+            meta.brand,
+            meta.breadcrumb
+        ].join(" "));
+        return haystack.includes(query);
+    });
+}
+
+function getSearchSuggestions(rawQuery = "", limit = 6) {
+    return findProductsByQuery(rawQuery).slice(0, limit);
+}
+
+function getProductById(productId) {
+    return products.find((product) => product.id === productId) || null;
+}
+
+function isFavorite(productId) {
+    return appState.favorites.some((entry) => entry.id === productId);
+}
+
+function getFavoriteProducts() {
+    return appState.favorites
+        .map((entry) => getProductById(entry.id))
+        .filter(Boolean);
+}
+
+function getInspiredProducts(limit = 6) {
+    const lastViewed = getProductById(appState.history[0]?.id);
+    if (!lastViewed) return [];
+
+    const sameCategory = products.filter((product) => product.id !== lastViewed.id && product.category === lastViewed.category);
+    const fallback = products.filter((product) => product.id !== lastViewed.id && product.category !== lastViewed.category);
+    return [...sameCategory, ...fallback].slice(0, limit);
+}
+
+function renderInspiredProductCard(product) {
+    const currentPrice = getEffectivePrice(product);
+    const discount = getDiscountPercentage(product);
+    return `
+        <article class="related-card min-w-[220px] max-w-[220px] rounded-2xl bg-white p-4 cursor-pointer" onclick="openDetails(${product.id}, this)">
+            <div class="h-40 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden">
+                <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain p-2" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png'">
+            </div>
+            <div class="pt-4">
+                <h3 class="text-[14px] text-gray-700 line-clamp-2 min-h-[42px]">${product.title}</h3>
+                <p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <div class="flex items-baseline gap-2 mt-1 flex-wrap">
+                    <p class="text-[28px] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
+                    <p class="text-sm font-bold text-green-600">${discount}% OFF</p>
+                </div>
+                <p class="text-[11px] text-green-600 font-bold mt-2">Frete gratis</p>
+            </div>
+        </article>
+    `;
+}
+
+function renderInspiredSection() {
+    const section = document.getElementById("inspired-section");
+    const list = document.getElementById("inspired-products-list");
+    const title = document.getElementById("inspired-last-title");
+    const dots = document.getElementById("inspired-section-dots");
+    const lastViewed = getProductById(appState.history[0]?.id);
+    const inspired = getInspiredProducts();
+    if (!section || !list || !title || !dots) return;
+
+    if (!lastViewed || !inspired.length) {
+        section.classList.add("hidden");
+        list.innerHTML = "";
+        return;
+    }
+
+    title.innerText = "Inspirado no ultimo visto";
+    dots.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-current"></span><span class="w-1.5 h-1.5 rounded-full bg-current"></span><span class="w-1.5 h-1.5 rounded-full bg-current"></span><span class="w-1.5 h-1.5 rounded-full bg-current"></span>';
+    list.innerHTML = inspired.map(renderInspiredProductCard).join("");
+    section.classList.remove("hidden");
+}
+
+function renderFavoritesMenu() {
+    const countDesktop = document.getElementById("favorites-count");
+    const countMobile = document.getElementById("mobile-favorites-count");
+    const list = document.getElementById("favorites-menu-list");
+    const empty = document.getElementById("favorites-menu-empty");
+    const favorites = getFavoriteProducts();
+
+    if (countDesktop) {
+        countDesktop.innerText = String(favorites.length);
+        countDesktop.classList.toggle("hidden", favorites.length === 0);
+    }
+    if (countMobile) {
+        countMobile.innerText = String(favorites.length);
+        countMobile.classList.toggle("hidden", favorites.length === 0);
+    }
+    if (!list || !empty) return;
+
+    if (!favorites.length) {
+        list.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+    }
+
+    empty.classList.add("hidden");
+    list.innerHTML = favorites.map((product) => `
+        <button class="desktop-account-menu-link gap-3 items-start" onclick="openDetails(${product.id}); closeFavoritesMenu();">
+            <img src="${product.image}" alt="${product.title}" class="w-12 h-12 object-contain rounded-lg bg-gray-50 border border-gray-100 p-1" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png'">
+            <span class="min-w-0 flex-1 text-left">
+                <span class="block text-sm text-gray-800 truncate">${product.title}</span>
+                <span class="block text-xs text-green-600 font-semibold mt-1">${formatCurrency(getEffectivePrice(product))}</span>
+            </span>
+        </button>
+    `).join("");
+}
+
+function closeFavoritesMenu() {
+    document.getElementById("favorites-menu")?.classList.remove("is-open");
+}
+
+function toggleFavoritesMenu(event) {
+    event?.stopPropagation();
+    const menu = document.getElementById("favorites-menu");
+    if (!menu) return;
+    const willOpen = !menu.classList.contains("is-open");
+    closeFavoritesMenu();
+    closeDesktopAccountMenu();
+    if (willOpen) menu.classList.add("is-open");
+}
+
+function updateFavoriteButton(productId) {
+    const button = document.getElementById("det-favorite-btn");
+    const icon = document.getElementById("det-favorite-icon");
+    if (!button || !icon) return;
+
+    const active = isFavorite(productId);
+    button.classList.toggle("text-blue-600", !active);
+    button.classList.toggle("text-pink-500", active);
+    icon.classList.toggle("fill-current", active);
+}
+
+function toggleFavorite(productId) {
+    if (!productId) return;
+    if (isFavorite(productId)) {
+        appState.favorites = appState.favorites.filter((entry) => entry.id !== productId);
+    } else {
+        appState.favorites = [
+            { id: productId, savedAt: new Date().toISOString() },
+            ...appState.favorites.filter((entry) => entry.id !== productId)
+        ].slice(0, 40);
+    }
+    persistState();
+    renderFavoritesMenu();
+    updateFavoriteButton(productId);
+}
+
+function renderHomeShortcutCard(card) {
+    const imageMarkup = card.product
+        ? `
+            <div class="h-28 flex items-center justify-center overflow-hidden rounded-xl bg-[#f8fafc]">
+                <img src="${card.product.image}" alt="${card.product.title}" class="max-h-full object-contain p-2" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-4')">
+            </div>
+        `
+        : `
+            <div class="h-28 flex items-center justify-center overflow-hidden rounded-xl bg-[#f8fafc]">
+                <i data-lucide="${card.icon || "wallet"}" class="w-14 h-14 text-[#333]"></i>
+            </div>
+        `;
+
+    const priceMarkup = card.product
+        ? `
+            <p class="text-[12px] text-gray-400 mt-2 line-through">R$ ${card.product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            <div class="flex items-baseline gap-2 mt-1 flex-wrap">
+                <p class="text-[18px] leading-none font-normal text-gray-900">${formatCurrency(getEffectivePrice(card.product))}</p>
+                <p class="text-[11px] font-bold text-green-600">${getDiscountPercentage(card.product)}% OFF</p>
+            </div>
+            <p class="text-[12px] text-green-600 font-semibold mt-2">Frete gratis <span class="font-bold">FULL</span></p>
+        `
+        : `<p class="text-[14px] text-[#666] leading-5 mt-3">${card.description}</p>`;
+
+    return `
+        <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
+            <h3 class="text-[16px] font-semibold text-[#333]">${card.title}</h3>
+            ${imageMarkup}
+            <div class="flex flex-col min-h-[128px]">
+                <p class="text-[14px] text-[#666] leading-5 line-clamp-3 min-h-[60px]">${card.copy}</p>
+                ${priceMarkup}
+                <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold mt-auto" onclick="${card.action}">${card.cta}</button>
+            </div>
+        </div>
+    `;
+}
+
+function renderHomeShortcuts() {
+    const container = document.getElementById("home-shortcuts-grid");
+    if (!container) return;
+
+    const recentProduct = getProductById(appState.history[0]?.id);
+    const interestProduct = recentProduct
+        ? products.find((product) => product.id !== recentProduct.id && product.category === recentProduct.category) || products.find((product) => product.id !== recentProduct.id)
+        : products[0];
+    const cartProduct = getProductById(appState.cart[0]?.id);
+    const latestSearch = appState.searchHistory[0]?.query || "";
+    const searchProduct = latestSearch ? findProductsByQuery(latestSearch)[0] || null : null;
+    const checkoutProduct = getProductById(appState.cart[appState.cart.length - 1]?.id) || recentProduct;
+
+    const cards = [
+        recentProduct
+            ? {
+                title: "Visto recentemente",
+                copy: recentProduct.title,
+                product: recentProduct,
+                cta: "Ver produto",
+                action: `openDetails(${recentProduct.id})`
+            }
+            : {
+                title: "Visto recentemente",
+                copy: "Quando voce navegar pelos produtos, eles vao aparecer aqui.",
+                icon: "history",
+                description: "Seu historico recente fica salvo nesta area.",
+                cta: "Explorar produtos",
+                action: "navigateToSection('offers')"
+            },
+        interestProduct
+            ? {
+                title: "Tambem te interessa",
+                copy: interestProduct.title,
+                product: interestProduct,
+                cta: "Ver oferta",
+                action: `openDetails(${interestProduct.id})`
+            }
+            : null,
+        cartProduct
+            ? {
+                title: "Compre seu carrinho",
+                copy: `${cartProduct.title}${appState.cart.length > 1 ? ` e mais ${appState.cart.length - 1} item(ns)` : ""}`,
+                product: cartProduct,
+                cta: "Ir para o carrinho",
+                action: "openCartPage()"
+            }
+            : {
+                title: "Compre seu carrinho",
+                copy: "Adicione produtos ao carrinho para continuar daqui com um clique.",
+                icon: "shopping-cart",
+                description: "Seu carrinho vazio aparece aqui quando voce escolher itens.",
+                cta: "Ver ofertas",
+                action: "navigateToSection('offers')"
+            },
+        searchProduct
+            ? {
+                title: "Sua busca",
+                copy: `Busca recente: "${latestSearch}"`,
+                product: searchProduct,
+                cta: "Repetir busca",
+                action: `applySearchQuery('${latestSearch.replace(/'/g, "\\'")}')`
+            }
+            : {
+                title: "Sua busca",
+                copy: "As pesquisas mais recentes aparecem aqui para voce retomar depois.",
+                icon: "search",
+                description: "Busque por um produto para alimentar esta recomendacao.",
+                cta: "Buscar produtos",
+                action: "document.getElementById('desktop-search-input')?.focus()"
+            },
+        checkoutProduct
+            ? {
+                title: "Conclua sua compra",
+                copy: appState.cart.length ? `Finalize agora ${checkoutProduct.title}` : `Continue vendo ${checkoutProduct.title}`,
+                product: checkoutProduct,
+                cta: appState.cart.length ? "Concluir compra" : "Ver produto",
+                action: appState.cart.length ? "startCheckoutFlow()" : `openDetails(${checkoutProduct.id})`
+            }
+            : null,
+        {
+            title: "Meios de pagamento",
+            copy: "Pague suas compras com rapidez e seguranca.",
+            icon: "wallet",
+            description: "Pix, cartao e outras opcoes sempre disponiveis.",
+            cta: "Mostrar meios",
+            action: "navigateToSection('coupons')"
+        }
+    ].filter(Boolean);
+
+    container.innerHTML = cards.map(renderHomeShortcutCard).join("");
+    lucide.createIcons();
+}
+
+function renderHeroCarousel() {
+    const track = document.getElementById("hero-carousel-track");
+    const dotsWrap = document.getElementById("hero-carousel-dots");
+    const slides = homeHeroSlides;
+    if (!track || !dotsWrap) return;
+
+    track.innerHTML = slides.map((slide) => `
+        <div class="min-w-full h-full">
+            <img src="${slide.image}" class="w-full h-full object-cover" alt="${slide.alt}">
+        </div>
+    `).join("");
+
+    dotsWrap.innerHTML = slides.map((slide, index) => `
+        <button class="hero-dot ${index === 0 ? "active" : ""}" onclick="setHeroSlide(${index})" aria-label="${slide.alt}"></button>
+    `).join("");
+
+    appState.currentHeroSlide = 0;
+    appState.heroSlideCount = slides.length || 1;
+    updateHeroCarousel();
+    startHeroCarousel();
+}
+
 function renderProducts() {
     const list = document.getElementById("products-list");
     const featured = document.getElementById("featured-offer");
     const mobileList = document.getElementById("mobile-products-list");
+    const searchSection = document.getElementById("search-results-section");
+    const searchTitle = document.getElementById("search-results-title");
+    const searchList = document.getElementById("search-results-list");
     const filteredProducts = getFilteredProducts();
     const featuredProduct = filteredProducts[0] || null;
     const desktopProducts = filteredProducts.slice(featuredProduct ? 1 : 0, featuredProduct ? 7 : 6);
     const mobileProducts = filteredProducts.slice(0, 6);
+
+    if (searchSection && searchTitle && searchList) {
+        if (appState.searchQuery.trim()) {
+            searchTitle.innerText = `Resultados para "${appState.searchQuery.trim()}"`;
+            searchList.innerHTML = filteredProducts.length
+                ? filteredProducts.map(renderProductCard).join("")
+                : '<div class="col-span-full px-4 py-10 text-center text-gray-500">Nenhum produto encontrado para essa busca.</div>';
+            searchSection.classList.remove("hidden");
+        } else {
+            searchSection.classList.add("hidden");
+            searchList.innerHTML = "";
+        }
+    }
 
     if (list) {
         list.innerHTML = desktopProducts.length
@@ -472,6 +1502,9 @@ function renderProducts() {
             </div>
         `;
     }
+
+    renderHomeShortcuts();
+    renderInspiredSection();
 }
 
 function syncSearchInputs() {
@@ -481,11 +1514,95 @@ function syncSearchInputs() {
     if (mobileInput && mobileInput.value !== appState.searchQuery) mobileInput.value = appState.searchQuery;
 }
 
+function closeSearchSuggestions() {
+    ["desktop-search-suggestions", "mobile-search-suggestions"].forEach((id) => {
+        const element = document.getElementById(id);
+        if (!element || element.classList.contains("hidden")) return;
+        element.classList.remove("is-open");
+        window.setTimeout(() => {
+            if (!element.classList.contains("is-open")) {
+                element.classList.add("hidden");
+            }
+        }, 220);
+    });
+}
+
+function commitSearchHistory(rawValue = "") {
+    const value = (rawValue || "").trim();
+    const normalized = normalizeSearchText(value);
+    if (!normalized) return;
+    appState.searchHistory = [
+        { query: value, at: new Date().toISOString() },
+        ...appState.searchHistory.filter((entry) => normalizeSearchText(entry.query) !== normalized)
+    ].slice(0, 8);
+    persistState();
+}
+
+function renderSearchSuggestions() {
+    const query = appState.searchQuery.trim();
+    const suggestions = getSearchSuggestions(query);
+    const containers = [
+        document.getElementById("desktop-search-suggestions"),
+        document.getElementById("mobile-search-suggestions")
+    ];
+
+    containers.forEach((container) => {
+        if (!container) return;
+        if (!query) {
+            container.innerHTML = "";
+            container.classList.add("hidden");
+            return;
+        }
+
+        if (!suggestions.length) {
+            container.innerHTML = '<div class="search-suggestion-empty">Nenhum produto encontrado.</div>';
+            container.classList.remove("hidden");
+            window.requestAnimationFrame(() => container.classList.add("is-open"));
+            return;
+        }
+
+        container.innerHTML = suggestions.map((product, index) => `
+            <button class="search-suggestion-item" style="animation-delay:${index * 40}ms" onclick="openSearchSuggestion(${product.id})">
+                <span class="search-suggestion-icon" aria-hidden="true">⌕</span>
+                <span class="min-w-0">
+                    <span class="block text-[14px] font-normal text-[#333] leading-5 truncate">${product.title}</span>
+                </span>
+            </button>
+        `).join("");
+        container.classList.remove("hidden");
+        window.requestAnimationFrame(() => container.classList.add("is-open"));
+    });
+}
+
 function applySearchQuery(rawValue = "") {
     appState.searchQuery = rawValue.trimStart();
+    commitSearchHistory(appState.searchQuery);
     syncSearchInputs();
+    closeSearchSuggestions();
     renderProducts();
     showPage("home", null, { updateHistory: false, skipAnimation: true });
+    if (appState.searchQuery.trim()) {
+        window.setTimeout(() => {
+            const section = document.getElementById("search-results-section");
+            if (!section) return;
+            const top = section.getBoundingClientRect().top + window.scrollY - 110;
+            window.scrollTo({ top, behavior: "smooth" });
+        }, 90);
+    }
+}
+
+function previewSearchQuery(rawValue = "") {
+    appState.searchQuery = rawValue.trimStart();
+    syncSearchInputs();
+    renderSearchSuggestions();
+}
+
+function openSearchSuggestion(productId) {
+    const product = getProductById(productId);
+    if (!product) return;
+    commitSearchHistory(appState.searchQuery || product.title);
+    closeSearchSuggestions();
+    openDetails(productId);
 }
 
 function bindSearchInputs() {
@@ -494,12 +1611,25 @@ function bindSearchInputs() {
         if (!input || input.dataset.bound === "true") return;
 
         input.addEventListener("input", (event) => {
-            applySearchQuery(event.target.value || "");
+            previewSearchQuery(event.target.value || "");
+        });
+
+        input.addEventListener("focus", (event) => {
+            previewSearchQuery(event.target.value || "");
         });
 
         input.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeSearchSuggestions();
+                return;
+            }
             if (event.key !== "Enter") return;
             event.preventDefault();
+            const firstMatch = getSearchSuggestions(event.target.value || "", 1)[0];
+            if (firstMatch) {
+                openSearchSuggestion(firstMatch.id);
+                return;
+            }
             applySearchQuery(event.target.value || "");
         });
 
@@ -564,8 +1694,254 @@ function initHeroCarousel() {
         }, { passive: true });
         hero.dataset.touchBound = "true";
     }
-    updateHeroCarousel();
-    startHeroCarousel();
+    renderHeroCarousel();
+}
+
+function getElectrodomesticosProducts() {
+    return products.filter((product) => product.category === "eletrodomesticos");
+}
+
+function getSportsFitnessProducts() {
+    return products.filter((product) => product.category === "esportes-fitness");
+}
+
+function renderElectroProductCard(product) {
+    const currentPrice = getEffectivePrice(product);
+    const discount = getDiscountPercentage(product);
+    const installmentValue = Number((currentPrice / 10).toFixed(2));
+    return `
+        <div class="bg-white rounded-[6px] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.08)] cursor-pointer border border-[#eee]" onclick="openDetails(${product.id}, this)">
+            <div class="h-[220px] bg-white flex items-center justify-center p-4 border-b border-[#f3f3f3]">
+                <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-4')">
+            </div>
+            <div class="p-3">
+                <span class="inline-flex items-center rounded-[3px] bg-[#3483fa] px-2 py-0.5 text-[10px] font-semibold text-white">OFERTA IMPERDIVEL</span>
+                <h3 class="mt-3 text-[14px] leading-5 text-[#333] line-clamp-3 min-h-[60px]">${product.title}</h3>
+                <p class="mt-2 text-[12px] text-[#999] line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <div class="mt-1 flex items-baseline gap-2 flex-wrap">
+                    <p class="text-[18px] leading-none text-[#333]">${formatCurrency(currentPrice)}</p>
+                    <span class="text-[12px] font-semibold text-[#00a650]">${discount}% OFF</span>
+                </div>
+                <p class="mt-2 text-[13px] leading-5 text-[#00a650]">10x R$ ${installmentValue.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</p>
+                <p class="mt-2 text-[13px] font-semibold text-[#00a650]">Frete gratis <span class="font-bold">FULL</span></p>
+            </div>
+        </div>
+    `;
+}
+
+function renderElectroPromoTile(imageUrl) {
+    return `
+        <div class="rounded-[10px] overflow-hidden bg-[#f6f1e7] shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
+            <img src="${imageUrl}" alt="Destaque de categoria" class="block w-full h-auto" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">
+        </div>
+    `;
+}
+
+function renderSportsQuickAccessCard(tile) {
+    return `
+        <button class="rounded-[22px] bg-white border border-[#e5e7eb] p-4 shadow-[0_10px_30px_rgba(15,23,42,0.07)] text-left hover:-translate-y-1 transition-transform" onclick="showPage('esportes-fitness')">
+            <div class="aspect-square rounded-[18px] bg-[#f7ffe9] overflow-hidden flex items-center justify-center">
+                <img src="${tile.image}" alt="${tile.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-6','bg-white')">
+            </div>
+            <p class="mt-3 text-[14px] md:text-[15px] font-semibold text-[#1f2937]">${tile.title}</p>
+        </button>
+    `;
+}
+
+function renderSportsLifestyleCard(tile) {
+    return `
+        <button class="rounded-[24px] overflow-hidden bg-white border border-[#e5e7eb] shadow-[0_12px_34px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-transform text-left" onclick="showPage('esportes-fitness')">
+            <img src="${tile.image}" alt="${tile.title}" class="block w-full h-auto" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">
+        </button>
+    `;
+}
+
+function renderSportsDarkTile(tile) {
+    return `
+        <button class="rounded-[24px] overflow-hidden bg-[#242424] border border-white/10 shadow-[0_18px_40px_rgba(15,23,42,0.18)] hover:-translate-y-1 transition-transform text-left" onclick="showPage('esportes-fitness')">
+            <img src="${tile.image}" alt="${tile.title}" class="block w-full h-auto" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">
+        </button>
+    `;
+}
+
+function updateElectroCarousel() {
+    const track = document.getElementById("electro-carousel-track");
+    const dots = document.querySelectorAll("#electro-carousel-dots .hero-dot");
+    if (track) track.style.transform = `translateX(-${appState.currentElectroSlide * 100}%)`;
+    dots.forEach((dot, index) => dot.classList.toggle("active", index === appState.currentElectroSlide));
+}
+
+function stopElectroCarousel() {
+    if (appState.electroCarouselInterval) {
+        window.clearInterval(appState.electroCarouselInterval);
+        appState.electroCarouselInterval = null;
+    }
+}
+
+function startElectroCarousel() {
+    stopElectroCarousel();
+    appState.electroCarouselInterval = window.setInterval(() => {
+        appState.currentElectroSlide = (appState.currentElectroSlide + 1) % appState.electroSlideCount;
+        updateElectroCarousel();
+    }, 4800);
+}
+
+function setElectroSlide(index) {
+    appState.currentElectroSlide = ((index % appState.electroSlideCount) + appState.electroSlideCount) % appState.electroSlideCount;
+    updateElectroCarousel();
+    startElectroCarousel();
+}
+
+function moveElectroSlide(direction) {
+    setElectroSlide(appState.currentElectroSlide + direction);
+}
+
+function renderElectrodomesticosPage() {
+    const track = document.getElementById("electro-carousel-track");
+    const dotsWrap = document.getElementById("electro-carousel-dots");
+    const list = document.getElementById("electro-products-list");
+    const promoGrid = document.getElementById("electro-promo-grid");
+    if (!track || !dotsWrap || !list || !promoGrid) return;
+
+    track.innerHTML = electrodomesticosHeroSlides.map((slide) => `
+        <div class="min-w-full h-full">
+            <img src="${slide.image}" class="block w-full h-auto md:h-full md:object-cover" alt="${slide.alt}">
+        </div>
+    `).join("");
+
+    dotsWrap.innerHTML = electrodomesticosHeroSlides.map((slide, index) => `
+        <button class="hero-dot ${index === 0 ? "active" : ""}" onclick="setElectroSlide(${index})" aria-label="${slide.alt}"></button>
+    `).join("");
+
+    list.innerHTML = getElectrodomesticosProducts().map(renderElectroProductCard).join("");
+    promoGrid.innerHTML = electroPromoTiles.map(renderElectroPromoTile).join("");
+    appState.currentElectroSlide = 0;
+    appState.electroSlideCount = electrodomesticosHeroSlides.length;
+    updateElectroCarousel();
+    startElectroCarousel();
+
+    const hero = document.getElementById("electro-carousel");
+    if (hero && !hero.dataset.touchBound) {
+        let startX = 0;
+        let endX = 0;
+        hero.addEventListener("touchstart", (event) => {
+            startX = event.changedTouches[0]?.clientX || 0;
+            endX = startX;
+            stopElectroCarousel();
+        }, { passive: true });
+        hero.addEventListener("touchmove", (event) => {
+            endX = event.changedTouches[0]?.clientX || startX;
+        }, { passive: true });
+        hero.addEventListener("touchend", () => {
+            const delta = endX - startX;
+            if (Math.abs(delta) > 40) {
+                moveElectroSlide(delta < 0 ? 1 : -1);
+                return;
+            }
+            startElectroCarousel();
+        }, { passive: true });
+        hero.dataset.touchBound = "true";
+    }
+}
+
+function updateSportsCarousel() {
+    const track = document.getElementById("sports-carousel-track");
+    const dots = document.querySelectorAll("#sports-carousel-dots .hero-dot");
+    if (track) track.style.transform = `translateX(-${appState.currentSportsSlide * 100}%)`;
+    dots.forEach((dot, index) => dot.classList.toggle("active", index === appState.currentSportsSlide));
+}
+
+function stopSportsCarousel() {
+    if (appState.sportsCarouselInterval) {
+        window.clearInterval(appState.sportsCarouselInterval);
+        appState.sportsCarouselInterval = null;
+    }
+}
+
+function startSportsCarousel() {
+    stopSportsCarousel();
+    appState.sportsCarouselInterval = window.setInterval(() => {
+        appState.currentSportsSlide = (appState.currentSportsSlide + 1) % appState.sportsSlideCount;
+        updateSportsCarousel();
+    }, 5000);
+}
+
+function setSportsSlide(index) {
+    appState.currentSportsSlide = ((index % appState.sportsSlideCount) + appState.sportsSlideCount) % appState.sportsSlideCount;
+    updateSportsCarousel();
+    startSportsCarousel();
+}
+
+function moveSportsSlide(direction) {
+    setSportsSlide(appState.currentSportsSlide + direction);
+}
+
+function renderSportsFitnessPage() {
+    const track = document.getElementById("sports-carousel-track");
+    const dotsWrap = document.getElementById("sports-carousel-dots");
+    const productsList = document.getElementById("sports-products-list");
+    const quickGrid = document.getElementById("sports-quick-grid");
+    const lifestyleGrid = document.getElementById("sports-lifestyle-grid");
+    const shootingBanner = document.getElementById("sports-shooting-banner");
+    const shootingGrid = document.getElementById("sports-shooting-grid");
+    const skateBanner = document.getElementById("sports-skate-banner");
+    const footballBanner = document.getElementById("sports-football-banner");
+    const footballGrid = document.getElementById("sports-football-grid");
+    const actionPromos = document.getElementById("sports-action-promos");
+
+    if (!track || !dotsWrap || !productsList || !quickGrid || !lifestyleGrid || !shootingBanner || !shootingGrid || !skateBanner || !footballBanner || !footballGrid || !actionPromos) return;
+
+    track.innerHTML = sportsFitnessHeroSlides.map((slide) => `
+        <div class="min-w-full h-full">
+            <img src="${slide.image}" class="block w-full h-auto md:h-full md:object-cover" alt="${slide.alt}">
+        </div>
+    `).join("");
+
+    dotsWrap.innerHTML = sportsFitnessHeroSlides.map((slide, index) => `
+        <button class="hero-dot ${index === 0 ? "active" : ""}" onclick="setSportsSlide(${index})" aria-label="${slide.alt}"></button>
+    `).join("");
+
+    productsList.innerHTML = getSportsFitnessProducts().map(renderElectroProductCard).join("");
+    quickGrid.innerHTML = sportsQuickAccessTiles.map(renderSportsQuickAccessCard).join("");
+    lifestyleGrid.innerHTML = sportsLifestyleTiles.map(renderSportsLifestyleCard).join("");
+    shootingBanner.innerHTML = `<img src="${sportsShootingAssets.banner}" alt="Tiro esportivo" class="block w-full h-auto rounded-[24px]" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">`;
+    shootingGrid.innerHTML = sportsShootingAssets.tiles.map(renderSportsDarkTile).join("");
+    skateBanner.innerHTML = `<img src="${sportsActionAssets.skateBanner}" alt="Skates e patins" class="block w-full h-auto rounded-[24px]" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">`;
+    footballBanner.innerHTML = `<img src="${sportsActionAssets.footballBanner}" alt="Futebol" class="block w-full h-auto rounded-[24px]" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">`;
+    footballGrid.innerHTML = sportsActionAssets.productTiles.map(renderSportsQuickAccessCard).join("");
+    actionPromos.innerHTML = sportsActionAssets.promoBanners.map((tile) => `
+        <button class="rounded-[24px] overflow-hidden bg-white border border-[#e5e7eb] shadow-[0_12px_34px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-transform text-left" onclick="showPage('esportes-fitness')">
+            <img src="${tile.image}" alt="${tile.title}" class="block w-full h-auto" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">
+        </button>
+    `).join("");
+
+    appState.currentSportsSlide = 0;
+    appState.sportsSlideCount = sportsFitnessHeroSlides.length;
+    updateSportsCarousel();
+    startSportsCarousel();
+
+    const hero = document.getElementById("sports-carousel");
+    if (hero && !hero.dataset.touchBound) {
+        let startX = 0;
+        let endX = 0;
+        hero.addEventListener("touchstart", (event) => {
+            startX = event.changedTouches[0]?.clientX || 0;
+            endX = startX;
+            stopSportsCarousel();
+        }, { passive: true });
+        hero.addEventListener("touchmove", (event) => {
+            endX = event.changedTouches[0]?.clientX || startX;
+        }, { passive: true });
+        hero.addEventListener("touchend", () => {
+            const delta = endX - startX;
+            if (Math.abs(delta) > 40) {
+                moveSportsSlide(delta < 0 ? 1 : -1);
+                return;
+            }
+            startSportsCarousel();
+        }, { passive: true });
+        hero.dataset.touchBound = "true";
+    }
 }
 
 function setActiveNav(triggerEl) {
@@ -578,7 +1954,7 @@ function closeCategoriesMenu() {
 }
 
 function getVisiblePageId() {
-    const pageMap = ["home", "auth", "purchases", "orders", "history", "addresses", "details", "cart", "cart-loading"];
+    const pageMap = ["home", "electrodomesticos", "esportes-fitness", "auth", "purchases", "orders", "history", "addresses", "details", "cart", "cart-loading"];
     return pageMap.find((pageId) => !document.getElementById(`page-${pageId}`)?.classList.contains("hidden")) || "home";
 }
 
@@ -669,6 +2045,8 @@ function showPage(pageId, triggerEl = null, options = {}) {
     const { updateHistory = true, skipAnimation = false } = options;
     const pageMap = {
         home: document.getElementById("page-home"),
+        electrodomesticos: document.getElementById("page-electrodomesticos"),
+        "esportes-fitness": document.getElementById("page-esportes-fitness"),
         auth: document.getElementById("page-auth"),
         purchases: document.getElementById("page-purchases"),
         orders: document.getElementById("page-orders"),
@@ -715,9 +2093,13 @@ function showPage(pageId, triggerEl = null, options = {}) {
     closeCategoriesMenu();
     closeDesktopAccountMenu();
     closeMobileMenu();
+    if (pageId !== "electrodomesticos") stopElectroCarousel();
+    if (pageId !== "esportes-fitness") stopSportsCarousel();
     setActiveNav(triggerEl);
     window.scrollTo({ top: 0, behavior: "smooth" });
     document.body.style.overflow = "auto";
+    if (pageId === "electrodomesticos") renderElectrodomesticosPage();
+    if (pageId === "esportes-fitness") renderSportsFitnessPage();
     if (pageId === "purchases") renderAccountArea();
     if (pageId === "orders") renderPurchaseHistory();
     if (pageId === "history") renderHistoryPage();
@@ -726,6 +2108,16 @@ function showPage(pageId, triggerEl = null, options = {}) {
 }
 
 function navigateToSection(sectionId, triggerEl = null) {
+    if (sectionId === "eletrodomesticos") {
+        showPage("electrodomesticos", triggerEl);
+        return;
+    }
+
+    if (sectionId === "esportes-fitness") {
+        showPage("esportes-fitness", triggerEl);
+        return;
+    }
+
     showPage("home", triggerEl);
     const target = document.getElementById(`section-${sectionId}`);
     if (!target) return;
@@ -821,7 +2213,9 @@ function openDetails(id, triggerEl = null, options = {}) {
     document.getElementById("det-option-count").innerText = meta.optionText;
     document.getElementById("det-highlights").innerHTML = meta.highlights.map((item) => `<li>${item}</li>`).join("");
     document.getElementById("det-add-cart").onclick = () => addToCart(id);
+    document.getElementById("det-favorite-btn").onclick = () => toggleFavorite(id);
     renderRatingStars(meta.rating);
+    updateFavoriteButton(id);
     if (triggerEl?.classList) {
         triggerEl.classList.add("product-opening");
         window.setTimeout(() => triggerEl.classList.remove("product-opening"), 280);
@@ -847,7 +2241,10 @@ function renderRelatedProducts(currentId) {
     const container = document.getElementById("related-products-list");
     if (!container) return;
 
-    const related = products.filter((item) => item.id !== currentId).slice(0, 6);
+    const currentProduct = products.find((item) => item.id === currentId);
+    const sameCategory = products.filter((item) => item.id !== currentId && item.category === currentProduct?.category);
+    const fallback = products.filter((item) => item.id !== currentId && item.category !== currentProduct?.category);
+    const related = [...sameCategory, ...fallback].slice(0, 6);
     container.innerHTML = related.map((product) => {
         const currentPrice = getEffectivePrice(product);
         const discount = getDiscountPercentage(product);
@@ -1033,6 +2430,9 @@ function updateCartUI() {
     totalLabel.innerText = `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     renderCartPage();
     updateCheckoutSummary();
+    renderHomeShortcuts();
+    renderInspiredSection();
+    renderFavoritesMenu();
     lucide.createIcons();
 }
 
@@ -1666,6 +3066,10 @@ function syncSession(user) {
 function renderHeaderAuthState() {
     const isLoggedIn = Boolean(appState.session);
     renderHeaderLocation();
+    renderFavoritesMenu();
+    document.getElementById("nav-guest-actions")?.classList.toggle("hidden", isLoggedIn);
+    document.getElementById("nav-user-actions")?.classList.toggle("hidden", !isLoggedIn);
+    document.getElementById("nav-common-actions")?.classList.remove("hidden");
     document.getElementById("nav-login-btn")?.classList.toggle("hidden", isLoggedIn);
     document.getElementById("nav-account-shell")?.classList.toggle("hidden", !isLoggedIn);
     document.getElementById("nav-register-btn")?.classList.toggle("hidden", isLoggedIn);
@@ -2073,12 +3477,16 @@ function recordViewedProduct(productId) {
         ...appState.history.filter((item) => item.id !== productId)
     ].slice(0, 30);
     persistState();
+    renderHomeShortcuts();
+    renderInspiredSection();
 }
 
 function removeViewedProduct(productId) {
     appState.history = appState.history.filter((item) => item.id !== productId);
     persistState();
     renderHistoryPage();
+    renderHomeShortcuts();
+    renderInspiredSection();
 }
 
 function groupHistoryEntries() {
@@ -2363,6 +3771,7 @@ async function deleteSavedAddress(addressId) {
 function init() {
     loadState();
     renderProducts();
+    renderFavoritesMenu();
     bindSearchInputs();
     updateCartUI();
     hydrateCheckoutUI();
@@ -2379,6 +3788,10 @@ function init() {
     document.getElementById("nav-account-btn")?.addEventListener("click", toggleDesktopAccountMenu);
     document.addEventListener("click", (event) => {
         closeCategoriesMenu();
+        closeFavoritesMenu();
+        if (!event.target.closest(".search-shell")) {
+            closeSearchSuggestions();
+        }
         if (!event.target.closest("#nav-account-shell")) {
             closeDesktopAccountMenu();
         }
@@ -2393,8 +3806,13 @@ function init() {
 
 window.setHeroSlide = setHeroSlide;
 window.moveHeroSlide = moveHeroSlide;
+window.setElectroSlide = setElectroSlide;
+window.moveElectroSlide = moveElectroSlide;
+window.setSportsSlide = setSportsSlide;
+window.moveSportsSlide = moveSportsSlide;
 window.showPage = showPage;
 window.navigateToSection = navigateToSection;
+window.openSearchSuggestion = openSearchSuggestion;
 window.toggleCategoriesMenu = toggleCategoriesMenu;
 window.toggleDesktopAccountMenu = toggleDesktopAccountMenu;
 window.closeDesktopAccountMenu = closeDesktopAccountMenu;
@@ -2405,6 +3823,7 @@ window.startCheckoutFlow = startCheckoutFlow;
 window.openAddressManager = openAddressManager;
 window.closeAddressManager = closeAddressManager;
 window.openDetails = openDetails;
+window.toggleFavorite = toggleFavorite;
 window.viewPurchase = viewPurchase;
 window.buyPurchaseAgain = buyPurchaseAgain;
 window.selectDetailImage = selectDetailImage;
