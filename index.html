@@ -969,6 +969,29 @@
             transform: translateY(-1px);
             outline: none;
         }
+        .password-field {
+            position: relative;
+        }
+        .password-field .account-input {
+            padding-right: 3.25rem;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .password-toggle:hover {
+            color: #3483fa;
+        }
         .auth-field-wrap {
             transition: opacity 0.28s ease, transform 0.28s ease, max-height 0.32s ease, margin 0.28s ease;
             max-height: 160px;
@@ -2345,11 +2368,21 @@
                         </div>
                         <div>
                             <label class="text-sm text-gray-600 block mb-1.5">Senha</label>
-                            <input id="auth-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Digite sua senha">
+                            <div class="password-field">
+                                <input id="auth-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Digite sua senha">
+                                <button id="auth-password-toggle" type="button" class="password-toggle" aria-label="Mostrar senha" onclick="togglePasswordVisibility('auth-password', 'auth-password-toggle')">
+                                    <i data-lucide="eye" class="w-5 h-5"></i>
+                                </button>
+                            </div>
                         </div>
                         <div id="auth-confirm-wrap" class="auth-field-wrap">
                             <label class="text-sm text-gray-600 block mb-1.5">Confirmar senha</label>
-                            <input id="auth-confirm-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Confirme sua senha">
+                            <div class="password-field">
+                                <input id="auth-confirm-password" type="password" class="account-input w-full rounded-xl px-4 py-3" placeholder="Confirme sua senha">
+                                <button id="auth-confirm-password-toggle" type="button" class="password-toggle" aria-label="Mostrar senha" onclick="togglePasswordVisibility('auth-confirm-password', 'auth-confirm-password-toggle')">
+                                    <i data-lucide="eye" class="w-5 h-5"></i>
+                                </button>
+                            </div>
                         </div>
                         <div id="auth-code-wrap" class="hidden">
                             <label class="text-sm text-gray-600 block mb-1.5">Código de verificação</label>

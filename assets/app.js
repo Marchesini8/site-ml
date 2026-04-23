@@ -236,11 +236,11 @@ const products = [
         slug: "Mundo-Álbum-Figurinhas-WORLD-2026TM",
         category: "esportes-fitness",
         title: "Copa do Mundo 2026 Album de Figurinhas Capa Dura FIFA WORLD CUP 2026",
-        price: 99.99,
-        oldPrice: 249.0,
+        price: 79.99,
+        oldPrice: 149.99,
         image: "https://m.media-amazon.com/images/I/71XGnCo1fML._SY342_.jpg",
         description: "Album de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores.",
-        priceOverride: 99.99
+        priceOverride: 79.99
     }
 ];
 
@@ -854,7 +854,7 @@ const productDetailMap = {
         sellerSales: "+1 M",
         sellerLogo: "assets/panini-logo.jpg",
         sellerVerified: true,
-        optionText: "12 produtos novos a partir de R$ 249",
+        optionText: "12 produtos novos a partir de R$ 149",
         highlights: [
             "Album de figurinhas capa dura da Copa do Mundo FIFA 2026.",
             "Produto ideal para colecionadores.",
@@ -3151,6 +3151,22 @@ function formatPhone(input) {
     input.value = value.trim().replace(/-$/, "");
 }
 
+function updatePasswordToggleIcon(buttonId, isVisible) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+    button.setAttribute("aria-label", isVisible ? "Ocultar senha" : "Mostrar senha");
+    button.innerHTML = `<i data-lucide="${isVisible ? "eye-off" : "eye"}" class="w-5 h-5"></i>`;
+    lucide.createIcons();
+}
+
+function togglePasswordVisibility(inputId, buttonId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isVisible = input.type === "text";
+    input.type = isVisible ? "password" : "text";
+    updatePasswordToggleIcon(buttonId, !isVisible);
+}
+
 function setAuthFeedback(message, tone = "neutral") {
     const el = document.getElementById("auth-feedback");
     if (!el) return;
@@ -4084,6 +4100,7 @@ window.lookupCep = lookupCep;
 window.confirmPayment = confirmPayment;
 window.copyPix = copyPix;
 window.buyNow = buyNow;
+window.togglePasswordVisibility = togglePasswordVisibility;
 window.openAuthPage = openAuthPage;
 window.toggleAuthMode = toggleAuthMode;
 window.handleGoogleFallback = handleGoogleFallback;
