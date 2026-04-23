@@ -235,11 +235,11 @@ const products = [
         id: 24,
         slug: "Mundo-Álbum-Figurinhas-WORLD-2026TM",
         category: "esportes-fitness",
-        title: "Copa do Mundo 2026 Album de Figurinhas Capa Dura FIFA WORLD CUP 2026",
+        title: "Copa do Mundo 2026 \u00c1lbum de Figurinhas Capa Dura FIFA WORLD CUP 2026",
         price: 79.99,
         oldPrice: 149.99,
         image: "https://m.media-amazon.com/images/I/71XGnCo1fML._SY342_.jpg",
-        description: "Album de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores.",
+        description: "\u00c1lbum de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores.",
         priceOverride: 79.99
     }
 ];
@@ -821,11 +821,11 @@ const productDetailMap = {
     },
     23: {
         brand: "FIFA World Cup",
-        breadcrumb: "Esportes e Fitness > Futebol > Albuns e Colecionaveis",
+        breadcrumb: "Esportes e Fitness > Futebol > \u00c1lbuns e Colecion\u00e1veis",
         sold: "+2 mil vendidos",
         rating: 4.9,
         reviews: 356,
-        shippingText: "Chegara rapido com envio full",
+        shippingText: "Chegar\u00e1 r\u00e1pido com envio Full",
         sellerName: "Loja oficial Panini",
         sellerSubtitle: "Loja oficial Panini",
         sellerSales: "+1 M",
@@ -844,11 +844,11 @@ const productDetailMap = {
     },
     24: {
         brand: "FIFA World Cup",
-        breadcrumb: "Esportes e Fitness > Futebol > Albuns e Colecionaveis",
+        breadcrumb: "Esportes e Fitness > Futebol > \u00c1lbuns e Colecion\u00e1veis",
         sold: "+1 mil vendidos",
         rating: 4.9,
         reviews: 214,
-        shippingText: "Chegara rapido com envio full",
+        shippingText: "Chegar\u00e1 r\u00e1pido com envio Full",
         sellerName: "Loja oficial Panini",
         sellerSubtitle: "Loja oficial Panini",
         sellerSales: "+1 M",
@@ -856,11 +856,11 @@ const productDetailMap = {
         sellerVerified: true,
         optionText: "12 produtos novos a partir de R$ 149",
         highlights: [
-            "Album de figurinhas capa dura da Copa do Mundo FIFA 2026.",
+            "\u00c1lbum de figurinhas capa dura da Copa do Mundo FIFA 2026.",
             "Produto ideal para colecionadores.",
             "Visual oficial World Cup 2026.",
             "Capa dura com acabamento mais resistente.",
-            "Boa opcao para fas de futebol e colecionadores."
+            "Boa op\u00e7\u00e3o para f\u00e3s de futebol e colecionadores."
         ]
     }
 };
