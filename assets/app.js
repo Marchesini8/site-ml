@@ -3213,6 +3213,7 @@ function resetRegisterVerificationState(clearCode = true) {
         email: ""
     };
     document.getElementById("auth-code-wrap")?.classList.add("hidden");
+    document.getElementById("auth-resend-code-btn")?.classList.add("hidden");
     if (clearCode) {
         const codeInput = document.getElementById("auth-code");
         if (codeInput) codeInput.value = "";
@@ -3225,10 +3226,35 @@ function setRegisterVerificationState(isActive, email = "") {
         email: (email || "").toLowerCase()
     };
     document.getElementById("auth-code-wrap")?.classList.toggle("hidden", !isActive);
+    document.getElementById("auth-resend-code-btn")?.classList.toggle("hidden", !isActive);
     if (!isActive) {
         const codeInput = document.getElementById("auth-code");
         if (codeInput) codeInput.value = "";
     }
+}
+
+async function resendRegisterCode() {
+    const payload = {
+        name: getFieldValue("auth-name"),
+        email: getFieldValue("auth-email").toLowerCase(),
+        password: getFieldValue("auth-password")
+    };
+    const confirmPassword = getFieldValue("auth-confirm-password");
+
+    if (!validateRegisterFields(payload, confirmPassword)) return;
+
+    setAuthFormBusy(true);
+    setAuthTopLoader(true);
+    setButtonLoading("auth-resend-code-btn", true, "Reenviando...", "Reenviar código");
+    const requestResult = await withMinimumDelay(() => apiRequest("/api/auth/register/send-code", payload));
+    setButtonLoading("auth-resend-code-btn", false, "", "Reenviar código");
+    setAuthFormBusy(false);
+    setAuthTopLoader(false);
+    if (requestResult?.error) return setAuthFeedback(requestResult.error, "error");
+
+    setRegisterVerificationState(true, payload.email);
+    setAuthFeedback(`Código reenviado para ${payload.email}.`, "success");
+    document.getElementById("auth-code")?.focus();
 }
 
 function setAuthMode(mode) {
@@ -4101,6 +4127,7 @@ window.confirmPayment = confirmPayment;
 window.copyPix = copyPix;
 window.buyNow = buyNow;
 window.togglePasswordVisibility = togglePasswordVisibility;
+window.resendRegisterCode = resendRegisterCode;
 window.openAuthPage = openAuthPage;
 window.toggleAuthMode = toggleAuthMode;
 window.handleGoogleFallback = handleGoogleFallback;
