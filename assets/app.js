@@ -221,6 +221,25 @@ const products = [
         oldPrice: 959.0,
         image: "https://http2.mlstatic.com/D_NQ_NP_2X_772435-MLB92445295136_092025-F.webp",
         description: "Kit com carabina CBC Jade 5.5, capa e chumbo para pratica esportiva."
+    },
+    {
+        id: 23,
+        category: "esportes-fitness",
+        title: "Copa do Mundo 2026 Album Brochura FIFA WORLD CUP 2026",
+        price: 24.9,
+        oldPrice: 166.0,
+        image: "https://m.media-amazon.com/images/I/71N-7EwcYwL._SY342_.jpg",
+        description: "Album brochura da Copa do Mundo FIFA World Cup 2026 para colecionar figurinhas do torneio."
+    },
+    {
+        id: 24,
+        slug: "Mundo-Álbum-Figurinhas-WORLD-2026TM",
+        category: "esportes-fitness",
+        title: "Copa do Mundo 2026 Album de Figurinhas Capa Dura FIFA WORLD CUP 2026",
+        price: 74.9,
+        oldPrice: 249.0,
+        image: "https://m.media-amazon.com/images/I/71XGnCo1fML._SY342_.jpg",
+        description: "Album de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores."
     }
 ];
 
@@ -797,6 +816,50 @@ const productDetailMap = {
             "Boa relacao custo-beneficio para o segmento.",
             "Entrega em vendedores autorizados."
         ]
+    },
+    23: {
+        brand: "FIFA World Cup",
+        breadcrumb: "Esportes e Fitness > Futebol > Albuns e Colecionaveis",
+        sold: "+2 mil vendidos",
+        rating: 4.9,
+        reviews: 356,
+        shippingText: "Chegara rapido com envio full",
+        sellerName: "Loja oficial Panini",
+        sellerSubtitle: "Loja oficial Panini",
+        sellerSales: "+1 M",
+        sellerLogo: "assets/panini-logo.jpg",
+        sellerVerified: true,
+        optionText: "16 produtos novos a partir de R$ 166",
+        highlights: [
+            "Ano de publicação: 2026.",
+            "Com índice: Não.",
+            "Volume do livro: 1.",
+            "Capa do livro: Mole.",
+            "Gênero: Esportes e lazer.",
+            "Número de páginas: 112.",
+            "ISBN: 9786555165753."
+        ]
+    },
+    24: {
+        brand: "FIFA World Cup",
+        breadcrumb: "Esportes e Fitness > Futebol > Albuns e Colecionaveis",
+        sold: "+1 mil vendidos",
+        rating: 4.9,
+        reviews: 214,
+        shippingText: "Chegara rapido com envio full",
+        sellerName: "Loja oficial Panini",
+        sellerSubtitle: "Loja oficial Panini",
+        sellerSales: "+1 M",
+        sellerLogo: "assets/panini-logo.jpg",
+        sellerVerified: true,
+        optionText: "12 produtos novos a partir de R$ 249",
+        highlights: [
+            "Album de figurinhas capa dura da Copa do Mundo FIFA 2026.",
+            "Produto ideal para colecionadores.",
+            "Visual oficial World Cup 2026.",
+            "Capa dura com acabamento mais resistente.",
+            "Boa opcao para fas de futebol e colecionadores."
+        ]
     }
 };
 
@@ -1106,9 +1169,21 @@ function normalizeSearchText(value) {
         .trim();
 }
 
+function prioritizeDailyOffers(productList) {
+    const priorityIds = [24, 23];
+    return [...productList].sort((a, b) => {
+        const aIndex = priorityIds.indexOf(a.id);
+        const bIndex = priorityIds.indexOf(b.id);
+        if (aIndex === -1 && bIndex === -1) return 0;
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+        return aIndex - bIndex;
+    });
+}
+
 function getFilteredProducts() {
     const query = normalizeSearchText(appState.searchQuery);
-    if (!query) return products;
+    if (!query) return prioritizeDailyOffers(products);
 
     return products.filter((product) => {
         const meta = getProductDetailMeta(product);
@@ -1971,10 +2046,24 @@ function captureNavigationState() {
     };
 }
 
+function getNavigationUrl(state) {
+    const url = new URL(window.location.href);
+    if (state.page === "details" && state.productId) {
+        return `${url.pathname}?produto=${getProductUrlToken(state.productId)}${url.hash}`;
+    } else {
+        url.searchParams.delete("produto");
+    }
+    return `${url.pathname}${url.search}${url.hash}`;
+}
+
 function writeNavigationState(mode = "push") {
     const state = captureNavigationState();
     const method = mode === "replace" ? "replaceState" : "pushState";
-    window.history[method]({ __appNavigation: true, ...state }, "", window.location.href);
+    window.history[method]({ __appNavigation: true, ...state }, "", getNavigationUrl(state));
+}
+
+function getInitialProductIdFromUrl() {
+    return getProductIdFromUrlToken(new URLSearchParams(window.location.search).get("produto"));
 }
 
 function restoreNavigationState(state) {
@@ -2136,7 +2225,10 @@ function getProductDetailMeta(product) {
         reviews: 1876,
         shippingText: "Chegará grátis entre quarta e quinta",
         sellerName: "Loja oficial Mercado Livre",
+        sellerSubtitle: "Loja oficial do Mercado Livre",
         sellerSales: "+1 M",
+        sellerLogo: "assets/mercado-livre-logo.png",
+        sellerVerified: false,
         optionText: `12 produtos novos a partir de R$ ${Math.round(product.oldPrice).toLocaleString("pt-BR")}`,
         highlights: [
             "Produto com excelente avaliacao dos compradores.",
@@ -2172,6 +2264,114 @@ function updateMainDetailImage(src, alt) {
     window.setTimeout(() => image.classList.remove("is-swapping"), 320);
 }
 
+function getProductUrlToken(productId) {
+    const product = getProductById(productId);
+    return product?.slug || String(productId);
+}
+
+function getProductIdFromUrlToken(token) {
+    if (!token) return null;
+    const productBySlug = products.find((product) => product.slug === token);
+    if (productBySlug) return productBySlug.id;
+
+    const productId = Number(token);
+    return products.some((product) => product.id === productId) ? productId : null;
+}
+
+function getProductShareUrl(productId = appState.currentProdId) {
+    const url = new URL(window.location.href);
+    return `${url.origin}${url.pathname}?produto=${getProductUrlToken(productId)}${url.hash}`;
+}
+
+function getProductShareText(productId = appState.currentProdId) {
+    const product = getProductById(productId);
+    return product ? `Olha esse produto: ${product.title}` : "Olha esse produto";
+}
+
+function updateProductShareTargets() {
+    if (!appState.currentProdId) return;
+    const shareUrl = getProductShareUrl(appState.currentProdId);
+    const shareText = getProductShareText(appState.currentProdId);
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedText = encodeURIComponent(shareText);
+    const encodedTextWithUrl = encodeURIComponent(`${shareText} ${shareUrl}`);
+
+    document.getElementById("share-whatsapp")?.setAttribute("href", `https://wa.me/?text=${encodedTextWithUrl}`);
+    document.getElementById("share-facebook")?.setAttribute("href", `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`);
+    document.getElementById("share-x")?.setAttribute("href", `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`);
+    document.getElementById("share-telegram")?.setAttribute("href", `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`);
+}
+
+function closeProductShareMenu() {
+    document.getElementById("product-share-menu")?.classList.add("hidden");
+}
+
+function toggleProductShareMenu(event) {
+    event?.stopPropagation();
+    updateProductShareTargets();
+    const menu = document.getElementById("product-share-menu");
+    if (!menu) return;
+    menu.classList.toggle("hidden");
+    lucide.createIcons();
+}
+
+function fallbackCopyText(text) {
+    const input = document.createElement("textarea");
+    input.value = text;
+    input.setAttribute("readonly", "");
+    input.style.position = "fixed";
+    input.style.left = "-9999px";
+    input.style.top = "0";
+    document.body.appendChild(input);
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+    const copied = document.execCommand("copy");
+    input.remove();
+    if (copied) return Promise.resolve();
+    return Promise.reject(new Error("Nao foi possivel copiar"));
+}
+
+function writeTextToClipboard(text) {
+    if (navigator.clipboard?.writeText) {
+        return navigator.clipboard.writeText(text).catch(() => fallbackCopyText(text));
+    }
+
+    return fallbackCopyText(text);
+}
+
+function setProductShareFeedback(status) {
+    const iconButton = document.getElementById("det-share-btn");
+    const textButton = document.getElementById("detail-share-link");
+    const copyLabel = document.getElementById("share-copy-label");
+    const success = status === "success";
+    const label = success ? "Link copiado" : "Nao foi possivel copiar";
+
+    iconButton?.setAttribute("aria-label", label);
+    iconButton?.setAttribute("title", label);
+    iconButton?.classList.toggle("text-green-600", success);
+    textButton?.replaceChildren(document.createTextNode(label));
+    textButton?.classList.toggle("text-green-600", success);
+    copyLabel?.replaceChildren(document.createTextNode(label));
+    closeProductShareMenu();
+
+    window.setTimeout(() => {
+        iconButton?.setAttribute("aria-label", "Compartilhar produto");
+        iconButton?.setAttribute("title", "Compartilhar produto");
+        iconButton?.classList.remove("text-green-600");
+        textButton?.replaceChildren(document.createTextNode("Compartilhar"));
+        textButton?.classList.remove("text-green-600");
+        copyLabel?.replaceChildren(document.createTextNode("Copiar link"));
+    }, success ? 1800 : 2600);
+}
+
+function copyProductLink() {
+    if (!appState.currentProdId) return;
+    writeTextToClipboard(getProductShareUrl(appState.currentProdId))
+        .then(() => setProductShareFeedback("success"))
+        .catch(() => setProductShareFeedback("error"));
+}
+
 function renderDetailGallery(product) {
     const thumbWrap = document.getElementById("det-thumbs");
     if (!thumbWrap) return;
@@ -2185,7 +2385,7 @@ function renderDetailGallery(product) {
 }
 
 function openDetails(id, triggerEl = null, options = {}) {
-    const { updateHistory = true } = options;
+    const { updateHistory = true, skipAnimation = false } = options;
     const product = products.find((item) => item.id === id);
     if (!product) return;
     const meta = getProductDetailMeta(product);
@@ -2209,11 +2409,23 @@ function openDetails(id, triggerEl = null, options = {}) {
     document.getElementById("det-description").innerText = product.description;
     document.getElementById("det-shipping-line").innerText = meta.shippingText;
     document.getElementById("det-seller-name").innerText = meta.sellerName;
+    document.getElementById("det-seller-subtitle").innerText = meta.sellerSubtitle || meta.sellerName;
     document.getElementById("det-seller-sales").innerText = meta.sellerSales;
     document.getElementById("det-option-count").innerText = meta.optionText;
     document.getElementById("det-highlights").innerHTML = meta.highlights.map((item) => `<li>${item}</li>`).join("");
+    const sellerLogo = meta.sellerLogo || "assets/mercado-livre-logo.png";
+    const sellerLogoImage = document.getElementById("det-seller-logo");
+    const sellerBannerImage = document.getElementById("det-seller-banner-image");
+    const sellerBanner = document.getElementById("det-seller-logo-banner");
+    const sellerVerifiedIcon = document.getElementById("det-seller-verified");
+    if (sellerLogoImage) sellerLogoImage.src = sellerLogo;
+    if (sellerBannerImage) sellerBannerImage.src = sellerLogo;
+    sellerBanner?.classList.toggle("hidden", Boolean(meta.sellerLogo));
+    sellerVerifiedIcon?.classList.toggle("hidden", !meta.sellerVerified);
     document.getElementById("det-add-cart").onclick = () => addToCart(id);
     document.getElementById("det-favorite-btn").onclick = () => toggleFavorite(id);
+    updateProductShareTargets();
+    closeProductShareMenu();
     renderRatingStars(meta.rating);
     updateFavoriteButton(id);
     if (triggerEl?.classList) {
@@ -2223,7 +2435,7 @@ function openDetails(id, triggerEl = null, options = {}) {
 
     renderDetailGallery(product);
     renderRelatedProducts(id);
-    showPage("details", null, { updateHistory });
+    showPage("details", null, { updateHistory, skipAnimation });
     const detailsPage = document.getElementById("page-details");
     detailsPage?.classList.remove("detail-animating");
     void detailsPage?.offsetWidth;
@@ -3789,6 +4001,9 @@ function init() {
     document.addEventListener("click", (event) => {
         closeCategoriesMenu();
         closeFavoritesMenu();
+        if (!event.target.closest(".product-share-shell") && !event.target.closest("#det-share-btn")) {
+            closeProductShareMenu();
+        }
         if (!event.target.closest(".search-shell")) {
             closeSearchSuggestions();
         }
@@ -3799,7 +4014,12 @@ function init() {
     window.addEventListener("popstate", (event) => {
         restoreNavigationState(event.state);
     });
-    showPage("home", null, { updateHistory: false });
+    const initialProductId = getInitialProductIdFromUrl();
+    if (initialProductId) {
+        openDetails(initialProductId, null, { updateHistory: false, skipAnimation: true });
+    } else {
+        showPage("home", null, { updateHistory: false });
+    }
     writeNavigationState("replace");
     lucide.createIcons();
 }
@@ -3824,6 +4044,8 @@ window.openAddressManager = openAddressManager;
 window.closeAddressManager = closeAddressManager;
 window.openDetails = openDetails;
 window.toggleFavorite = toggleFavorite;
+window.copyProductLink = copyProductLink;
+window.toggleProductShareMenu = toggleProductShareMenu;
 window.viewPurchase = viewPurchase;
 window.buyPurchaseAgain = buyPurchaseAgain;
 window.selectDetailImage = selectDetailImage;

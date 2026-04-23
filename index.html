@@ -2783,7 +2783,33 @@
                 </div>
                 <div class="flex items-center gap-4 text-blue-600">
                     <button class="text-sm font-medium hover:underline">Vender um igual</button>
-                    <button class="text-sm font-medium hover:underline">Compartilhar</button>
+                    <div class="product-share-shell relative">
+                        <button id="detail-share-link" onclick="toggleProductShareMenu(event)" class="text-sm font-medium hover:underline">Compartilhar</button>
+                        <div id="product-share-menu" class="hidden absolute right-0 top-full mt-2 w-56 rounded-lg border border-gray-200 bg-white p-2 shadow-[0_16px_36px_rgba(15,23,42,0.18)] z-[130] text-gray-700">
+                            <a id="share-whatsapp" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-gray-50">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-white">
+                                    <img src="assets/whatsapp-share.png" alt="WhatsApp" class="h-7 w-7 object-contain">
+                                </span>
+                                WhatsApp
+                            </a>
+                            <a id="share-facebook" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-gray-50">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#1877f2] text-white font-bold">f</span>
+                                Facebook
+                            </a>
+                            <a id="share-x" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-gray-50">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white font-semibold">X</span>
+                                X
+                            </a>
+                            <a id="share-telegram" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-gray-50">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#26a5e4] text-white"><i data-lucide="send" class="w-4 h-4"></i></span>
+                                Telegram
+                            </a>
+                            <button onclick="copyProductLink()" class="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600"><i data-lucide="link" class="w-4 h-4"></i></span>
+                                <span id="share-copy-label">Copiar link</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2807,9 +2833,14 @@
                         </div>
                         <div class="flex items-start justify-between gap-3">
                             <h1 id="det-title" class="text-[29px] font-normal leading-9 text-gray-800"></h1>
-                            <button id="det-favorite-btn" class="text-blue-600 hover:text-blue-700 transition-colors">
-                                <i id="det-favorite-icon" data-lucide="heart" class="w-6 h-6"></i>
-                            </button>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button id="det-share-btn" onclick="toggleProductShareMenu(event)" class="text-blue-600 hover:text-blue-700 transition-colors" aria-label="Compartilhar produto" title="Compartilhar produto">
+                                    <i data-lucide="share-2" class="w-6 h-6"></i>
+                                </button>
+                                <button id="det-favorite-btn" class="text-blue-600 hover:text-blue-700 transition-colors" aria-label="Favoritar produto" title="Favoritar produto">
+                                    <i id="det-favorite-icon" data-lucide="heart" class="w-6 h-6"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="flex items-center gap-2 mt-4">
                             <span id="det-rating-score" class="text-sm font-medium text-gray-700">4.9</span>
@@ -2870,14 +2901,20 @@
                         </div>
 
                         <div class="detail-store-card rounded-lg p-4">
-                            <div class="rounded-lg bg-[#fff8d9] border border-[#f4e38e] h-28 flex items-center justify-center">
-                                <img src="assets/mercado-livre-logo.png" alt="Loja oficial" class="h-16 object-contain">
+                            <div id="det-seller-logo-banner" class="rounded-lg bg-[#fff8d9] border border-[#f4e38e] h-28 flex items-center justify-center">
+                                <img id="det-seller-banner-image" src="assets/mercado-livre-logo.png" alt="Loja oficial" class="h-16 object-contain">
                             </div>
                             <div class="mt-4">
                                 <div class="flex items-center justify-between gap-3">
-                                    <div>
-                                        <p class="text-[22px] leading-7 font-medium text-gray-800" id="det-seller-name">Mercado Livre</p>
-                                        <p class="text-sm text-gray-500">Loja oficial do Mercado Livre</p>
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img id="det-seller-logo" src="assets/mercado-livre-logo.png" alt="Loja oficial" class="w-11 h-11 rounded-full object-contain border border-gray-100 bg-gray-50 p-1 shrink-0">
+                                        <div class="min-w-0">
+                                            <p class="text-[18px] leading-6 font-medium text-gray-800 flex items-center gap-1.5 min-w-0">
+                                                <span id="det-seller-name" class="truncate">Mercado Livre</span>
+                                                <i id="det-seller-verified" data-lucide="badge-check" class="w-4 h-4 fill-[#3483fa] text-white hidden shrink-0"></i>
+                                            </p>
+                                            <p id="det-seller-subtitle" class="text-sm text-gray-500">Loja oficial do Mercado Livre</p>
+                                        </div>
                                     </div>
                                     <button class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1 rounded-md">Seguir</button>
                                 </div>
