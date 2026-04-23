@@ -236,10 +236,11 @@ const products = [
         slug: "Mundo-Álbum-Figurinhas-WORLD-2026TM",
         category: "esportes-fitness",
         title: "Copa do Mundo 2026 Album de Figurinhas Capa Dura FIFA WORLD CUP 2026",
-        price: 74.9,
+        price: 99.99,
         oldPrice: 249.0,
         image: "https://m.media-amazon.com/images/I/71XGnCo1fML._SY342_.jpg",
-        description: "Album de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores."
+        description: "Album de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores.",
+        priceOverride: 99.99
     }
 ];
 
@@ -1064,6 +1065,9 @@ function getBasePrice(product) {
 }
 
 function getEffectivePrice(product) {
+    if (typeof product?.priceOverride === "number" && product.priceOverride > 0) {
+        return Number(product.priceOverride.toFixed(2));
+    }
     const basePrice = getBasePrice(product);
     if (basePrice <= 0) return 0;
     return Number((basePrice * (1 - GLOBAL_DISCOUNT_RATE)).toFixed(2));
@@ -2406,6 +2410,7 @@ function openDetails(id, triggerEl = null, options = {}) {
     document.getElementById("det-old-price").innerHTML = `De <span class="line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
     document.getElementById("det-off-badge").innerText = `${discount}% OFF`;
     document.getElementById("det-cash-price").innerText = pixPrice;
+    document.getElementById("det-cash-row").style.display = pixPrice === currentPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ? "none" : "";
     document.getElementById("det-description").innerText = product.description;
     document.getElementById("det-shipping-line").innerText = meta.shippingText;
     document.getElementById("det-seller-name").innerText = meta.sellerName;
