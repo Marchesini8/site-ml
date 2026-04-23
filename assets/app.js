@@ -352,6 +352,7 @@ const appState = {
     addresses: [],
     addressesLoadedFor: "",
     pendingCheckout: false,
+    pendingCheckoutProductId: null,
     searchQuery: "",
     currentElectroSlide: 0,
     electroCarouselInterval: null,
@@ -1099,9 +1100,10 @@ function renderHeaderLocation() {
     document.getElementById("desktop-header-location-text")?.replaceChildren(document.createTextNode(label));
 }
 
-function requireAccountForPurchase() {
+function requireAccountForPurchase(productId = appState.currentProdId) {
     if (appState.session) return true;
     appState.pendingCheckout = true;
+    appState.pendingCheckoutProductId = productId || null;
     toggleCart(false);
     closeCheckout();
     openAuthPage("login");
@@ -1115,7 +1117,16 @@ function continuePendingCheckoutAfterAuth() {
         return;
     }
 
+    const pendingProductId = appState.pendingCheckoutProductId;
     appState.pendingCheckout = false;
+    appState.pendingCheckoutProductId = null;
+    if (pendingProductId && !appState.cart.some((item) => item.id === pendingProductId)) {
+        const product = getProductById(pendingProductId);
+        if (product) {
+            appState.cart.push({ ...product, qty: 1, unitPrice: getEffectivePrice(product) });
+            updateCartUI();
+        }
+    }
     setAuthFeedback("Login concluído. Vamos continuar sua compra.", "success");
     window.setTimeout(() => {
         openCartPage();
@@ -3115,7 +3126,7 @@ function copyPix() {
 }
 
 function buyNow() {
-    if (!requireAccountForPurchase()) return;
+    if (!requireAccountForPurchase(appState.currentProdId)) return;
     addToCart(appState.currentProdId);
 }
 
