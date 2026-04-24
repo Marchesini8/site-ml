@@ -235,10 +235,15 @@ const products = [
         id: 24,
         slug: "Mundo-Álbum-Figurinhas-WORLD-2026TM",
         category: "esportes-fitness",
-        title: "Copa do Mundo 2026 \u00c1lbum de Figurinhas Capa Dura FIFA WORLD CUP 2026",
+        title: "Álbum Copa Do Mundo 2026 Capa Dura Oficial + 70 figurinhas",
         price: 79.99,
         oldPrice: 149.99,
-        image: "https://m.media-amazon.com/images/I/71XGnCo1fML._SY342_.jpg",
+        image: "./assets/album-copa-2026-capa-dura-principal.png",
+        gallery: [
+            "./assets/album-copa-2026-capa-dura-principal.png",
+            "./assets/album-copa-2026-capa-dura-1.png",
+            "./assets/album-copa-2026-capa-dura-2.png"
+        ],
         description: "\u00c1lbum de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores.",
         priceOverride: 79.99
     }
@@ -2390,7 +2395,9 @@ function copyProductLink() {
 function renderDetailGallery(product) {
     const thumbWrap = document.getElementById("det-thumbs");
     if (!thumbWrap) return;
-    const gallery = [product.image, product.image, product.image, product.image, product.image];
+    const gallery = Array.isArray(product.gallery) && product.gallery.length
+        ? product.gallery
+        : [product.image];
     thumbWrap.innerHTML = gallery.map((src, index) => `
         <button class="detail-thumb ${index === 0 ? "active" : ""} w-14 h-14 rounded-md p-1 bg-white" onclick="selectDetailImage('${src}', '${product.title.replace(/'/g, "\\'")}', this)">
             <img src="${src}" alt="${product.title}" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png'">
