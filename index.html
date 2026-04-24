@@ -1241,6 +1241,25 @@
             border-color: #3483fa;
             transform: translateY(-1px);
         }
+        .detail-main-media {
+            touch-action: pan-y;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .detail-mobile-dots {
+            min-height: 18px;
+        }
+        .detail-mobile-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: #d1d5db;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .detail-mobile-dot.active {
+            background: #3483fa;
+            transform: scale(1.15);
+        }
         .detail-star {
             color: #3483fa;
         }
@@ -2852,8 +2871,9 @@
                     <div class="p-4 md:p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
                         <div class="flex gap-4">
                             <div id="det-thumbs" class="hidden md:flex flex-col gap-3"></div>
-                            <div class="flex-1 min-h-[480px] flex items-center justify-center">
+                            <div id="det-main-media" class="detail-main-media flex-1 min-h-[480px] flex flex-col items-center justify-center">
                                 <img id="det-main-image" class="max-h-[520px] object-contain hover:scale-105 transition-transform duration-500" alt="Produto">
+                                <div id="det-mobile-dots" class="detail-mobile-dots flex md:hidden items-center justify-center gap-2 mt-4"></div>
                             </div>
                         </div>
                     </div>

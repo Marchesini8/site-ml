@@ -339,6 +339,8 @@ const sportsActionAssets = {
 const appState = {
     cart: [],
     currentProdId: null,
+    currentDetailGallery: [],
+    currentDetailImageIndex: 0,
     currentPayment: null,
     currentHeroSlide: 0,
     heroCarouselInterval: null,
@@ -2284,6 +2286,70 @@ function updateMainDetailImage(src, alt) {
     window.setTimeout(() => image.classList.remove("is-swapping"), 320);
 }
 
+function renderMobileDetailDots() {
+    const dotsWrap = document.getElementById("det-mobile-dots");
+    const gallery = appState.currentDetailGallery || [];
+    if (!dotsWrap) return;
+    if (gallery.length <= 1) {
+        dotsWrap.innerHTML = "";
+        return;
+    }
+
+    dotsWrap.innerHTML = gallery.map((_, index) => `
+        <button
+            type="button"
+            class="detail-mobile-dot ${index === appState.currentDetailImageIndex ? "active" : ""}"
+            aria-label="Ver imagem ${index + 1} do produto"
+            onclick="goToDetailImage(${index})">
+        </button>
+    `).join("");
+}
+
+function syncDetailThumbState() {
+    document.querySelectorAll("#det-thumbs .detail-thumb").forEach((thumb, index) => {
+        thumb.classList.toggle("active", index === appState.currentDetailImageIndex);
+    });
+}
+
+function goToDetailImage(index) {
+    const gallery = appState.currentDetailGallery || [];
+    if (!gallery.length) return;
+    const normalizedIndex = ((index % gallery.length) + gallery.length) % gallery.length;
+    appState.currentDetailImageIndex = normalizedIndex;
+    updateMainDetailImage(gallery[normalizedIndex], getProductById(appState.currentProdId)?.title || "Produto");
+    syncDetailThumbState();
+    renderMobileDetailDots();
+}
+
+function bindDetailGalleryTouch() {
+    const media = document.getElementById("det-main-media");
+    if (!media) return;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    media.ontouchstart = (event) => {
+        const touch = event.touches?.[0];
+        if (!touch || (appState.currentDetailGallery || []).length <= 1) return;
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+    };
+
+    media.ontouchend = (event) => {
+        const touch = event.changedTouches?.[0];
+        const gallery = appState.currentDetailGallery || [];
+        if (!touch || gallery.length <= 1) return;
+
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        const minSwipe = 36;
+
+        if (Math.abs(deltaX) < minSwipe || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+        if (deltaX < 0) goToDetailImage(appState.currentDetailImageIndex + 1);
+        else goToDetailImage(appState.currentDetailImageIndex - 1);
+    };
+}
+
 function getProductUrlToken(productId) {
     const product = getProductById(productId);
     return product?.slug || String(productId);
@@ -2398,12 +2464,16 @@ function renderDetailGallery(product) {
     const gallery = Array.isArray(product.gallery) && product.gallery.length
         ? product.gallery
         : [product.image];
+    appState.currentDetailGallery = gallery;
+    appState.currentDetailImageIndex = 0;
     thumbWrap.innerHTML = gallery.map((src, index) => `
         <button class="detail-thumb ${index === 0 ? "active" : ""} w-14 h-14 rounded-md p-1 bg-white" onclick="selectDetailImage('${src}', '${product.title.replace(/'/g, "\\'")}', this)">
             <img src="${src}" alt="${product.title}" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png'">
         </button>
     `).join("");
     updateMainDetailImage(gallery[0], product.title);
+    renderMobileDetailDots();
+    bindDetailGalleryTouch();
 }
 
 function openDetails(id, triggerEl = null, options = {}) {
@@ -2467,9 +2537,15 @@ function openDetails(id, triggerEl = null, options = {}) {
 }
 
 function selectDetailImage(src, alt, trigger) {
+    const gallery = appState.currentDetailGallery || [];
+    const nextIndex = gallery.indexOf(src);
+    if (nextIndex >= 0) {
+        appState.currentDetailImageIndex = nextIndex;
+    }
     updateMainDetailImage(src, alt);
     document.querySelectorAll("#det-thumbs .detail-thumb").forEach((thumb) => thumb.classList.remove("active"));
     trigger?.classList.add("active");
+    renderMobileDetailDots();
 }
 
 function renderRelatedProducts(currentId) {
@@ -4114,6 +4190,7 @@ window.toggleProductShareMenu = toggleProductShareMenu;
 window.viewPurchase = viewPurchase;
 window.buyPurchaseAgain = buyPurchaseAgain;
 window.selectDetailImage = selectDetailImage;
+window.goToDetailImage = goToDetailImage;
 window.scrollRelatedProducts = scrollRelatedProducts;
 window.toggleCart = toggleCart;
 window.addToCart = addToCart;
