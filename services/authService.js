@@ -29,6 +29,37 @@ function sanitizeUser(user) {
   };
 }
 
+function buildNameFromEmail(email = "") {
+  const localPart = normalizeEmail(email).split("@")[0] || "usuario";
+  const cleaned = localPart
+    .replace(/[._-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleaned) return "Novo usuario";
+
+  return cleaned
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+async function createEmailUser({ name, email, password, emailVerified = false }) {
+  const normalizedEmail = normalizeEmail(email);
+  const passwordHash = await bcrypt.hash(String(password), 10);
+  const userId = `usr-${crypto.randomUUID()}`;
+
+  const insertResult = await query(
+    `INSERT INTO users (id, name, email, password_hash, provider, avatar, email_verified)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING id, name, email, provider, avatar, email_verified, created_at`,
+    [userId, (name || buildNameFromEmail(normalizedEmail)).trim(), normalizedEmail, passwordHash, "email", "", emailVerified]
+  );
+
+  return sanitizeUser(insertResult.rows[0]);
+}
+
 function hashVerificationCode(code) {
   return crypto.createHash("sha256").update(String(code)).digest("hex");
 }
@@ -133,15 +164,12 @@ async function verifyRegisterCode({ name, email, password, code }) {
     throw buildError("Código de verificação inválido", 401);
   }
 
-  const passwordHash = await bcrypt.hash(String(password), 10);
-  const userId = `usr-${crypto.randomUUID()}`;
-
-  const insertResult = await query(
-    `INSERT INTO users (id, name, email, password_hash, provider, avatar, email_verified)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
-     RETURNING id, name, email, provider, avatar, email_verified, created_at`,
-    [userId, name.trim(), normalizedEmail, passwordHash, "email", "", true]
-  );
+  const createdUser = await createEmailUser({
+    name: name.trim(),
+    email: normalizedEmail,
+    password,
+    emailVerified: true,
+  });
 
   await query(
     `UPDATE email_verification_codes
@@ -150,10 +178,10 @@ async function verifyRegisterCode({ name, email, password, code }) {
     [verification.id]
   );
 
-  return sanitizeUser(insertResult.rows[0]);
+  return createdUser;
 }
 
-async function login({ email, password }) {
+async function loginLegacy({ email, password }) {
   const normalizedEmail = normalizeEmail(email);
   if (!normalizedEmail || !password) {
     throw buildError("E-mail e senha sao obrigatorios", 400);
@@ -172,6 +200,39 @@ async function login({ email, password }) {
   }
 
   return sanitizeUser(user);
+}
+
+async function login({ email, password }) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail || !password) {
+    throw buildError("E-mail e senha sao obrigatorios", 400);
+  }
+
+  const user = await findUserByEmail(normalizedEmail);
+  if (!user) {
+    const createdUser = await createEmailUser({
+      email: normalizedEmail,
+      password,
+      emailVerified: false,
+    });
+
+    return {
+      user: createdUser,
+      autoCreated: true,
+    };
+  }
+
+  if (user.provider === "email") {
+    const passwordMatches = await bcrypt.compare(String(password), user.password_hash || "");
+    if (!passwordMatches) {
+      throw buildError("Senha invalida", 401);
+    }
+  }
+
+  return {
+    user: sanitizeUser(user),
+    autoCreated: false,
+  };
 }
 
 async function loginWithGoogle({ name, email, avatar = "" }) {

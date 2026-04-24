@@ -26,8 +26,8 @@ router.post('/register/verify', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const user = await authService.login(req.body || {});
-    return res.json({ user });
+    const result = await authService.login(req.body || {});
+    return res.json(result);
   } catch (error) {
     return res.status(error.statusCode || 500).json({
       error: error.message || 'Erro ao fazer login',

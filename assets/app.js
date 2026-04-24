@@ -3360,10 +3360,57 @@ function toggleAuthMode() {
     setAuthMode(appState.authMode === "register" ? "login" : "register");
 }
 
+function setAuthModeGoogleOnlyLegacyTwo(mode) {
+    appState.authMode = mode;
+    const isRegister = mode === "register";
+    const passwordWrap = document.getElementById("auth-password")?.closest("div");
+
+    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta com Google" : "Digite seu e-mail ou telefone para iniciar sessÃ£o";
+    document.getElementById("auth-subtitle").innerText = isRegister
+        ? "Para novos cadastros, use sua conta Google para continuar com seguranÃ§a."
+        : "Entre com seus dados para continuar a compra com seguranÃ§a.";
+    document.getElementById("auth-register-google-only")?.classList.toggle("hidden", !isRegister);
+    document.getElementById("auth-name-wrap")?.classList.toggle("hidden", true);
+    document.getElementById("auth-email-wrap")?.classList.toggle("hidden", isRegister);
+    document.getElementById("auth-email-wrap")?.classList.toggle("hidden", isRegister);
+    document.getElementById("auth-confirm-wrap")?.classList.toggle("hidden", true);
+    document.getElementById("auth-code-wrap")?.classList.add("hidden");
+    passwordWrap?.classList.toggle("hidden", isRegister);
+    resetRegisterVerificationState(true);
+    document.getElementById("auth-submit-btn").innerText = "Entrar";
+    document.getElementById("auth-submit-btn")?.classList.toggle("hidden", isRegister);
+    document.getElementById("auth-switch-label").innerText = isRegister ? "JÃ¡ tem uma conta?" : "Ainda nÃ£o tem uma conta?";
+    document.getElementById("auth-switch-btn").innerText = isRegister ? "Entre" : "Criar conta com Google";
+    setAuthFeedback("");
+}
+
 function openAuthPage(mode = "register", triggerEl = null) {
     setAuthMode(mode);
     showPage("auth", triggerEl);
     initGoogleAuth();
+}
+
+function setAuthModeGoogleOnlyLegacyFinal(mode) {
+    appState.authMode = mode;
+    const isRegister = mode === "register";
+    const passwordWrap = document.getElementById("auth-password")?.closest("div");
+
+    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta com Google" : "Digite seu e-mail ou telefone para iniciar sessao";
+    document.getElementById("auth-subtitle").innerText = isRegister
+        ? "Para novos cadastros, use sua conta Google para continuar com seguranca."
+        : "Entre com seus dados para continuar a compra com seguranca.";
+    document.getElementById("auth-register-google-only")?.classList.toggle("hidden", !isRegister);
+    document.getElementById("auth-name-wrap")?.classList.toggle("hidden", true);
+    document.getElementById("auth-email-wrap")?.classList.toggle("hidden", isRegister);
+    document.getElementById("auth-confirm-wrap")?.classList.toggle("hidden", true);
+    document.getElementById("auth-code-wrap")?.classList.add("hidden");
+    passwordWrap?.classList.toggle("hidden", isRegister);
+    resetRegisterVerificationState(true);
+    document.getElementById("auth-submit-btn").innerText = "Entrar";
+    document.getElementById("auth-submit-btn")?.classList.toggle("hidden", isRegister);
+    document.getElementById("auth-switch-label").innerText = isRegister ? "Ja tem uma conta?" : "Ainda nao tem uma conta?";
+    document.getElementById("auth-switch-btn").innerText = isRegister ? "Entre" : "Criar conta com Google";
+    setAuthFeedback("");
 }
 
 function normalizeUser(user) {
@@ -3571,16 +3618,24 @@ async function loginUser() {
     const user = normalizeUser(serverResult.user);
     syncSession(user);
     persistState();
-    setAuthFeedback("Login realizado com sucesso.", "success");
+    setAuthFeedback(serverResult.autoCreated ? "Conta criada automaticamente e login realizado com sucesso." : "Login realizado com sucesso.", "success");
     animateAuthCardSuccess();
     renderPurchaseHistory();
     continuePendingCheckoutAfterAuth();
+}
+
+async function registerUserGoogleOnlyLegacyTwo() {
+    setAuthFeedback("A criaÃ§Ã£o de conta estÃ¡ disponÃ­vel apenas com Google.", "error");
 }
 
 async function submitAuthForm(event) {
     event.preventDefault();
     if (appState.authMode === "register") await registerUser();
     else await loginUser();
+}
+
+async function registerUserGoogleOnlyLegacyFinal() {
+    setAuthFeedback("A criacao de conta esta disponivel apenas com Google.", "error");
 }
 
 function decodeJwtPayload(token) {
