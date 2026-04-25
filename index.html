@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercado Livre - Premium Experience</title>
-    <link rel="icon" type="image/png" href="./assets/favicon.png">
-    <link rel="shortcut icon" type="image/png" href="./assets/favicon.png">
+    <title>Mercado Livre Brasil - Frete Grátis</title>
+    <link rel="icon" type="image/png" href="./assets/faviconV2.png">
+    <link rel="shortcut icon" type="image/png" href="./assets/faviconV2.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -222,13 +222,34 @@
         .mobile-menu-link {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+            justify-content: flex-start;
+            gap: 14px;
             width: 100%;
-            padding: 13px 4px;
-            color: #1f2937;
-            font-weight: 500;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 14px 6px;
+            color: #5f6368;
+            font-size: 15px;
+            line-height: 1.2;
+            font-weight: 600;
+            border-bottom: 0;
+        }
+        .mobile-menu-link i {
+            width: 22px;
+            height: 22px;
+            color: #5f6368;
+            flex-shrink: 0;
+        }
+        .mobile-menu-link-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 18px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: #00a650;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1;
         }
         .mobile-menu-profile {
             background: linear-gradient(180deg, #ffe600 0%, #ffea3a 100%);
@@ -285,13 +306,13 @@
         .desktop-header-navzone {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 22px;
             min-width: 0;
         }
         .desktop-primary-nav {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 18px;
             min-width: 0;
             white-space: nowrap;
         }
@@ -300,16 +321,17 @@
         #favorites-btn {
             font-size: 13px;
             line-height: 1;
+            letter-spacing: 0.01em;
         }
         .desktop-header-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 18px;
             white-space: nowrap;
             flex-shrink: 0;
             margin-left: 0;
-            padding-left: 14px;
-            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            padding-left: 22px;
+            border-left: 1px solid rgba(0, 0, 0, 0.04);
         }
         @media (min-width: 768px) {
             .desktop-header-actions {
@@ -319,12 +341,12 @@
                 gap: 16px;
             }
             .desktop-header-navzone {
-                gap: 20px;
+                gap: 24px;
             }
         }
         @media (min-width: 1280px) {
             .desktop-primary-nav {
-                gap: 18px;
+                gap: 22px;
             }
             .desktop-primary-nav .nav-link,
             .desktop-header-actions .nav-link,
@@ -332,8 +354,8 @@
                 font-size: 14px;
             }
             .desktop-header-right {
-                gap: 16px;
-                padding-left: 18px;
+                gap: 22px;
+                padding-left: 24px;
             }
         }
         .desktop-account-trigger {
@@ -416,6 +438,103 @@
             margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid #f1f5f9;
+        }
+        .header-icon-btn {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        .header-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.45);
+            transform: translateY(-1px);
+        }
+        .header-icon-btn.is-highlighted {
+            background: #ffef99;
+            box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.72);
+        }
+        .header-icon-badge {
+            position: absolute;
+            top: -4px;
+            right: -2px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.24);
+        }
+        .notifications-menu {
+            width: 360px;
+            padding: 0;
+            overflow: hidden;
+        }
+        .notifications-menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px 12px;
+            border-bottom: 1px solid #eef2f7;
+        }
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            width: 100%;
+            padding: 16px 18px;
+            text-align: left;
+            transition: background-color 0.18s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .notification-item:last-child {
+            border-bottom: 0;
+        }
+        .notification-item:hover {
+            background: #f8fafc;
+        }
+        .notification-item-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px solid #eef2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notification-item-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .notification-item-status {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+        .notification-item-status.is-pending {
+            color: #d97706;
+        }
+        .notification-item-status.is-confirmed {
+            color: #16a34a;
+        }
+        .notification-empty {
+            padding: 22px 18px 24px;
+            text-align: center;
+            color: #6b7280;
         }
         .address-card {
             border: 1px solid #e5e7eb;
@@ -869,14 +988,39 @@
             .address-form-grid {
                 grid-template-columns: 1fr;
             }
+            .auth-login-shell {
+                padding: 18px 14px 40px;
+            }
             .auth-login-layout {
                 grid-template-columns: 1fr;
-                gap: 28px;
-                margin-top: 6px;
+                gap: 22px;
+                margin-top: 4px;
+                justify-items: center;
+            }
+            .auth-login-layout > div:first-child {
+                width: 100%;
+                max-width: 360px;
+                margin: 0 auto;
+            }
+            .auth-login-heading {
+                max-width: 360px;
+                margin: 0 auto;
             }
             .auth-login-card {
+                width: 100%;
                 max-width: 100%;
-                padding: 22px 18px;
+                max-width: 360px;
+                margin: 0 auto;
+                padding: 20px 16px;
+            }
+            #auth-title {
+                font-size: 24px;
+                line-height: 1.12;
+            }
+            #auth-subtitle {
+                margin-top: 12px;
+                font-size: 15px;
+                line-height: 1.45;
             }
         }
         .hero-carousel-track {
@@ -1169,6 +1313,62 @@
             background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
             border: 1px solid rgba(226, 232, 240, 0.95);
             box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
+        }
+        .meli-plus-track {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scroll-snap-type: x proximity;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .meli-plus-track::-webkit-scrollbar {
+            display: none;
+        }
+        .meli-plus-item {
+            min-width: 0;
+        }
+        .mobile-discovery-section {
+            background: #fff;
+            border: 1px solid rgba(226, 232, 240, 0.95);
+            border-radius: 18px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+        .mobile-discovery-list {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+        .mobile-discovery-item {
+            display: grid;
+            grid-template-columns: 112px minmax(0, 1fr);
+            gap: 14px;
+            width: 100%;
+            padding: 16px 14px;
+            border-top: 1px solid #edf2f7;
+            text-align: left;
+            background: #fff;
+        }
+        .mobile-discovery-item:first-child {
+            border-top: 0;
+        }
+        .mobile-discovery-thumb {
+            width: 112px;
+            height: 112px;
+            border-radius: 12px;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .mobile-discovery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 6px;
         }
         .meli-plus-divider {
             width: 1px;
@@ -1650,6 +1850,31 @@
                 border-radius: 10px;
                 background: #f8fafc;
             }
+            .meli-plus-shell {
+                border-radius: 18px;
+            }
+            .meli-plus-mobile-header {
+                display: flex;
+            }
+            .meli-plus-desktop-cta,
+            .meli-plus-desktop-grid {
+                display: none;
+            }
+            .meli-plus-mobile-card {
+                flex: 0 0 178px;
+                background: #fff;
+                border: 1px solid #edf2f7;
+                border-radius: 12px;
+                padding: 10px;
+                scroll-snap-align: start;
+            }
+            .meli-plus-mobile-card img {
+                width: 100%;
+                height: 126px;
+                object-fit: contain;
+                border-radius: 10px;
+                background: #fafafa;
+            }
             #home-shortcuts,
             .desktop-offers-shell {
                 display: none;
@@ -1692,21 +1917,28 @@
                 overflow-y: auto;
             }
         }
+        @media (min-width: 768px) {
+            .meli-plus-mobile-header,
+            .meli-plus-mobile-track,
+            .meli-plus-mobile-cta {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-900">
 
     <!-- HEADER -->
     <header class="bg-[#ffe600] w-full pt-2 pb-2 shadow-sm sticky top-0 z-[100]">
-        <div class="mobile-header-shell max-w-7xl mx-auto px-3 pt-1 pb-2">
+        <div class="mobile-header-shell max-w-7xl mx-auto px-3 pt-1 pb-1">
             <div class="flex items-center gap-2.5">
                 <button class="shrink-0" onclick="showPage('home')">
-                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-11 w-auto object-contain">
+                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-9 w-auto object-contain">
                 </button>
                 <div class="search-shell flex-1 min-w-0">
-                    <div class="ml-header-search bg-white h-10 rounded-[14px] flex items-center overflow-hidden">
+                    <div class="ml-header-search bg-white h-9 rounded-[14px] flex items-center overflow-hidden">
                         <input id="mobile-search-input" type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full min-w-0 h-full px-3 text-[14px] text-gray-500 bg-transparent outline-none">
-                        <button class="w-10 h-10 flex items-center justify-center text-gray-400">
+                        <button class="w-9 h-9 flex items-center justify-center text-gray-400">
                             <i data-lucide="search" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -1717,7 +1949,7 @@
                     <span id="mobile-menu-badge" class="mobile-menu-badge hidden">0</span>
                 </button>
             </div>
-            <div class="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide">
+            <div class="mt-1.5 flex items-center gap-2 overflow-x-auto scrollbar-hide">
                 <div class="mobile-utility-chip shrink-0 flex items-center gap-2 px-3 py-2">
                     <i data-lucide="map-pin" class="w-4 h-4 text-[#333]"></i>
                     <div class="leading-none">
@@ -1730,23 +1962,23 @@
             </div>
         </div>
         <div class="hidden md:flex max-w-7xl mx-auto px-4 flex-col gap-3">
-            <div class="flex items-center gap-3 md:gap-6">
+            <div class="flex items-center gap-3 md:gap-5">
                 <div class="flex items-center shrink-0 min-w-fit cursor-pointer" onclick="showPage('home')">
-                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-10 md:h-16 w-auto object-contain">
+                    <img src="assets/mercado-livre-logo.png" alt="Logo Mercado Livre" class="h-9 md:h-12 w-auto object-contain">
                 </div>
 
                 <div class="search-shell flex-1 min-w-0">
-                    <div class="ml-header-search bg-white h-11 rounded-[2px] flex items-center overflow-hidden">
+                    <div class="ml-header-search bg-white h-10 rounded-[2px] flex items-center overflow-hidden">
                         <input id="desktop-search-input" type="text" placeholder="Buscar produtos, marcas e muito mais..." class="w-full min-w-0 h-full px-3 md:px-4 text-[14px] md:text-[18px] text-gray-500 bg-transparent outline-none">
                         <div class="h-6 w-px bg-gray-200"></div>
-                        <button class="w-10 md:w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
+                        <button class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
                             <i data-lucide="search" class="w-5 h-5"></i>
                         </button>
                     </div>
                     <div id="desktop-search-suggestions" class="search-suggestions hidden"></div>
                 </div>
 
-                <div class="hidden lg:flex ml-header-pill items-center justify-center rounded-2xl px-3 py-1.5 h-[52px] min-w-[300px] overflow-hidden">
+                <div class="hidden lg:flex ml-header-pill items-center justify-center rounded-2xl px-3 py-1 h-[42px] min-w-[300px] overflow-hidden">
                     <img src="https://http2.mlstatic.com/D_NQ_965966-MLA110467212691_042026-OO.webp" alt="Banner promocional Mercado Livre" class="h-full w-full object-cover rounded-xl">
                 </div>
             </div>
@@ -1794,7 +2026,7 @@
                         <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('coupons', this)">Cupons</button>
                         <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('supermarket', this)">Supermercado</button>
                         <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('fashion', this)">Moda</button>
-                        <button class="nav-link hover:text-black transition-colors relative" onclick="navigateToSection('play', this)">Mercado Play <span class="absolute -top-3 right-0 text-[9px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRATIS</span></button>
+                        <button class="nav-link hover:text-black transition-colors relative" onclick="navigateToSection('play', this)">Mercado Play <span class="absolute -top-3 right-0 text-[9px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRÁTIS</span></button>
                         <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('sell', this)">Vender</button>
                         <button class="nav-link hover:text-black transition-colors" onclick="navigateToSection('contact', this)">Contato</button>
                     </nav>
@@ -1802,7 +2034,6 @@
 
                 <div class="desktop-header-right">
                     <div id="nav-guest-actions" class="desktop-header-actions items-center gap-4 lg:gap-5 shrink-0">
-                        <button id="nav-register-btn" class="nav-link hover:text-black transition-colors" onclick="openAuthPage('register', this)">Crie a sua conta</button>
                         <button id="nav-login-btn" class="nav-link hover:text-black transition-colors" onclick="openAuthPage('login', this)">Entre</button>
                     </div>
                     <div id="nav-user-actions" class="desktop-header-actions items-center gap-4 lg:gap-5 shrink-0">
@@ -1842,7 +2073,7 @@
                                 <div class="desktop-account-menu-section space-y-1">
                                     <button class="desktop-account-menu-link" onclick="navigateToSection('offers'); closeDesktopAccountMenu();"><span>Empréstimos</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
                                     <button class="desktop-account-menu-link" onclick="navigateToSection('coupons'); closeDesktopAccountMenu();"><span>Assinaturas</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
-                                    <button class="desktop-account-menu-link" onclick="navigateToSection('play'); closeDesktopAccountMenu();"><span>Mercado Play</span><span class="text-[10px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRATIS</span></button>
+                                    <button class="desktop-account-menu-link" onclick="navigateToSection('play'); closeDesktopAccountMenu();"><span>Mercado Play</span><span class="text-[10px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRÁTIS</span></button>
                                 </div>
                                 <div class="desktop-account-menu-section space-y-1">
                                     <button class="desktop-account-menu-link" onclick="navigateToSection('sell'); closeDesktopAccountMenu();"><span>Vender</span><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></button>
@@ -1884,7 +2115,26 @@
                         </div>
                         <button class="nav-link hover:text-black transition-colors" onclick="showPage('orders', this)">Compras</button>
                     </div>
-                    <div id="cart-btn" class="relative cursor-pointer hover:scale-110 transition-transform" onclick="openCartPage()">
+                    <div id="notifications-shell" class="desktop-account-shell">
+                        <button id="notifications-btn" type="button" class="header-icon-btn is-highlighted" onclick="toggleNotificationsMenu(event)" aria-label="Abrir notificações">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                            <span id="notifications-count" class="hidden header-icon-badge">0</span>
+                        </button>
+                        <div id="notifications-menu" class="desktop-account-menu notifications-menu">
+                            <div class="notifications-menu-header">
+                                <div>
+                                    <p class="font-semibold text-gray-900">Avisos</p>
+                                    <p class="text-sm text-gray-500">Pagamentos pendentes e aprovados</p>
+                                </div>
+                                <i data-lucide="settings-2" class="w-4 h-4 text-gray-400"></i>
+                            </div>
+                            <div id="notifications-menu-empty" class="notification-empty">
+                                Nenhuma notificação no momento.
+                            </div>
+                            <div id="notifications-menu-list"></div>
+                        </div>
+                    </div>
+                    <div id="cart-btn" class="relative header-icon-btn cursor-pointer" onclick="openCartPage()">
                         <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                         <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">0</span>
                     </div>
@@ -1920,64 +2170,68 @@
 
             <div class="px-4 pt-2 pb-6">
                 <button class="mobile-menu-link" onclick="showPage('home'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="house" class="w-5 h-5 text-gray-500"></i>Início</span>
+                    <i data-lucide="house"></i>
+                    <span>Início</span>
+                </button>
+                <button class="mobile-menu-link" onclick="openNotificationsCenter()">
+                    <i data-lucide="bell"></i>
+                    <span>Avisos</span>
                 </button>
                 <button class="mobile-menu-link" onclick="showPage('orders'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="shopping-bag" class="w-5 h-5 text-gray-500"></i>Compras</span>
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Compras</span>
                 </button>
-                <button class="mobile-menu-link" onclick="showPage('history'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="history" class="w-5 h-5 text-gray-500"></i>Histórico</span>
+                <button class="mobile-menu-link" onclick="showPage('home'); closeMobileMenu();">
+                    <i data-lucide="heart"></i>
+                    <span>Favoritos</span>
                 </button>
                 <button class="mobile-menu-link" onclick="navigateToSection('offers'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="badge-percent" class="w-5 h-5 text-gray-500"></i>Ofertas</span>
+                    <i data-lucide="badge-percent"></i>
+                    <span>Ofertas</span>
                 </button>
                 <button class="mobile-menu-link" onclick="navigateToSection('coupons'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="ticket-percent" class="w-5 h-5 text-gray-500"></i>Cupons</span>
+                    <i data-lucide="ticket-percent"></i>
+                    <span>Cupons</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('offers'); closeMobileMenu();">
+                    <i data-lucide="hand-coins"></i>
+                    <span>Empréstimos</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('offers'); closeMobileMenu();">
+                    <i data-lucide="shield-check"></i>
+                    <span>Seguros e assistências</span>
+                </button>
+                <button class="mobile-menu-link" onclick="navigateToSection('coupons'); closeMobileMenu();">
+                    <i data-lucide="receipt-text"></i>
+                    <span>Assinaturas</span>
                 </button>
                 <button class="mobile-menu-link" onclick="navigateToSection('play'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="monitor-play" class="w-5 h-5 text-gray-500"></i>Mercado Play <span class="text-[10px] font-bold text-white bg-[#00a650] px-1.5 py-0.5 rounded-full">GRATIS</span></span>
+                    <i data-lucide="monitor-play"></i>
+                    <span class="flex items-center gap-2">Mercado Play <span class="mobile-menu-link-badge">GRÁTIS</span></span>
+                </button>
+                <button class="mobile-menu-link" onclick="showPage('history'); closeMobileMenu();">
+                    <i data-lucide="history"></i>
+                    <span>Histórico</span>
                 </button>
                 <button class="mobile-menu-link" onclick="showPage('purchases'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="circle-user" class="w-5 h-5 text-gray-500"></i>Minha conta</span>
-                </button>
-                <button class="mobile-menu-link" onclick="openCartPage(); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="shopping-cart" class="w-5 h-5 text-gray-500"></i>Carrinho</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('categories'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="layout-grid" class="w-5 h-5 text-gray-500"></i>Categorias</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('tecnologia'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="laptop" class="w-5 h-5 text-gray-500"></i>Tecnologia</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('eletrodomesticos'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="washing-machine" class="w-5 h-5 text-gray-500"></i>Eletrodomesticos</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('casa-moveis'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="sofa" class="w-5 h-5 text-gray-500"></i>Casa e Moveis</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('esportes-fitness'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="dumbbell" class="w-5 h-5 text-gray-500"></i>Esportes e Fitness</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('supermarket'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="store" class="w-5 h-5 text-gray-500"></i>Supermercado</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('fashion'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="shirt" class="w-5 h-5 text-gray-500"></i>Moda</span>
-                </button>
-                <button class="mobile-menu-link" onclick="navigateToSection('sell'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="briefcase-business" class="w-5 h-5 text-gray-500"></i>Vender</span>
+                    <i data-lucide="circle-user"></i>
+                    <span>Minha conta</span>
                 </button>
                 <button class="mobile-menu-link" onclick="navigateToSection('contact'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="headphones" class="w-5 h-5 text-gray-500"></i>Contato</span>
+                    <i data-lucide="headphones"></i>
+                    <span>Contato</span>
                 </button>
                 <button id="mobile-menu-login-link" class="mobile-menu-link" onclick="openAuthPage('login'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="log-in" class="w-5 h-5 text-gray-500"></i>Entrar</span>
+                    <i data-lucide="log-in"></i>
+                    <span>Entrar</span>
                 </button>
                 <button id="mobile-menu-register-link" class="mobile-menu-link" onclick="openAuthPage('register'); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="user-plus" class="w-5 h-5 text-gray-500"></i>Criar conta</span>
+                    <i data-lucide="user-plus"></i>
+                    <span>Criar conta</span>
                 </button>
                 <button id="mobile-menu-logout-link" class="mobile-menu-link hidden" onclick="logout(); closeMobileMenu();">
-                    <span class="flex items-center gap-3"><i data-lucide="log-out" class="w-5 h-5 text-gray-500"></i>Sair</span>
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
                 </button>
             </div>
 
@@ -2025,7 +2279,7 @@
                         <div class="flex items-center justify-center h-24">
                             <i data-lucide="package-open" class="w-16 h-16 text-[#333]"></i>
                         </div>
-                        <p class="text-[14px] text-[#666] leading-5">Beneficio por ser sua primeira compra.</p>
+                        <p class="text-[14px] text-[#666] leading-5">Benef?cio por ser sua primeira compra.</p>
                         <button class="shortcut-cta rounded-md py-2 text-[13px] font-semibold" onclick="navigateToSection('offers')">Mostrar produtos</button>
                     </div>
                     <div class="shortcut-card p-4 md:p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform">
@@ -2074,7 +2328,7 @@
             <section id="inspired-section" class="hidden max-w-7xl mx-auto px-4 mt-10">
                 <div class="offer-shell rounded-[2rem] p-4 md:p-6">
                     <div class="flex items-center justify-between mb-5">
-                        <h2 id="inspired-last-title" class="text-xl font-bold text-gray-900">Inspirado no ultimo visto</h2>
+                        <h2 id="inspired-last-title" class="text-xl font-bold text-gray-900">Inspirado no ?ltimo visto</h2>
                         <div id="inspired-section-dots" class="hidden md:flex items-center gap-1 text-gray-300"></div>
                     </div>
                     <div id="inspired-products-list" class="related-track flex gap-4 overflow-x-auto pb-4 scrollbar-hide"></div>
@@ -2136,38 +2390,69 @@
                 </div>
             </section>
 
-            <section id="section-offers" class="max-w-7xl mx-auto px-4 mt-8">
+            <section id="section-offers" class="hidden md:block max-w-7xl mx-auto px-4 mt-8">
                 <div class="meli-plus-shell rounded-[2rem] overflow-hidden">
+                    <div class="meli-plus-mobile-header flex-col gap-3 px-4 py-4">
+                        <img src="assets/pill-meliplus.png" alt="meli+" class="h-8 w-fit object-contain">
+                        <p class="text-[20px] leading-[1.05] font-black text-gray-900">Viva toda a experiência Mercado Livre</p>
+                    </div>
+                    <div class="meli-plus-mobile-track px-4">
+                        <div class="meli-plus-track">
+                            <article class="meli-plus-mobile-card">
+                                <img src="assets/meli-envios.png" alt="Frete grátis">
+                                <p class="font-bold text-gray-900 mt-4 text-[14px] leading-[1.35] text-center">Frete grátis rápido em produtos a partir de R$ 19</p>
+                            </article>
+                            <article class="meli-plus-mobile-card">
+                                <img src="assets/meli-streaming.png" alt="Streaming">
+                                <p class="font-bold text-gray-900 mt-4 text-[14px] leading-[1.35] text-center">As melhores plataformas de entretenimento</p>
+                            </article>
+                            <article class="meli-plus-mobile-card">
+                                <img src="assets/meli-cashback.png" alt="Cashback">
+                                <p class="font-bold text-gray-900 mt-4 text-[14px] leading-[1.35] text-center">Até 5% de cashback nas suas compras e pagamentos</p>
+                            </article>
+                            <article class="meli-plus-mobile-card">
+                                <img src="assets/meli-rendimento.png" alt="Rendimento">
+                                <p class="font-bold text-gray-900 mt-4 text-[14px] leading-[1.35] text-center">Rendimento de 120% do CDI em Cofrinhos</p>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="meli-plus-mobile-cta px-4 pt-4 pb-4">
+                        <button class="w-full bg-blue-600 text-white px-5 py-3 rounded-xl text-[14px] font-bold hover:bg-blue-700 transition-colors" onclick="openAuthPage('register')">
+                            Assinar a partir de R$ 9,90
+                        </button>
+                    </div>
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-5 md:px-8 py-4 border-b border-gray-100">
                         <div class="flex items-center gap-4">
                             <img src="assets/pill-meliplus.png" alt="meli+" class="h-8 w-auto object-contain">
                             <p class="text-lg md:text-xl font-black text-gray-900">Viva toda a experiencia Mercado Livre</p>
                         </div>
-                        <button class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors" onclick="openAuthPage('register')">
+                        <button class="meli-plus-desktop-cta bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors" onclick="openAuthPage('register')">
                             Assinar a partir de R$ 9,90
                         </button>
                     </div>
 
-                    <div class="grid md:grid-cols-4 gap-4 md:gap-0 px-5 md:px-8 py-6">
-                        <div class="text-center px-4 md:border-r md:border-[#ece3fb]">
-                            <img src="assets/meli-envios.png" alt="Frete gratis" class="h-28 mx-auto object-contain">
+                    <div class="meli-plus-desktop-grid grid md:grid-cols-4 gap-4 md:gap-0 px-5 md:px-8 py-6">
+                        <div class="meli-plus-item text-center px-4 md:border-r md:border-[#ece3fb]">
+                            <img src="assets/meli-envios.png" alt="Frete grátis" class="h-28 mx-auto object-contain">
                             <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Frete grátis rápido em produtos a partir de R$ 19</p>
                         </div>
-                        <div class="text-center px-4 md:border-r md:border-[#ece3fb]">
+                        <div class="meli-plus-item text-center px-4 md:border-r md:border-[#ece3fb]">
                             <img src="assets/meli-streaming.png" alt="Streaming" class="h-28 mx-auto object-contain">
                             <p class="font-bold text-gray-900 mt-4 text-sm leading-5">As melhores plataformas de entretenimento</p>
                         </div>
-                        <div class="text-center px-4 md:border-r md:border-[#ece3fb]">
+                        <div class="meli-plus-item text-center px-4 md:border-r md:border-[#ece3fb]">
                             <img src="assets/meli-cashback.png" alt="Cashback" class="h-28 mx-auto object-contain">
-                            <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Ate 5% de cashback nas suas compras e pagamentos</p>
+                            <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Até 5% de cashback nas suas compras e pagamentos</p>
                         </div>
-                        <div class="text-center px-4">
+                        <div class="meli-plus-item text-center px-4">
                             <img src="assets/meli-rendimento.png" alt="Rendimento" class="h-28 mx-auto object-contain">
                             <p class="font-bold text-gray-900 mt-4 text-sm leading-5">Rendimento de 120% do CDI em Cofrinhos</p>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <section id="mobile-discovery-sections" class="md:hidden px-3 mt-3 space-y-3"></section>
 
             <section id="section-coupons" class="max-w-7xl mx-auto px-4 mt-8">
                 <div class="grid md:grid-cols-2 gap-6">
@@ -2206,7 +2491,7 @@
                         <div class="max-w-md">
                             <img src="assets/mercado-livre-play-cover.png" alt="Mercado Play" class="h-10 w-auto object-contain mb-6">
                             <h2 class="text-3xl md:text-4xl font-black text-white leading-tight">Assuma o controle. Assista o que quiser.</h2>
-                            <span class="inline-flex mt-4 bg-[#00a650] text-white text-xs font-black px-3 py-1 rounded-full">GRATIS</span>
+                            <span class="inline-flex mt-4 bg-[#00a650] text-white text-xs font-black px-3 py-1 rounded-full">GRÁTIS</span>
                             <p class="text-white/75 mt-4">O vídeo agora roda direto no quadro da direita, dentro da área do Mercado Play que você marcou.</p>
                             <div class="flex flex-wrap gap-3 mt-6">
                                 <button class="bg-white text-gray-900 px-5 py-3 rounded-xl font-bold" onclick="playEmbeddedVideo()">Assistir agora</button>
@@ -2930,8 +3215,8 @@
 
                     <div class="p-4 md:p-6 flex flex-col gap-5">
                         <div class="detail-store-card rounded-lg p-4">
-                            <div class="inline-flex detail-badge-green text-[11px] font-bold px-2 py-1 rounded mb-3" id="det-shipping-badge">FRETE GRATIS ACIMA DE R$ 19</div>
-                            <p id="det-shipping-line" class="text-[22px] leading-7 text-green-600 font-medium">Chegara gratis quinta-feira 30 de abril</p>
+                            <div class="inline-flex detail-badge-green text-[11px] font-bold px-2 py-1 rounded mb-3" id="det-shipping-badge">FRETE GRÁTIS ACIMA DE R$ 19</div>
+                            <p id="det-shipping-line" class="text-[22px] leading-7 text-green-600 font-medium">Chegará grátis quinta-feira 30 de abril</p>
                             <p id="det-shipping-sub" class="text-sm text-gray-500 mt-1">por ser sua primeira compra</p>
                             <button class="text-sm text-blue-600 mt-2 hover:underline">Mais detalhes e formas de entrega</button>
 
@@ -3209,7 +3494,7 @@
                                             <p class="text-sm text-gray-400 mt-2">Residencial</p>
                                         </div>
                                     </div>
-                                    <p class="text-green-600 font-semibold">Gratis</p>
+                                    <p class="text-green-600 font-semibold">Gr?tis</p>
                                 </div>
                                 <div class="border-t border-gray-100 px-5 py-4">
                         <button onclick="goToCheckStep('address')" class="text-sm text-blue-600 font-medium">Alterar ou escolher outro endereço</button>
@@ -3350,7 +3635,7 @@
                         <p class="font-semibold text-gray-800 mb-4">Resumo da compra</p>
                         <div class="space-y-3 text-sm">
                             <div class="flex items-center justify-between"><span>Produto</span><span id="summary-product-total">R$ 0,00</span></div>
-                            <div class="flex items-center justify-between"><span>Frete</span><span id="summary-shipping-total" class="text-green-600">Gratis</span></div>
+                            <div class="flex items-center justify-between"><span>Frete</span><span id="summary-shipping-total" class="text-green-600">Gr?tis</span></div>
                             <div id="summary-coupon-row" class="hidden flex items-center justify-between"><span>Cupons</span><span class="text-blue-600">(1 para aplicar)</span></div>
                             <div class="border-t border-gray-100 pt-3 flex items-center justify-between font-semibold text-[16px]"><span id="summary-total-label">Total</span><span id="summary-grand-total">R$ 0,00</span></div>
                         </div>

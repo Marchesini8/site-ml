@@ -1,4 +1,4 @@
-const FIXED_SHIPPING = 49.9;
+﻿const FIXED_SHIPPING = 49.9;
 const FULL_DISCOUNT_LABEL = "100% OFF";
 const GLOBAL_DISCOUNT_RATE = 0.85;
 const DISCOUNTED_PRODUCT_IDS = new Set([23, 24]);
@@ -7,7 +7,8 @@ const STORAGE_KEYS = {
     purchases: "ml_purchases",
     history: "ml_history",
     searchHistory: "ml_search_history",
-    favorites: "ml_favorites"
+    favorites: "ml_favorites",
+    notifications: "ml_notifications"
 };
 const APP_CONFIG = {
     googleClientId: window.GOOGLE_CLIENT_ID || ""
@@ -41,7 +42,7 @@ const products = [
         price: 118.5,
         oldPrice: 790.0,
         image: "https://http2.mlstatic.com/D_NQ_NP_2X_654188-MLA110122213881_042026-F.webp",
-        description: "Air fryer oven Mondial de 12 litros para assar, gratinar e fritar com menos oleo."
+        description: "Air fryer oven Mondial de 12 litros para assar, gratinar e fritar com menos óleo."
     },
     {
         id: 3,
@@ -181,7 +182,7 @@ const products = [
     {
         id: 18,
         category: "esportes-fitness",
-        title: "Kit Halteres 6 em 1 Ate 40kg Ajustavel Halter Kettlebell Anilha Preto Vermelho",
+        title: "Kit Halteres 6 em 1 Até 40kg Ajustável Halter Kettlebell Anilha Preto Vermelho",
         price: 299.0,
         oldPrice: 1649.0,
         image: "https://http2.mlstatic.com/D_NQ_NP_2X_723293-MLA101063609196_122025-F.webp",
@@ -358,6 +359,7 @@ const appState = {
     history: [],
     searchHistory: [],
     favorites: [],
+    notifications: [],
     addresses: [],
     addressesLoadedFor: "",
     pendingCheckout: false,
@@ -438,7 +440,7 @@ const productDetailMap = {
         sold: "+500 vendidos",
         rating: 4.7,
         reviews: 118,
-        shippingText: "Entrega agendada e frete gratis na primeira compra",
+        shippingText: "Entrega agendada e frete grátis na primeira compra",
         sellerName: "Loja oficial Inbox",
         sellerSales: "+5 mil",
         optionText: "12 produtos novos a partir de R$ 500",
@@ -456,7 +458,7 @@ const productDetailMap = {
         sold: "+3 mil vendidos",
         rating: 4.8,
         reviews: 624,
-        shippingText: "Chegara rapido com envio full",
+        shippingText: "Chegará rápido com envio full",
         sellerName: "Loja oficial Mondial",
         sellerSales: "+80 mil",
         optionText: "22 produtos novos a partir de R$ 790",
@@ -465,7 +467,7 @@ const productDetailMap = {
             "Funciona como fritadeira e forno.",
             "Ideal para receitas de maior volume.",
             "Design preto para cozinhas modernas.",
-            "Versatil para assar, gratinar e aquecer."
+            "Vers?til para assar, gratinar e aquecer."
         ]
     },
     3: {
@@ -492,7 +494,7 @@ const productDetailMap = {
         sold: "+2 mil vendidos",
         rating: 4.7,
         reviews: 391,
-        shippingText: "Chegara em poucos dias com frete gratis na campanha",
+        shippingText: "Chegará em poucos dias com frete grátis na campanha",
         sellerName: "Loja oficial Consul",
         sellerSales: "+100 mil",
         optionText: "15 produtos novos a partir de R$ 1.799",
@@ -546,7 +548,7 @@ const productDetailMap = {
         sold: "+6 mil vendidos",
         rating: 4.9,
         reviews: 987,
-        shippingText: "Chegara rapido com nota fiscal e garantia",
+        shippingText: "Chegará rápido com nota fiscal e garantia",
         sellerName: "Distribuidor autorizado Apple",
         sellerSales: "+250 mil",
         optionText: "16 produtos novos a partir de R$ 2.699",
@@ -600,7 +602,7 @@ const productDetailMap = {
         sold: "+1 mil vendidos",
         rating: 4.7,
         reviews: 188,
-        shippingText: "Chegara rapido com compra protegida",
+        shippingText: "Chegará rápido com compra protegida",
         sellerName: "Loja oficial Suggar",
         sellerSales: "+70 mil",
         optionText: "17 produtos novos a partir de R$ 980",
@@ -636,7 +638,7 @@ const productDetailMap = {
         sold: "+900 vendidos",
         rating: 4.7,
         reviews: 138,
-        shippingText: "Chegara rapido com envio full",
+        shippingText: "Chegará rápido com envio full",
         sellerName: "Loja oficial Brinovar",
         sellerSales: "+15 mil",
         optionText: "10 produtos novos a partir de R$ 996",
@@ -672,7 +674,7 @@ const productDetailMap = {
         sold: "+2 mil vendidos",
         rating: 4.9,
         reviews: 286,
-        shippingText: "Chegara com envio full para regioes selecionadas",
+        shippingText: "Chegará com envio full para regiões selecionadas",
         sellerName: "Loja oficial Adidas",
         sellerSales: "+120 mil",
         optionText: "14 produtos novos a partir de R$ 299",
@@ -744,7 +746,7 @@ const productDetailMap = {
         sold: "+3 mil vendidos",
         rating: 4.8,
         reviews: 521,
-        shippingText: "Chegara rapido com envio full",
+        shippingText: "Chegará rápido com envio full",
         sellerName: "Loja oficial WCT Fitness",
         sellerSales: "+55 mil",
         optionText: "16 produtos novos a partir de R$ 1.649",
@@ -780,7 +782,7 @@ const productDetailMap = {
         sold: "+900 vendidos",
         rating: 4.7,
         reviews: 164,
-        shippingText: "Chegara com envio rapido para varias regioes",
+        shippingText: "Chegará com envio rápido para várias regiões",
         sellerName: "Loja oficial Dream Fitness",
         sellerSales: "+34 mil",
         optionText: "13 produtos novos a partir de R$ 3.082",
@@ -892,6 +894,7 @@ function persistState() {
     localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(appState.history));
     localStorage.setItem(STORAGE_KEYS.searchHistory, JSON.stringify(appState.searchHistory));
     localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(appState.favorites));
+    localStorage.setItem(STORAGE_KEYS.notifications, JSON.stringify(appState.notifications));
 }
 
 function loadState() {
@@ -900,6 +903,8 @@ function loadState() {
     appState.history = safeParse(STORAGE_KEYS.history, []);
     appState.searchHistory = safeParse(STORAGE_KEYS.searchHistory, []);
     appState.favorites = safeParse(STORAGE_KEYS.favorites, []);
+    appState.notifications = safeParse(STORAGE_KEYS.notifications, []);
+    syncNotificationsFromPurchases();
 }
 
 function getSessionEmail() {
@@ -1165,7 +1170,7 @@ function renderProductCard(product) {
                     <p class="text-[18px] md:text-[20px] leading-none font-normal text-gray-900">${formatCurrency(currentPrice)}</p>
                     ${showDiscount ? `<p class="text-[12px] font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
-                <p class="text-[12px] text-green-600 font-medium mt-2">Frete gratis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
+                <p class="text-[12px] text-green-600 font-medium mt-2">Frete grátis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
                 <button onclick="event.stopPropagation(); addToCart(${product.id})" class="mt-auto pt-3 text-left text-[12px] text-blue-600 font-semibold hover:underline">Ver oferta</button>
             </div>
         </div>
@@ -1194,6 +1199,12 @@ function renderMobileProductCard(product) {
     `;
 }
 
+const recommendationTitleBuilders = [
+    () => "Pensados para você",
+    () => "Relacionado com você",
+    () => "Semelhantes ao que te interessa",
+    () => "Escolhidos para você"
+];
 function normalizeSearchText(value) {
     return (value || "")
         .normalize("NFD")
@@ -1289,7 +1300,7 @@ function renderInspiredProductCard(product) {
                     <p class="text-[28px] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
                     ${showDiscount ? `<p class="text-sm font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
-                <p class="text-[11px] text-green-600 font-bold mt-2">Frete gratis</p>
+                <p class="text-[11px] text-green-600 font-bold mt-2">Frete grátis</p>
             </div>
         </article>
     `;
@@ -1310,12 +1321,108 @@ function renderInspiredSection() {
         return;
     }
 
-    title.innerText = "Inspirado no ultimo visto";
+    title.innerText = "Inspirado no último visto";
     dots.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-current"></span><span class="w-1.5 h-1.5 rounded-full bg-current"></span><span class="w-1.5 h-1.5 rounded-full bg-current"></span><span class="w-1.5 h-1.5 rounded-full bg-current"></span>';
     list.innerHTML = inspired.map(renderInspiredProductCard).join("");
     section.classList.remove("hidden");
 }
 
+function getRecommendationProducts(category, excludeIds = [], limit = 4) {
+    const exclude = new Set(excludeIds);
+    const sameCategory = products.filter((product) => product.category === category && !exclude.has(product.id));
+    const fallback = products.filter((product) => product.category !== category && !exclude.has(product.id));
+    const ordered = [...sameCategory, ...fallback];
+    const offset = appState.history.length % Math.max(ordered.length || 1, 1);
+    return [...ordered.slice(offset), ...ordered.slice(0, offset)].slice(0, limit);
+}
+
+function getSearchDrivenCategory() {
+    const latestSearch = appState.searchHistory[0]?.query || "";
+    if (!latestSearch) return "";
+    const results = findProductsByQuery(latestSearch);
+    return results[0]?.category || "";
+}
+
+function buildMobileRecommendationSections() {
+    const sections = [];
+    const usedTitles = new Set();
+    const recentProducts = appState.history
+        .map((entry) => getProductById(entry.id))
+        .filter(Boolean);
+    const recentCategories = [...new Set(recentProducts.map((product) => product.category).filter(Boolean))];
+    const searchCategory = getSearchDrivenCategory();
+    const candidateCategories = [...recentCategories];
+
+    if (searchCategory && !candidateCategories.includes(searchCategory)) {
+        candidateCategories.push(searchCategory);
+    }
+
+    if (!candidateCategories.length) {
+        candidateCategories.push("tecnologia", "eletrodomesticos");
+    }
+
+    candidateCategories.forEach((category, index) => {
+        const titleBuilder = recommendationTitleBuilders[index % recommendationTitleBuilders.length];
+        const title = titleBuilder();
+        if (usedTitles.has(title)) return;
+        const items = getRecommendationProducts(category, recentProducts.map((product) => product.id), 4);
+        if (!items.length) return;
+        usedTitles.add(title);
+        sections.push({ title, items });
+    });
+
+    if (sections.length < 2) {
+        const fallbackTitle = "Semelhantes ao que te interessa";
+        if (!usedTitles.has(fallbackTitle)) {
+            sections.push({
+                title: fallbackTitle,
+                items: getRecommendationProducts(candidateCategories[0] || "tecnologia", [], 4)
+            });
+        }
+    }
+
+    return sections.slice(0, 3);
+}
+
+function renderMobileDiscoverySections() {
+    const container = document.getElementById("mobile-discovery-sections");
+    if (!container) return;
+
+    const sections = buildMobileRecommendationSections().filter((section) => section.items.length);
+    if (!sections.length) {
+        container.innerHTML = "";
+        return;
+    }
+
+    container.innerHTML = sections.map((section) => `
+        <section class="mobile-discovery-section">
+            <div class="px-4 pt-4 pb-3 border-b border-gray-100">
+                <h3 class="text-[22px] leading-[1.15] font-semibold text-gray-900">${section.title}</h3>
+            </div>
+            <div class="mobile-discovery-list">
+                ${section.items.map((product) => {
+                    const currentPrice = getEffectivePrice(product);
+                    const discount = getDiscountPercentage(product);
+                    const showDiscount = hasDiscount(product);
+                    return `
+                        <button class="mobile-discovery-item" onclick="openDetails(${product.id})">
+                            <span class="mobile-discovery-thumb">
+                                <img src="${product.image}" alt="${product.title}" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png'">
+                            </span>
+                            <span class="min-w-0">
+                                <span class="block text-[15px] leading-[1.3] text-gray-700 line-clamp-2">${product.title}</span>
+                                ${showDiscount ? `<span class="block text-[13px] text-gray-400 line-through mt-2">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>` : ""}
+                                <span class="block text-[20px] leading-none text-gray-900 mt-1.5">${formatCurrency(currentPrice)}</span>
+                                ${showDiscount ? `<span class="block text-[13px] font-bold text-green-600 mt-1.5">${discount}% OFF</span>` : ""}
+                                <span class="block text-[13px] font-semibold text-green-600 mt-2.5">Frete grátis</span>
+                            </span>
+                        </button>
+                    `;
+                }).join("")}
+            </div>
+        </section>
+    `).join("");
+}
 function renderFavoritesMenu() {
     const countDesktop = document.getElementById("favorites-count");
     const countMobile = document.getElementById("mobile-favorites-count");
@@ -1351,6 +1458,87 @@ function renderFavoritesMenu() {
     `).join("");
 }
 
+function formatNotificationDate(dateString) {
+    const date = dateString ? new Date(dateString) : null;
+    if (!date || Number.isNaN(date.getTime())) return "";
+    return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+}
+
+function syncNotificationsFromPurchases() {
+    appState.purchases.forEach((purchase) => {
+        syncPurchaseNotificationForOrder(purchase, false);
+    });
+    appState.notifications = appState.notifications
+        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+        .slice(0, 20);
+}
+
+function syncPurchaseNotificationForOrder(order, markAsUnread = true) {
+    if (!order?.id || !["pending", "confirmed"].includes(order.status)) return;
+    const firstItem = order.items?.[0] || null;
+    const isConfirmed = order.status === "confirmed";
+    const notificationId = `payment-${order.id}-${order.status}`;
+    const existing = appState.notifications.find((entry) => entry.id === notificationId);
+    const notification = {
+        id: notificationId,
+        orderId: order.id,
+        status: order.status,
+        title: isConfirmed ? "Pagamento aprovado" : "Pagamento pendente",
+        message: isConfirmed
+            ? "Seu pagamento foi aprovado e estamos preparando a entrega."
+            : "Recebemos seu pedido. Falta concluir o pagamento para liberar o envio.",
+        productTitle: firstItem?.title || "Seu pedido",
+        image: firstItem?.image || "assets/mercado-livre-logo.png",
+        createdAt: existing?.createdAt || new Date().toISOString(),
+        read: markAsUnread ? false : Boolean(existing?.read)
+    };
+
+    appState.notifications = [
+        notification,
+        ...appState.notifications.filter((entry) => entry.id !== notificationId)
+    ]
+        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+        .slice(0, 20);
+}
+
+function renderNotificationsMenu() {
+    const count = document.getElementById("notifications-count");
+    const list = document.getElementById("notifications-menu-list");
+    const empty = document.getElementById("notifications-menu-empty");
+    const button = document.getElementById("notifications-btn");
+    const unreadCount = appState.notifications.filter((entry) => !entry.read).length;
+
+    if (count) {
+        count.innerText = String(unreadCount);
+        count.classList.toggle("hidden", unreadCount === 0);
+    }
+    if (button) button.classList.toggle("is-highlighted", unreadCount > 0);
+    if (!list || !empty) return;
+
+    if (!appState.notifications.length) {
+        list.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+    }
+
+    empty.classList.add("hidden");
+    list.innerHTML = appState.notifications.map((notification) => `
+        <button class="notification-item" onclick="openNotificationsCenter('${notification.orderId}')">
+            <span class="notification-item-thumb">
+                <img src="${notification.image}" alt="${notification.productTitle}" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png'">
+            </span>
+            <span class="min-w-0 flex-1">
+                <span class="flex items-center justify-between gap-3">
+                    <span class="notification-item-status ${notification.status === "confirmed" ? "is-confirmed" : "is-pending"}">${notification.title}</span>
+                    <span class="text-xs text-gray-400">${formatNotificationDate(notification.createdAt)}</span>
+                </span>
+                <span class="block text-sm text-gray-800 mt-1">${notification.message}</span>
+                <span class="block text-sm text-gray-500 mt-1 line-clamp-2">${notification.productTitle}</span>
+            </span>
+        </button>
+    `).join("");
+}
+
 function closeFavoritesMenu() {
     document.getElementById("favorites-menu")?.classList.remove("is-open");
 }
@@ -1363,6 +1551,42 @@ function toggleFavoritesMenu(event) {
     closeFavoritesMenu();
     closeDesktopAccountMenu();
     if (willOpen) menu.classList.add("is-open");
+}
+
+function closeNotificationsMenu() {
+    document.getElementById("notifications-menu")?.classList.remove("is-open");
+}
+
+function markNotificationsAsRead() {
+    let changed = false;
+    appState.notifications = appState.notifications.map((notification) => {
+        if (notification.read) return notification;
+        changed = true;
+        return { ...notification, read: true };
+    });
+    if (changed) persistState();
+    renderNotificationsMenu();
+}
+
+function toggleNotificationsMenu(event) {
+    event?.stopPropagation();
+    const menu = document.getElementById("notifications-menu");
+    if (!menu) return;
+    const willOpen = !menu.classList.contains("is-open");
+    closeNotificationsMenu();
+    closeFavoritesMenu();
+    closeDesktopAccountMenu();
+    if (willOpen) {
+        menu.classList.add("is-open");
+        markNotificationsAsRead();
+    }
+    lucide.createIcons();
+}
+
+function openNotificationsCenter() {
+    markNotificationsAsRead();
+    closeNotificationsMenu();
+    showPage("orders");
 }
 
 function updateFavoriteButton(productId) {
@@ -1411,7 +1635,7 @@ function renderHomeShortcutCard(card) {
                 <p class="text-[18px] leading-none font-normal text-gray-900">${formatCurrency(getEffectivePrice(card.product))}</p>
                 ${hasDiscount(card.product) ? `<p class="text-[11px] font-bold text-green-600">${getDiscountPercentage(card.product)}% OFF</p>` : ""}
             </div>
-            <p class="text-[12px] text-green-600 font-semibold mt-2">Frete gratis <span class="font-bold">FULL</span></p>
+            <p class="text-[12px] text-green-600 font-semibold mt-2">Frete grátis <span class="font-bold">FULL</span></p>
         `
         : `<p class="text-[14px] text-[#666] leading-5 mt-3">${card.description}</p>`;
 
@@ -1510,7 +1734,7 @@ function renderHomeShortcuts() {
             : null,
         {
             title: "Meios de pagamento",
-            copy: "Pague suas compras com rapidez e seguranca.",
+            copy: "Pague suas compras com rapidez e seguran?a.",
             icon: "wallet",
             description: "Pix, cartao e outras opcoes sempre disponiveis.",
             cta: "Mostrar meios",
@@ -1581,6 +1805,8 @@ function renderProducts() {
             : '<div class="w-full rounded-[14px] bg-white px-4 py-6 text-center text-sm text-gray-500 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">Nenhum produto encontrado para essa busca.</div>';
     }
 
+    renderMobileDiscoverySections();
+
     if (featured) {
         if (!featuredProduct) {
             featured.innerHTML = `
@@ -1608,7 +1834,7 @@ function renderProducts() {
                         <p class="text-[2.5rem] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
                         ${showDiscount ? `<p class="text-lg font-bold text-green-600">${discount}% OFF</p>` : ""}
                     </div>
-                    <p class="text-sm text-green-600 font-bold mt-2">Frete gratis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
+                    <p class="text-sm text-green-600 font-bold mt-2">Frete grátis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
                     <button onclick="event.stopPropagation(); addToCart(${product.id})" class="mt-4 bg-blue-600 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors">Adicionar ao carrinho</button>
                 </div>
             </div>
@@ -1617,6 +1843,7 @@ function renderProducts() {
 
     renderHomeShortcuts();
     renderInspiredSection();
+    renderMobileDiscoverySections();
 }
 
 function syncSearchInputs() {
@@ -1836,7 +2063,7 @@ function renderElectroProductCard(product) {
                     ${showDiscount ? `<span class="text-[12px] font-semibold text-[#00a650]">${discount}% OFF</span>` : ""}
                 </div>
                 <p class="mt-2 text-[13px] leading-5 text-[#00a650]">10x R$ ${installmentValue.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</p>
-                <p class="mt-2 text-[13px] font-semibold text-[#00a650]">Frete gratis <span class="font-bold">FULL</span></p>
+                <p class="mt-2 text-[13px] font-semibold text-[#00a650]">Frete grátis <span class="font-bold">FULL</span></p>
             </div>
         </div>
     `;
@@ -2139,6 +2366,7 @@ function toggleDesktopAccountMenu(event) {
     if (shell) shell.classList.add("is-open");
     const willOpen = !menu.classList.contains("is-open");
     closeDesktopAccountMenu();
+    closeNotificationsMenu();
     if (willOpen) menu.classList.add("is-open");
     lucide.createIcons();
 }
@@ -2161,6 +2389,7 @@ function toggleCategoriesMenu(event, triggerEl) {
     if (!menu) return;
     const willOpen = menu.classList.contains("hidden");
     closeCategoriesMenu();
+    closeNotificationsMenu();
     if (willOpen) {
         menu.classList.remove("hidden");
         setActiveNav(triggerEl);
@@ -2219,6 +2448,7 @@ function showPage(pageId, triggerEl = null, options = {}) {
 
     closeCategoriesMenu();
     closeDesktopAccountMenu();
+    closeNotificationsMenu();
     closeMobileMenu();
     if (pageId !== "electrodomesticos") stopElectroCarousel();
     if (pageId !== "esportes-fitness") stopSportsCarousel();
@@ -2591,7 +2821,7 @@ function renderRelatedProducts(currentId) {
                     <p class="text-[28px] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
                         ${showDiscount ? `<p class="text-sm font-bold text-green-600">${discount}% OFF</p>` : ""}
                     </div>
-                    <p class="text-[11px] text-green-600 font-bold mt-2">Frete gratis <span class="font-normal text-gray-400">por sua primeira compra</span></p>
+                    <p class="text-[11px] text-green-600 font-bold mt-2">Frete grátis <span class="font-normal text-gray-400">por sua primeira compra</span></p>
                 </div>
             </div>
         `;
@@ -2764,6 +2994,7 @@ function updateCartUI() {
     updateCheckoutSummary();
     renderHomeShortcuts();
     renderInspiredSection();
+    renderMobileDiscoverySections();
     renderFavoritesMenu();
     lucide.createIcons();
 }
@@ -2850,7 +3081,7 @@ function updateCheckoutSummary() {
     const couponRow = document.getElementById("summary-coupon-row");
 
     if (productLabel) productLabel.innerText = formatCurrency(finalTotal);
-    if (shippingLabel) shippingLabel.innerText = "Gratis";
+    if (shippingLabel) shippingLabel.innerText = "Grátis";
     if (grandTotal) grandTotal.innerText = formatCurrency(finalTotal);
     if (couponRow) couponRow.classList.toggle("hidden", appState.currentCheckoutStep !== "payment");
     if (totalLabel) {
@@ -2933,12 +3164,14 @@ function recordPurchase(status = "confirmed") {
     };
     if (existingIndex >= 0) appState.purchases.splice(existingIndex, 1, order);
     else appState.purchases.unshift(order);
+    syncPurchaseNotificationForOrder(order);
     if (appState.currentPayment) {
         appState.currentPayment.orderId = orderId;
         appState.currentPayment.status = status;
     }
     persistState();
     renderPurchaseHistory();
+    renderNotificationsMenu();
 }
 
 function goToCheckStep(step, options = {}) {
@@ -3386,10 +3619,10 @@ function setAuthModeGoogleOnlyLegacyTwo(mode) {
     const isRegister = mode === "register";
     const passwordWrap = document.getElementById("auth-password")?.closest("div");
 
-    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta com Google" : "Digite seu e-mail ou telefone para iniciar sessÃ£o";
+    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta com Google" : "Digite seu e-mail ou telefone para iniciar sessão";
     document.getElementById("auth-subtitle").innerText = isRegister
-        ? "Para novos cadastros, use sua conta Google para continuar com seguranÃ§a."
-        : "Entre com seus dados para continuar a compra com seguranÃ§a.";
+        ? "Para novos cadastros, use sua conta Google para continuar com segurança."
+        : "Entre com seus dados para continuar a compra com segurança.";
     document.getElementById("auth-register-google-only")?.classList.toggle("hidden", !isRegister);
     document.getElementById("auth-name-wrap")?.classList.toggle("hidden", true);
     document.getElementById("auth-email-wrap")?.classList.toggle("hidden", isRegister);
@@ -3400,7 +3633,7 @@ function setAuthModeGoogleOnlyLegacyTwo(mode) {
     resetRegisterVerificationState(true);
     document.getElementById("auth-submit-btn").innerText = "Entrar";
     document.getElementById("auth-submit-btn")?.classList.toggle("hidden", isRegister);
-    document.getElementById("auth-switch-label").innerText = isRegister ? "JÃ¡ tem uma conta?" : "Ainda nÃ£o tem uma conta?";
+    document.getElementById("auth-switch-label").innerText = isRegister ? "Já tem uma conta?" : "Ainda não tem uma conta?";
     document.getElementById("auth-switch-btn").innerText = isRegister ? "Entre" : "Criar conta com Google";
     setAuthFeedback("");
 }
@@ -3416,10 +3649,10 @@ function setAuthModeGoogleOnlyLegacyFinal(mode) {
     const isRegister = mode === "register";
     const passwordWrap = document.getElementById("auth-password")?.closest("div");
 
-    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta com Google" : "Digite seu e-mail ou telefone para iniciar sessao";
+    document.getElementById("auth-title").innerText = isRegister ? "Crie sua conta com Google" : "Digite seu e-mail ou telefone para iniciar sess?o";
     document.getElementById("auth-subtitle").innerText = isRegister
-        ? "Para novos cadastros, use sua conta Google para continuar com seguranca."
-        : "Entre com seus dados para continuar a compra com seguranca.";
+        ? "Para novos cadastros, use sua conta Google para continuar com seguran?a."
+        : "Entre com seus dados para continuar a compra com seguran?a.";
     document.getElementById("auth-register-google-only")?.classList.toggle("hidden", !isRegister);
     document.getElementById("auth-name-wrap")?.classList.toggle("hidden", true);
     document.getElementById("auth-email-wrap")?.classList.toggle("hidden", isRegister);
@@ -3429,7 +3662,7 @@ function setAuthModeGoogleOnlyLegacyFinal(mode) {
     resetRegisterVerificationState(true);
     document.getElementById("auth-submit-btn").innerText = "Entrar";
     document.getElementById("auth-submit-btn")?.classList.toggle("hidden", isRegister);
-    document.getElementById("auth-switch-label").innerText = isRegister ? "Ja tem uma conta?" : "Ainda nao tem uma conta?";
+    document.getElementById("auth-switch-label").innerText = isRegister ? "J? tem uma conta?" : "Ainda n?o tem uma conta?";
     document.getElementById("auth-switch-btn").innerText = isRegister ? "Entre" : "Criar conta com Google";
     setAuthFeedback("");
 }
@@ -3488,6 +3721,7 @@ function renderHeaderAuthState() {
     const isLoggedIn = Boolean(appState.session);
     renderHeaderLocation();
     renderFavoritesMenu();
+    renderNotificationsMenu();
     document.getElementById("nav-guest-actions")?.classList.toggle("hidden", isLoggedIn);
     document.getElementById("nav-user-actions")?.classList.toggle("hidden", !isLoggedIn);
     document.getElementById("nav-common-actions")?.classList.remove("hidden");
@@ -3646,7 +3880,7 @@ async function loginUser() {
 }
 
 async function registerUserGoogleOnlyLegacyTwo() {
-    setAuthFeedback("A criaÃ§Ã£o de conta estÃ¡ disponÃ­vel apenas com Google.", "error");
+    setAuthFeedback("A criação de conta está disponível apenas com Google.", "error");
 }
 
 async function submitAuthForm(event) {
@@ -3786,6 +4020,7 @@ function logout() {
     appState.session = null;
     appState.addresses = [];
     appState.addressesLoadedFor = "";
+    closeNotificationsMenu();
     persistState();
     renderAccountArea();
     renderHeaderAuthState();
@@ -3908,6 +4143,7 @@ function recordViewedProduct(productId) {
     persistState();
     renderHomeShortcuts();
     renderInspiredSection();
+    renderMobileDiscoverySections();
 }
 
 function removeViewedProduct(productId) {
@@ -3916,6 +4152,7 @@ function removeViewedProduct(productId) {
     renderHistoryPage();
     renderHomeShortcuts();
     renderInspiredSection();
+    renderMobileDiscoverySections();
 }
 
 function groupHistoryEntries() {
@@ -4202,6 +4439,7 @@ function init() {
     loadState();
     renderProducts();
     renderFavoritesMenu();
+    renderNotificationsMenu();
     bindSearchInputs();
     updateCartUI();
     hydrateCheckoutUI();
@@ -4219,6 +4457,7 @@ function init() {
     document.addEventListener("click", (event) => {
         closeCategoriesMenu();
         closeFavoritesMenu();
+        closeNotificationsMenu();
         if (!event.target.closest(".product-share-shell") && !event.target.closest("#det-share-btn")) {
             closeProductShareMenu();
         }
@@ -4254,6 +4493,8 @@ window.openSearchSuggestion = openSearchSuggestion;
 window.toggleCategoriesMenu = toggleCategoriesMenu;
 window.toggleDesktopAccountMenu = toggleDesktopAccountMenu;
 window.closeDesktopAccountMenu = closeDesktopAccountMenu;
+window.toggleNotificationsMenu = toggleNotificationsMenu;
+window.openNotificationsCenter = openNotificationsCenter;
 window.openMobileMenu = openMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.openCartPage = openCartPage;
