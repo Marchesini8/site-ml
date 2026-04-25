@@ -387,6 +387,10 @@
             opacity: 0;
             transform: translateY(8px);
             pointer-events: none;
+            max-height: min(720px, calc(100vh - 92px));
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-gutter: stable;
             transition: opacity 0.22s ease, transform 0.22s ease;
         }
         .desktop-account-menu.is-open {
@@ -2236,13 +2240,13 @@
                     <p class="text-sm uppercase tracking-[0.3em] text-gray-400 font-bold">Contato</p>
                     <div class="grid md:grid-cols-2 gap-6 mt-4">
                         <div>
-                            <h2 class="text-3xl font-black text-gray-900">Central de atendimento e onboarding</h2>
-                            <p class="mt-3 text-gray-600">Use essa secao para FAQ, suporte, termos e canais de atendimento.</p>
+                            <h2 class="text-3xl font-black text-gray-900">Central de atendimento e suporte</h2>
+                            <p class="mt-3 text-gray-600">Use esta seção para acessar perguntas frequentes, suporte, termos e canais de atendimento.</p>
                         </div>
                         <div class="rounded-[1.5rem] bg-gray-50 p-5 border border-gray-200">
                             <p class="text-sm text-gray-500">Canal principal</p>
-                            <p class="text-xl font-bold mt-2">contato@seudominio.com</p>
-                            <p class="text-sm text-gray-500 mt-4">Horario sugerido: segunda a sexta, das 9h as 18h.</p>
+                            <p class="text-xl font-bold mt-2">suporte@ml.com.br</p>
+                            <p class="text-sm text-gray-500 mt-4">Horário de atendimento: segunda a sexta, das 9h às 18h.</p>
                         </div>
                     </div>
                 </div>

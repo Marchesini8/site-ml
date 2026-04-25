@@ -1,6 +1,7 @@
 const FIXED_SHIPPING = 49.9;
 const FULL_DISCOUNT_LABEL = "100% OFF";
 const GLOBAL_DISCOUNT_RATE = 0.85;
+const DISCOUNTED_PRODUCT_IDS = new Set([23, 24]);
 const STORAGE_KEYS = {
     session: "ml_session",
     purchases: "ml_purchases",
@@ -233,19 +234,20 @@ const products = [
     },
     {
         id: 24,
-        slug: "Mundo-Álbum-Figurinhas-WORLD-2026TM",
+        slug: "copa-do-mundo-2026-album-capa-dura-kit-24-envelopes",
         category: "esportes-fitness",
-        title: "Álbum Copa Do Mundo 2026 Capa Dura Oficial + 70 figurinhas",
-        price: 79.99,
-        oldPrice: 149.99,
-        image: "./assets/album-copa-2026-capa-dura-principal.png",
+        title: "Copa Do Mundo 2026 - Álbum Capa Dura + Kit 24 Envelopes - Fifa World Cup 2026",
+        price: 99.9,
+        oldPrice: 242.9,
+        image: "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459518.jpg",
         gallery: [
-            "./assets/album-copa-2026-capa-dura-principal.png",
-            "./assets/album-copa-2026-capa-dura-1.png",
-            "./assets/album-copa-2026-capa-dura-2.png"
+            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459518.jpg",
+            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459520.jpg",
+            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459521.jpg",
+            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459522.jpg"
         ],
-        description: "\u00c1lbum de figurinhas capa dura da Copa do Mundo FIFA World Cup 2026 para colecionadores.",
-        priceOverride: 79.99
+        description: "Álbum capa dura da Copa do Mundo 2026 com kit de 24 envelopes da Fifa World Cup 2026.",
+        priceOverride: 99.9
     }
 ];
 
@@ -1078,6 +1080,9 @@ function getEffectivePrice(product) {
     }
     const basePrice = getBasePrice(product);
     if (basePrice <= 0) return 0;
+    if (!DISCOUNTED_PRODUCT_IDS.has(Number(product?.id))) {
+        return Number(basePrice.toFixed(2));
+    }
     return Number((basePrice * (1 - GLOBAL_DISCOUNT_RATE)).toFixed(2));
 }
 
@@ -1086,6 +1091,10 @@ function getDiscountPercentage(product) {
     const currentPrice = getEffectivePrice(product);
     if (!basePrice || currentPrice >= basePrice) return 0;
     return Math.round((1 - currentPrice / basePrice) * 100);
+}
+
+function hasDiscount(product) {
+    return getDiscountPercentage(product) > 0;
 }
 
 function getPreferredLocationLabel() {
@@ -1143,6 +1152,7 @@ function continuePendingCheckoutAfterAuth() {
 function renderProductCard(product) {
     const currentPrice = getEffectivePrice(product);
     const discount = getDiscountPercentage(product);
+    const showDiscount = hasDiscount(product);
     return `
         <div class="offer-grid-card px-3 md:px-4 py-3 md:py-4 bg-white cursor-pointer" onclick="openDetails(${product.id}, this)">
             <div class="h-32 md:h-36 flex items-center justify-center overflow-hidden rounded-md bg-[#f7f7f7]">
@@ -1150,10 +1160,10 @@ function renderProductCard(product) {
             </div>
             <div class="pt-3 min-h-[194px] flex flex-col">
                 <h4 class="text-[13px] text-gray-700 line-clamp-2 min-h-[42px] font-normal leading-[1.35]">${product.title}</h4>
-                <p class="text-xs text-gray-400 mt-2 line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                ${showDiscount ? `<p class="text-xs text-gray-400 mt-2 line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                 <div class="flex items-baseline gap-1.5 mt-1 flex-wrap">
                     <p class="text-[18px] md:text-[20px] leading-none font-normal text-gray-900">${formatCurrency(currentPrice)}</p>
-                    <p class="text-[12px] font-bold text-green-600">${discount}% OFF</p>
+                    ${showDiscount ? `<p class="text-[12px] font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
                 <p class="text-[12px] text-green-600 font-medium mt-2">Frete gratis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
                 <button onclick="event.stopPropagation(); addToCart(${product.id})" class="mt-auto pt-3 text-left text-[12px] text-blue-600 font-semibold hover:underline">Ver oferta</button>
@@ -1165,6 +1175,7 @@ function renderProductCard(product) {
 function renderMobileProductCard(product) {
     const currentPrice = getEffectivePrice(product);
     const discount = getDiscountPercentage(product);
+    const showDiscount = hasDiscount(product);
     return `
         <div class="mobile-product-card cursor-pointer" onclick="openDetails(${product.id}, this)">
             <div class="mobile-product-image flex items-center justify-center overflow-hidden">
@@ -1172,10 +1183,10 @@ function renderMobileProductCard(product) {
             </div>
             <div class="pt-3">
                 <h4 class="text-[13px] leading-[1.35] text-gray-700 line-clamp-2 min-h-[36px]">${product.title}</h4>
-                <p class="text-[11px] text-gray-400 mt-2 line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                ${showDiscount ? `<p class="text-[11px] text-gray-400 mt-2 line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                 <div class="flex items-baseline gap-1 mt-1 flex-wrap">
                     <p class="text-[24px] leading-none font-normal text-gray-900">${formatCurrency(currentPrice)}</p>
-                    <p class="text-[11px] font-bold text-green-600">${discount}% OFF</p>
+                    ${showDiscount ? `<p class="text-[11px] font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
                 <p class="text-[11px] text-green-600 font-semibold mt-2">Frete grátis</p>
             </div>
@@ -1265,6 +1276,7 @@ function getInspiredProducts(limit = 6) {
 function renderInspiredProductCard(product) {
     const currentPrice = getEffectivePrice(product);
     const discount = getDiscountPercentage(product);
+    const showDiscount = hasDiscount(product);
     return `
         <article class="related-card min-w-[220px] max-w-[220px] rounded-2xl bg-white p-4 cursor-pointer" onclick="openDetails(${product.id}, this)">
             <div class="h-40 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -1272,10 +1284,10 @@ function renderInspiredProductCard(product) {
             </div>
             <div class="pt-4">
                 <h3 class="text-[14px] text-gray-700 line-clamp-2 min-h-[42px]">${product.title}</h3>
-                <p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                ${showDiscount ? `<p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                 <div class="flex items-baseline gap-2 mt-1 flex-wrap">
                     <p class="text-[28px] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
-                    <p class="text-sm font-bold text-green-600">${discount}% OFF</p>
+                    ${showDiscount ? `<p class="text-sm font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
                 <p class="text-[11px] text-green-600 font-bold mt-2">Frete gratis</p>
             </div>
@@ -1394,10 +1406,10 @@ function renderHomeShortcutCard(card) {
 
     const priceMarkup = card.product
         ? `
-            <p class="text-[12px] text-gray-400 mt-2 line-through">R$ ${card.product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            ${hasDiscount(card.product) ? `<p class="text-[12px] text-gray-400 mt-2 line-through">R$ ${card.product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
             <div class="flex items-baseline gap-2 mt-1 flex-wrap">
                 <p class="text-[18px] leading-none font-normal text-gray-900">${formatCurrency(getEffectivePrice(card.product))}</p>
-                <p class="text-[11px] font-bold text-green-600">${getDiscountPercentage(card.product)}% OFF</p>
+                ${hasDiscount(card.product) ? `<p class="text-[11px] font-bold text-green-600">${getDiscountPercentage(card.product)}% OFF</p>` : ""}
             </div>
             <p class="text-[12px] text-green-600 font-semibold mt-2">Frete gratis <span class="font-bold">FULL</span></p>
         `
@@ -1582,20 +1594,23 @@ function renderProducts() {
         const product = featuredProduct;
         const currentPrice = getEffectivePrice(product);
         const discount = getDiscountPercentage(product);
+        const showDiscount = hasDiscount(product);
         featured.innerHTML = `
             <p class="text-2xl font-light text-gray-700 mb-4">${appState.searchQuery ? "Resultado em destaque" : "Oferta do dia"}</p>
-            <div class="rounded-[1.25rem] overflow-hidden bg-gray-50 h-[300px] flex items-center justify-center">
-                <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.remove('object-cover');this.classList.add('object-contain','p-8')">
-            </div>
-            <div class="pt-4">
-                <h3 class="text-[15px] text-gray-700 leading-6">${product.title}</h3>
-                <p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                <div class="flex items-baseline gap-2 mt-1 flex-wrap">
-                    <p class="text-[2.5rem] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
-                    <p class="text-lg font-bold text-green-600">${discount}% OFF</p>
+            <div class="cursor-pointer" onclick="openDetails(${product.id}, this)">
+                <div class="rounded-[1.25rem] overflow-hidden bg-gray-50 h-[300px] flex items-center justify-center">
+                    <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.remove('object-cover');this.classList.add('object-contain','p-8')">
                 </div>
-                <p class="text-sm text-green-600 font-bold mt-2">Frete gratis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
-                <button onclick="addToCart(${product.id})" class="mt-4 bg-blue-600 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors">Adicionar ao carrinho</button>
+                <div class="pt-4">
+                    <h3 class="text-[15px] text-gray-700 leading-6">${product.title}</h3>
+                    ${showDiscount ? `<p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
+                    <div class="flex items-baseline gap-2 mt-1 flex-wrap">
+                        <p class="text-[2.5rem] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
+                        ${showDiscount ? `<p class="text-lg font-bold text-green-600">${discount}% OFF</p>` : ""}
+                    </div>
+                    <p class="text-sm text-green-600 font-bold mt-2">Frete gratis <span class="font-normal text-gray-400">por ser sua primeira compra</span></p>
+                    <button onclick="event.stopPropagation(); addToCart(${product.id})" class="mt-4 bg-blue-600 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors">Adicionar ao carrinho</button>
+                </div>
             </div>
         `;
     }
@@ -1805,6 +1820,7 @@ function getSportsFitnessProducts() {
 function renderElectroProductCard(product) {
     const currentPrice = getEffectivePrice(product);
     const discount = getDiscountPercentage(product);
+    const showDiscount = hasDiscount(product);
     const installmentValue = Number((currentPrice / 10).toFixed(2));
     return `
         <div class="bg-white rounded-[6px] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.08)] cursor-pointer border border-[#eee]" onclick="openDetails(${product.id}, this)">
@@ -1814,10 +1830,10 @@ function renderElectroProductCard(product) {
             <div class="p-3">
                 <span class="inline-flex items-center rounded-[3px] bg-[#3483fa] px-2 py-0.5 text-[10px] font-semibold text-white">OFERTA IMPERDIVEL</span>
                 <h3 class="mt-3 text-[14px] leading-5 text-[#333] line-clamp-3 min-h-[60px]">${product.title}</h3>
-                <p class="mt-2 text-[12px] text-[#999] line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                ${showDiscount ? `<p class="mt-2 text-[12px] text-[#999] line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                 <div class="mt-1 flex items-baseline gap-2 flex-wrap">
                     <p class="text-[18px] leading-none text-[#333]">${formatCurrency(currentPrice)}</p>
-                    <span class="text-[12px] font-semibold text-[#00a650]">${discount}% OFF</span>
+                    ${showDiscount ? `<span class="text-[12px] font-semibold text-[#00a650]">${discount}% OFF</span>` : ""}
                 </div>
                 <p class="mt-2 text-[13px] leading-5 text-[#00a650]">10x R$ ${installmentValue.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</p>
                 <p class="mt-2 text-[13px] font-semibold text-[#00a650]">Frete gratis <span class="font-bold">FULL</span></p>
@@ -2484,6 +2500,7 @@ function openDetails(id, triggerEl = null, options = {}) {
     const currentPrice = getEffectivePrice(product);
     const pixPrice = currentPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const discount = getDiscountPercentage(product);
+    const showDiscount = hasDiscount(product);
 
     appState.currentProdId = id;
     recordViewedProduct(id);
@@ -2495,8 +2512,10 @@ function openDetails(id, triggerEl = null, options = {}) {
     document.getElementById("det-rating-score").innerText = meta.rating.toFixed(1);
     document.getElementById("det-reviews").innerText = `(${meta.reviews})`;
     document.getElementById("det-price").innerText = formatCurrency(currentPrice);
-    document.getElementById("det-old-price").innerHTML = `De <span class="line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
-    document.getElementById("det-off-badge").innerText = `${discount}% OFF`;
+    document.getElementById("det-old-price").innerHTML = showDiscount ? `De <span class="line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>` : "";
+    document.getElementById("det-old-price").style.display = showDiscount ? "" : "none";
+    document.getElementById("det-off-badge").innerText = showDiscount ? `${discount}% OFF` : "";
+    document.getElementById("det-off-badge").style.display = showDiscount ? "" : "none";
     document.getElementById("det-cash-price").innerText = pixPrice;
     document.getElementById("det-cash-row").style.display = pixPrice === currentPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ? "none" : "";
     document.getElementById("det-description").innerText = product.description;
@@ -2559,6 +2578,7 @@ function renderRelatedProducts(currentId) {
     container.innerHTML = related.map((product) => {
         const currentPrice = getEffectivePrice(product);
         const discount = getDiscountPercentage(product);
+        const showDiscount = hasDiscount(product);
         return `
             <div class="related-card min-w-[240px] max-w-[240px] rounded-2xl bg-white p-4 cursor-pointer" onclick="openDetails(${product.id}, this)">
                 <div class="h-36 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -2566,10 +2586,10 @@ function renderRelatedProducts(currentId) {
                 </div>
                 <div class="pt-4">
                     <h3 class="text-[14px] text-gray-700 line-clamp-2 min-h-[42px]">${product.title}</h3>
-                    <p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    ${showDiscount ? `<p class="text-sm text-gray-400 line-through mt-3">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                     <div class="flex items-baseline gap-2 mt-1 flex-wrap">
                     <p class="text-[28px] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
-                        <p class="text-sm font-bold text-green-600">${discount}% OFF</p>
+                        ${showDiscount ? `<p class="text-sm font-bold text-green-600">${discount}% OFF</p>` : ""}
                     </div>
                     <p class="text-[11px] text-green-600 font-bold mt-2">Frete gratis <span class="font-normal text-gray-400">por sua primeira compra</span></p>
                 </div>
@@ -2665,6 +2685,7 @@ function renderCartPage() {
     itemsWrap.innerHTML = appState.cart.map((item) => {
         const price = getEffectivePrice(item);
         const discount = getDiscountPercentage(item);
+        const showDiscount = hasDiscount(item);
         return `
             <div class="cart-page-line">
                 <span class="cart-page-check"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>
@@ -2686,9 +2707,9 @@ function renderCartPage() {
                     <button onclick="remove(${item.id})" class="text-gray-400 hover:text-red-500 transition-colors">
                         <i data-lucide="trash-2" class="w-4 h-4 ml-auto"></i>
                     </button>
-                    ${item.oldPrice ? `<p class="text-sm text-gray-400 line-through mt-3">R$ ${item.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
+                    ${showDiscount && item.oldPrice ? `<p class="text-sm text-gray-400 line-through mt-3">R$ ${item.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                     <p class="text-[34px] leading-none font-normal text-gray-900 mt-1">${formatCurrency(price)}</p>
-                    <p class="text-sm text-green-600 font-semibold mt-2">${discount}% OFF</p>
+                    ${showDiscount ? `<p class="text-sm text-green-600 font-semibold mt-2">${discount}% OFF</p>` : ""}
                 </div>
             </div>
         `;
@@ -3946,6 +3967,7 @@ function renderHistoryPage() {
                 ${group.items.map(({ product }) => {
                     const currentPrice = getEffectivePrice(product);
                     const discount = getDiscountPercentage(product);
+                    const showDiscount = hasDiscount(product);
                     return `
                         <article class="history-card" onclick="openDetails(${product.id})">
                             <div class="history-card-media">
@@ -3954,10 +3976,10 @@ function renderHistoryPage() {
                             <div class="history-card-body">
                                 <p class="history-card-title">${product.title}</p>
                                 <p class="history-card-seller">Por Mercado Livre</p>
-                                ${product.oldPrice ? `<p class="history-card-old-price">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
+                                ${showDiscount && product.oldPrice ? `<p class="history-card-old-price">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>` : ""}
                                 <div class="history-card-price-row">
                                     <span class="history-card-price">${formatCurrency(currentPrice)}</span>
-                                    ${discount ? `<span class="history-card-discount">${discount}% OFF</span>` : ""}
+                                    ${showDiscount ? `<span class="history-card-discount">${discount}% OFF</span>` : ""}
                                 </div>
                                 <p class="history-card-shipping">Frete grátis</p>
                                 <button class="history-card-remove" onclick="event.stopPropagation(); removeViewedProduct(${product.id})">Excluir</button>
