@@ -237,18 +237,21 @@ const products = [
         id: 24,
         slug: "copa-do-mundo-2026-album-capa-dura-kit-24-envelopes",
         category: "esportes-fitness",
-        title: "Copa Do Mundo 2026 - Álbum Capa Dura + Kit 24 Envelopes - Fifa World Cup 2026",
-        price: 99.9,
-        oldPrice: 242.9,
-        image: "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459518.jpg",
+        title: "Copa do Mundo 2026 Álbum de Figurinhas Capa Dura Ouro FIFA WORLD CUP 2026™ + 70 figurinhas",
+        price: 35.9,
+        oldPrice: 79.9,
+        image: "assets/album-copa-2026-pre-venda-principal.jpeg",
         gallery: [
-            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459518.jpg",
-            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459520.jpg",
-            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459521.jpg",
-            "https://images5.kabum.com.br/produtos/fotos/sync_mirakl/1030375/xlarge/Copa-Do-Mundo-2026-lbum-Capa-Dura-Kit-24-Envelopes-Fifa-World-Cup-2026_1776459522.jpg"
+            "assets/album-copa-2026-pre-venda-principal.jpeg",
+            "assets/album-copa-2026-envelopes.jpeg"
         ],
-        description: "Álbum capa dura da Copa do Mundo 2026 com kit de 24 envelopes da Fifa World Cup 2026.",
-        priceOverride: 99.9
+        description: "Álbum de figurinhas capa dura ouro da Copa do Mundo 2026 em pré-venda, com visual oficial FIFA World Cup 2026 e 70 figurinhas.",
+        preSale: {
+            launchDate: "25/Maio/2026",
+            message: "Este produto será lançado em 25/Maio/2026.",
+            cta: "Reserve o seu na pré-venda."
+        },
+        priceOverride: 35.9
     }
 ];
 
@@ -865,12 +868,12 @@ const productDetailMap = {
         sellerSales: "+1 M",
         sellerLogo: "assets/panini-logo.jpg",
         sellerVerified: true,
-        optionText: "12 produtos novos a partir de R$ 149",
+        optionText: "12 produtos novos a partir de R$ 35,90",
         highlights: [
-            "\u00c1lbum de figurinhas capa dura da Copa do Mundo FIFA 2026.",
-            "Produto ideal para colecionadores.",
-            "Visual oficial World Cup 2026.",
-            "Capa dura com acabamento mais resistente.",
+            "\u00c1lbum de figurinhas capa dura ouro da Copa do Mundo FIFA 2026.",
+            "Produto em pr\u00e9-venda com lan\u00e7amento previsto para 25 de maio de 2026.",
+            "Visual oficial FIFA World Cup 2026.",
+            "Acompanha 70 figurinhas para iniciar a cole\u00e7\u00e3o.",
             "Boa op\u00e7\u00e3o para f\u00e3s de futebol e colecionadores."
         ]
     }
@@ -2749,6 +2752,16 @@ function openDetails(id, triggerEl = null, options = {}) {
     document.getElementById("det-cash-price").innerText = pixPrice;
     document.getElementById("det-cash-row").style.display = pixPrice === currentPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ? "none" : "";
     document.getElementById("det-description").innerText = product.description;
+    const preSaleBanner = document.getElementById("det-pre-sale-banner");
+    const preSaleTitle = document.getElementById("det-pre-sale-title");
+    const preSaleCta = document.getElementById("det-pre-sale-cta");
+    if (product.preSale && preSaleBanner && preSaleTitle && preSaleCta) {
+        preSaleTitle.innerText = product.preSale.message;
+        preSaleCta.innerText = product.preSale.cta;
+        preSaleBanner.classList.remove("hidden");
+    } else if (preSaleBanner) {
+        preSaleBanner.classList.add("hidden");
+    }
     document.getElementById("det-shipping-line").innerText = meta.shippingText;
     document.getElementById("det-seller-name").innerText = meta.sellerName;
     document.getElementById("det-seller-subtitle").innerText = meta.sellerSubtitle || meta.sellerName;

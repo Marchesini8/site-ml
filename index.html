@@ -1475,6 +1475,11 @@
             border: 1px solid #e5e7eb;
             box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
         }
+        .detail-pre-sale-banner {
+            background: linear-gradient(180deg, #f3fff5 0%, #ffffff 100%);
+            border: 1px solid #b7e3c0;
+            box-shadow: 0 10px 28px rgba(22, 101, 52, 0.08);
+        }
         .checkout-flow-shell {
             background: #ededed;
         }
@@ -3190,6 +3195,10 @@
                             <div id="det-stars" class="flex items-center gap-0.5 detail-star"></div>
                             <span id="det-reviews" class="text-sm text-gray-400">(4452)</span>
                         </div>
+                        <div id="det-pre-sale-banner" class="detail-pre-sale-banner hidden rounded-2xl px-4 py-4 mt-5">
+                            <p id="det-pre-sale-title" class="text-[18px] leading-7 text-[#12823b] font-medium"></p>
+                            <p id="det-pre-sale-cta" class="text-[16px] leading-6 text-gray-900 mt-1"></p>
+                        </div>
                         <div class="mt-5">
                             <span id="det-old-price" class="text-sm text-gray-400"></span>
                             <div class="flex items-end gap-3 flex-wrap mt-1">
@@ -3202,28 +3211,20 @@
                         </div>
 
                         <div class="mt-8">
-                        <h3 class="text-base font-semibold text-gray-800 mb-4">O que você precisa saber sobre este produto</h3>
-                            <ul id="det-highlights" class="space-y-2 text-sm text-gray-700 list-disc pl-5"></ul>
-                            <button class="text-sm text-blue-600 mt-4 hover:underline">Ver caracter&iacute;sticas</button>
-                        </div>
-
-                        <div class="mt-8">
-                            <p class="text-sm text-gray-500">Opcoes de compra:</p>
+                            <p class="text-sm text-gray-500">Opções de compra:</p>
                             <button id="det-option-count" class="text-sm text-blue-600 font-medium hover:underline mt-1">20 produtos novos a partir de R$ 2.299</button>
                         </div>
-                    </div>
 
-                    <div class="p-4 md:p-6 flex flex-col gap-5">
-                        <div class="detail-store-card rounded-lg p-4">
+                        <div class="detail-store-card rounded-lg p-4 mt-8">
                             <div class="inline-flex detail-badge-green text-[11px] font-bold px-2 py-1 rounded mb-3" id="det-shipping-badge">FRETE GRÁTIS ACIMA DE R$ 19</div>
                             <p id="det-shipping-line" class="text-[22px] leading-7 text-green-600 font-medium">Chegará grátis quinta-feira 30 de abril</p>
                             <p id="det-shipping-sub" class="text-sm text-gray-500 mt-1">por ser sua primeira compra</p>
                             <button class="text-sm text-blue-600 mt-2 hover:underline">Mais detalhes e formas de entrega</button>
 
                             <div class="mt-6">
-                                <p class="text-lg text-gray-800 font-medium">Estoque disponivel</p>
+                                <p class="text-lg text-gray-800 font-medium">Estoque disponível</p>
                                 <p class="text-xs text-gray-400 mt-1">Armazenado e enviado pelo <span class="text-green-600 font-bold">FULL</span></p>
-                                <p class="text-sm text-gray-700 mt-3">Quantidade: <span id="det-qty" class="font-semibold">1 unidade</span> <span id="det-stock" class="text-gray-400">(+50 disponiveis)</span></p>
+                                <p class="text-sm text-gray-700 mt-3">Quantidade: <span id="det-qty" class="font-semibold">1 unidade</span> <span id="det-stock" class="text-gray-400">(+50 disponíveis)</span></p>
                             </div>
 
                             <div class="flex flex-col gap-3 mt-6">
@@ -3238,8 +3239,20 @@
                                 </div>
                                 <div class="flex items-start gap-3">
                                     <i data-lucide="shield-check" class="w-4 h-4 text-gray-400 mt-0.5"></i>
-                                    <p><span class="text-blue-600 font-medium">Compra Garantida.</span> Receba o produto que esta esperando ou devolvemos o dinheiro.</p>
+                                    <p><span class="text-blue-600 font-medium">Compra Garantida.</span> Receba o produto que está esperando ou devolvemos o dinheiro.</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 flex flex-col gap-5">
+                        <div class="detail-store-card rounded-lg p-4">
+                            <h3 class="text-base font-semibold text-gray-800 mb-4">Descrição do produto</h3>
+                            <p id="det-description" class="text-gray-600 leading-relaxed whitespace-pre-line"></p>
+                            <div class="mt-6 pt-6 border-t border-gray-100">
+                                <h4 class="text-base font-semibold text-gray-800 mb-4">Detalhes do produto</h4>
+                                <ul id="det-highlights" class="space-y-2 text-sm text-gray-700 list-disc pl-5"></ul>
+                                <button class="text-sm text-blue-600 mt-4 hover:underline">Ver características</button>
                             </div>
                         </div>
 
@@ -3258,11 +3271,11 @@
                                             </p>
                                             <p id="det-seller-subtitle" class="text-sm text-gray-500">Loja oficial do Mercado Livre</p>
                                         </div>
-                                    </div>
-                                    <button class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1 rounded-md">Seguir</button>
                                 </div>
-                                <p class="text-sm text-green-600 font-semibold mt-4">MercadoLider Platinum</p>
-                                <p class="text-xs text-gray-500">E um dos melhores do site!</p>
+                                <button class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1 rounded-md">Seguir</button>
+                            </div>
+                            <p class="text-sm text-green-600 font-semibold mt-4">MercadoLider Platinum</p>
+                                <p class="text-xs text-gray-500">É um dos melhores do site!</p>
                                 <div class="grid grid-cols-3 gap-3 mt-5 text-center">
                                     <div>
                                         <p class="text-lg font-semibold text-gray-800" id="det-seller-sales">+1 M</p>
@@ -3284,10 +3297,7 @@
                 </div>
 
                 <div class="max-w-6xl p-6 md:p-10 border-t border-gray-100 bg-white mx-auto w-full">
-                <h2 class="text-2xl font-bold mb-8 text-gray-800">Descrição do Produto</h2>
-                    <p id="det-description" class="text-gray-600 leading-relaxed text-lg whitespace-pre-line"></p>
-
-                    <div class="mt-14 border-t border-gray-100 pt-8">
+                    <div class="mt-2">
                         <div class="flex items-center justify-between gap-4 mb-6">
                             <div class="flex items-center gap-3">
                                 <h2 class="text-[32px] font-light text-gray-800">Produtos relacionados</h2>
