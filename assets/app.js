@@ -2760,21 +2760,36 @@ function updateProductShareTargets() {
     const encodedText = encodeURIComponent(shareText);
     const encodedTextWithUrl = encodeURIComponent(`${shareText} ${shareUrl}`);
 
-    document.getElementById("share-whatsapp")?.setAttribute("href", `https://wa.me/?text=${encodedTextWithUrl}`);
-    document.getElementById("share-facebook")?.setAttribute("href", `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`);
-    document.getElementById("share-x")?.setAttribute("href", `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`);
-    document.getElementById("share-telegram")?.setAttribute("href", `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`);
+    ["share-whatsapp", "share-whatsapp-mobile"].forEach((id) => {
+        document.getElementById(id)?.setAttribute("href", `https://wa.me/?text=${encodedTextWithUrl}`);
+    });
+    ["share-facebook", "share-facebook-mobile"].forEach((id) => {
+        document.getElementById(id)?.setAttribute("href", `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`);
+    });
+    ["share-x", "share-x-mobile"].forEach((id) => {
+        document.getElementById(id)?.setAttribute("href", `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`);
+    });
+    ["share-telegram", "share-telegram-mobile"].forEach((id) => {
+        document.getElementById(id)?.setAttribute("href", `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`);
+    });
 }
 
 function closeProductShareMenu() {
     document.getElementById("product-share-menu")?.classList.add("hidden");
+    document.getElementById("product-share-menu-mobile")?.classList.add("hidden");
 }
 
 function toggleProductShareMenu(event) {
     event?.stopPropagation();
     updateProductShareTargets();
-    const menu = document.getElementById("product-share-menu");
+    const isMobileTrigger = event?.currentTarget?.id === "det-mobile-share-btn";
+    const menu = document.getElementById(isMobileTrigger ? "product-share-menu-mobile" : "product-share-menu");
     if (!menu) return;
+    if (isMobileTrigger) {
+        document.getElementById("product-share-menu")?.classList.add("hidden");
+    } else {
+        document.getElementById("product-share-menu-mobile")?.classList.add("hidden");
+    }
     menu.classList.toggle("hidden");
     lucide.createIcons();
 }
@@ -2806,26 +2821,36 @@ function writeTextToClipboard(text) {
 
 function setProductShareFeedback(status) {
     const iconButton = document.getElementById("det-share-btn");
+    const mobileIconButton = document.getElementById("det-mobile-share-btn");
     const textButton = document.getElementById("detail-share-link");
     const copyLabel = document.getElementById("share-copy-label");
+    const copyLabelMobile = document.getElementById("share-copy-label-mobile");
     const success = status === "success";
     const label = success ? "Link copiado" : "Nao foi possivel copiar";
 
     iconButton?.setAttribute("aria-label", label);
     iconButton?.setAttribute("title", label);
     iconButton?.classList.toggle("text-green-600", success);
+    mobileIconButton?.setAttribute("aria-label", label);
+    mobileIconButton?.setAttribute("title", label);
+    mobileIconButton?.classList.toggle("text-green-600", success);
     textButton?.replaceChildren(document.createTextNode(label));
     textButton?.classList.toggle("text-green-600", success);
     copyLabel?.replaceChildren(document.createTextNode(label));
+    copyLabelMobile?.replaceChildren(document.createTextNode(label));
     closeProductShareMenu();
 
     window.setTimeout(() => {
         iconButton?.setAttribute("aria-label", "Compartilhar produto");
         iconButton?.setAttribute("title", "Compartilhar produto");
         iconButton?.classList.remove("text-green-600");
+        mobileIconButton?.setAttribute("aria-label", "Compartilhar produto");
+        mobileIconButton?.setAttribute("title", "Compartilhar produto");
+        mobileIconButton?.classList.remove("text-green-600");
         textButton?.replaceChildren(document.createTextNode("Compartilhar"));
         textButton?.classList.remove("text-green-600");
         copyLabel?.replaceChildren(document.createTextNode("Copiar link"));
+        copyLabelMobile?.replaceChildren(document.createTextNode("Copiar link"));
     }, success ? 1800 : 2600);
 }
 
