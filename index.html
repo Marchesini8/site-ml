@@ -36,6 +36,9 @@
             transform-origin: top center;
             will-change: opacity, transform;
         }
+        body.nav-loading {
+            cursor: progress;
+        }
         .page-enter {
             animation: pageEnter 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
@@ -50,6 +53,43 @@
         @keyframes pageEnter {
             from { opacity: 0; transform: translateY(18px) scale(0.992); filter: saturate(0.98); }
             to { opacity: 1; transform: translateY(0) scale(1); filter: saturate(1); }
+        }
+        .global-nav-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(52, 131, 250, 0.12);
+            overflow: hidden;
+            z-index: 160;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .global-nav-loader.is-active {
+            opacity: 1;
+        }
+        .global-nav-loader-bar {
+            width: 38%;
+            height: 100%;
+            background: linear-gradient(90deg, #9ec5ff 0%, #3483fa 55%, #1259c3 100%);
+            box-shadow: 0 0 18px rgba(52, 131, 250, 0.45);
+            transform: translateX(-120%);
+        }
+        .global-nav-loader.is-active .global-nav-loader-bar {
+            animation: globalNavLoader 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+        }
+        @keyframes globalNavLoader {
+            0% {
+                transform: translateX(-120%);
+            }
+            62% {
+                transform: translateX(150%);
+            }
+            100% {
+                transform: translateX(225%);
+            }
         }
 
         /* Efeito de elevacao nos cards */
@@ -1918,6 +1958,9 @@
     </style>
 </head>
 <body class="text-gray-900">
+    <div id="global-nav-loader" class="global-nav-loader">
+        <div class="global-nav-loader-bar"></div>
+    </div>
 
     <!-- HEADER -->
     <header class="bg-[#ffe600] w-full pt-2 pb-2 shadow-sm sticky top-0 z-[100]">
@@ -3366,7 +3409,6 @@
                             <span>Envios</span>
                             <span class="text-green-600 font-semibold">Grátis</span>
                         </div>
-                        <button class="text-[#3483fa] text-sm font-semibold">Inserir código do cupom</button>
                         <div class="pt-3 border-t border-[#eef2f7]">
                             <div class="flex items-center justify-between">
                                 <span class="text-[28px] font-semibold text-gray-900">Total</span>
@@ -3504,7 +3546,6 @@
                                             <p class="text-sm text-gray-400 mt-2">Residencial</p>
                                         </div>
                                     </div>
-                                    <p class="text-green-600 font-semibold">Gr?tis</p>
                                 </div>
                                 <div class="border-t border-gray-100 px-5 py-4">
                         <button onclick="goToCheckStep('address')" class="text-sm text-blue-600 font-medium">Alterar ou escolher outro endereço</button>
@@ -3518,10 +3559,6 @@
                         <div id="check-step-payment" class="hidden">
                             <h2 class="text-[20px] font-semibold text-gray-900 mb-5">Escolha como pagar</h2>
                             <div class="space-y-4 max-w-[700px]">
-                                <div class="checkout-surface rounded-lg p-4 flex items-center justify-between">
-                                    <p class="text-gray-700">Combinar 2 meios de pagamento</p>
-                                    <div class="w-10 h-6 rounded-full bg-gray-200"></div>
-                                </div>
                                 <div>
                                     <p class="text-xs font-semibold text-gray-500 uppercase mb-3">Recomendados</p>
                                     <button id="pix-option-card" onclick="selectPaymentMethod('pix')" class="checkout-option selected checkout-surface rounded-lg p-4 w-full text-left flex items-center gap-4">
@@ -3529,11 +3566,11 @@
                                             <div class="w-2.5 h-2.5 rounded-full bg-[#3483fa]"></div>
                                         </div>
                                         <div class="w-9 h-9 rounded-full bg-[#e9fbf8] flex items-center justify-center overflow-hidden">
-                                            <img src="assets/pix-logo.jpg" alt="Pix" class="w-6 h-6 object-contain">
+                                            <img src="assets/pix-logo-novo.png" alt="Pix" class="w-6 h-6 object-contain">
                                         </div>
                                         <div>
                                             <p class="font-medium text-gray-900">Pix</p>
-                                            <p class="text-sm text-gray-400">Aprovacao imediata</p>
+                                            <p class="text-sm text-gray-400">Aprovação imediata</p>
                                         </div>
                                     </button>
                                 </div>
@@ -3570,7 +3607,7 @@
                                     </div>
                                     <div class="p-4 flex items-start gap-4">
                                         <div class="w-9 h-9 rounded-full bg-[#e9fbf8] flex items-center justify-center overflow-hidden">
-                                            <img src="assets/pix-logo.jpg" alt="Pix" class="w-6 h-6 object-contain">
+                                            <img src="assets/pix-logo-novo.png" alt="Pix" class="w-6 h-6 object-contain">
                                         </div>
                                         <div>
                                             <p class="font-semibold text-gray-900">Pix</p>
@@ -3644,9 +3681,19 @@
                     <aside id="checkout-summary-sidebar" class="checkout-surface rounded-lg p-4 sticky top-24">
                         <p class="font-semibold text-gray-800 mb-4">Resumo da compra</p>
                         <div class="space-y-3 text-sm">
+                            <div id="summary-product-card" class="hidden rounded-xl border border-gray-100 bg-white p-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-16 h-16 rounded-lg bg-[#f7f7f7] flex items-center justify-center overflow-hidden shrink-0">
+                                        <img id="summary-product-image" alt="Produto do checkout" class="w-full h-full object-contain p-1">
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p id="summary-product-title" class="text-sm font-semibold text-gray-900 line-clamp-2"></p>
+                                        <p id="summary-product-qty" class="text-xs text-gray-500 mt-1"></p>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="flex items-center justify-between"><span>Produto</span><span id="summary-product-total">R$ 0,00</span></div>
-                            <div class="flex items-center justify-between"><span>Frete</span><span id="summary-shipping-total" class="text-green-600">Gr?tis</span></div>
-                            <div id="summary-coupon-row" class="hidden flex items-center justify-between"><span>Cupons</span><span class="text-blue-600">(1 para aplicar)</span></div>
+                            <div class="flex items-center justify-between"><span>Frete</span><span id="summary-shipping-total">-</span></div>
                             <div class="border-t border-gray-100 pt-3 flex items-center justify-between font-semibold text-[16px]"><span id="summary-total-label">Total</span><span id="summary-grand-total">R$ 0,00</span></div>
                         </div>
                     </aside>

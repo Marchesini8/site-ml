@@ -14,6 +14,10 @@ const APP_CONFIG = {
     googleClientId: window.GOOGLE_CLIENT_ID || ""
 };
 const AUTH_LOADING_MIN_MS = 950;
+const NAVIGATION_LOADING_MIN_MS = 520;
+const NAVIGATION_LOADING_REVEAL_MS = 170;
+let navigationLoaderToken = 0;
+let navigationLoaderHideTimeout = null;
 const legacyProducts = [
     { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 1499.99, oldPrice: 2199.0, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
     { id: 2, title: "Geladeira Electrolux Frost Free Inverter 480L", price: 1999.99, oldPrice: 3798.0, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
@@ -2470,6 +2474,15 @@ function showPage(pageId, triggerEl = null, options = {}) {
 
     const nextPage = pageMap[pageId];
     const currentPage = Object.values(pageMap).find((page) => page && !page.classList.contains("hidden"));
+    const isRealPageChange = Boolean(nextPage && currentPage !== nextPage);
+    const transitionDelay = skipAnimation || !isRealPageChange ? 0 : NAVIGATION_LOADING_MIN_MS;
+    const loaderToken = ++navigationLoaderToken;
+
+    if (isRealPageChange && !skipAnimation) {
+        setGlobalNavLoader(true);
+    } else {
+        setGlobalNavLoader(false);
+    }
 
     if (currentPage && currentPage !== nextPage && !skipAnimation) {
         currentPage.classList.remove("page-enter");
@@ -2495,10 +2508,19 @@ function showPage(pageId, triggerEl = null, options = {}) {
         };
 
         if (currentPage && !skipAnimation) {
-            window.setTimeout(revealNextPage, 140);
+            window.setTimeout(() => {
+                if (loaderToken !== navigationLoaderToken) return;
+                revealNextPage();
+                queueGlobalNavLoaderHide(loaderToken);
+            }, transitionDelay);
         } else {
             revealNextPage();
+            if (isRealPageChange) {
+                queueGlobalNavLoaderHide(loaderToken, NAVIGATION_LOADING_REVEAL_MS);
+            }
         }
+    } else if (!isRealPageChange) {
+        setGlobalNavLoader(false);
     }
 
     closeCategoriesMenu();
@@ -2517,6 +2539,21 @@ function showPage(pageId, triggerEl = null, options = {}) {
     if (pageId === "history") renderHistoryPage();
     if (updateHistory) writeNavigationState("push");
     lucide.createIcons();
+}
+
+function setGlobalNavLoader(isActive) {
+    const loader = document.getElementById("global-nav-loader");
+    if (!loader) return;
+    loader.classList.toggle("is-active", isActive);
+    document.body.classList.toggle("nav-loading", isActive);
+}
+
+function queueGlobalNavLoaderHide(token, delay = NAVIGATION_LOADING_REVEAL_MS) {
+    window.clearTimeout(navigationLoaderHideTimeout);
+    navigationLoaderHideTimeout = window.setTimeout(() => {
+        if (token !== navigationLoaderToken) return;
+        setGlobalNavLoader(false);
+    }, delay);
 }
 
 function navigateToSection(sectionId, triggerEl = null) {
@@ -3198,16 +3235,36 @@ function hydrateCheckoutUI() {
 function updateCheckoutSummary() {
     const productTotal = appState.cart.reduce((acc, item) => acc + getEffectivePrice(item) * item.qty, 0);
     const finalTotal = productTotal;
+    const firstItem = appState.cart[0] || null;
     const productLabel = document.getElementById("summary-product-total");
     const shippingLabel = document.getElementById("summary-shipping-total");
     const grandTotal = document.getElementById("summary-grand-total");
     const totalLabel = document.getElementById("summary-total-label");
-    const couponRow = document.getElementById("summary-coupon-row");
+    const productCard = document.getElementById("summary-product-card");
+    const productImage = document.getElementById("summary-product-image");
+    const productTitle = document.getElementById("summary-product-title");
+    const productQty = document.getElementById("summary-product-qty");
 
     if (productLabel) productLabel.innerText = formatCurrency(finalTotal);
-    if (shippingLabel) shippingLabel.innerText = "Grátis";
+    if (shippingLabel) shippingLabel.innerText = "-";
     if (grandTotal) grandTotal.innerText = formatCurrency(finalTotal);
-    if (couponRow) couponRow.classList.toggle("hidden", appState.currentCheckoutStep !== "payment");
+    if (productCard && productImage && productTitle && productQty) {
+        if (firstItem) {
+            productCard.classList.remove("hidden");
+            productImage.src = firstItem.image;
+            productImage.onerror = () => {
+                productImage.onerror = null;
+                productImage.src = "assets/mercado-livre-logo.png";
+            };
+            productTitle.innerText = firstItem.title;
+            productQty.innerText = firstItem.qty > 1 ? `${firstItem.qty} unidades` : "1 unidade";
+        } else {
+            productCard.classList.add("hidden");
+            productImage.src = "";
+            productTitle.innerText = "";
+            productQty.innerText = "";
+        }
+    }
     if (totalLabel) {
     totalLabel.innerText = appState.currentCheckoutStep === "payment" ? "Você pagará" : "Total";
     }
