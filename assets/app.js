@@ -242,8 +242,8 @@ const products = [
         slug: "copa-do-mundo-2026-album-capa-dura-kit-24-envelopes",
         category: "esportes-fitness",
         title: "Copa do Mundo 2026 Álbum de Figurinhas Capa Dura Ouro FIFA WORLD CUP 2026™ + 70 figurinhas",
-        price: 35.9,
-        oldPrice: 79.9,
+        price: 179.99,
+        oldPrice: 599.9,
         image: "assets/album-copa-2026-capa-dura-oficial-2026.png",
         gallery: [
             "assets/album-copa-2026-capa-dura-oficial-2026.png",
@@ -307,7 +307,35 @@ const products = [
                 }
             ]
         },
-        priceOverride: 35.9
+        specs: {
+            main: [
+                ["Marca", "Album Copa do Mundo Panini"],
+                ["Nome", "ÁLBUM CAPA DURA DOURADA GOLD COM PACOTES"],
+                ["É kit", "Sim"],
+                ["Modelo", "Capa Dura DOURADA + 70 Figurinhas"],
+                ["Tipo de capa", "Capa Dura Dourada"],
+                ["Cor", "Colorido"],
+                ["Quantidade de pacotes de figurinhas", "10"]
+            ],
+            dimensions: [
+                ["Comprimento", "29,7 cm"],
+                ["Largura", "21 cm"]
+            ],
+            others: [
+                ["Quantidade total de figurinhas", "70"],
+                ["Ano", "2026"],
+                ["Tema", "Copa do Mundo FIFA 2026"],
+                ["Quantidade de páginas", "112"],
+                ["Quantidade de figurinhas para completar", "980"],
+                ["Com caixa de pacotes de figurinha", "Não"],
+                ["Quantidade de figurinhas por pacote", "7"],
+                ["Extras incluídos", "10 pacote de figurinhas"],
+                ["Idade mínima recomendada", "5 anos"],
+                ["Condição", "Incompleto"],
+                ["Idade recomendada", ""]
+            ]
+        },
+        priceOverride: 179.99
     }
 ];
 
@@ -924,7 +952,7 @@ const productDetailMap = {
         sellerSales: "+1 M",
         sellerLogo: "assets/panini-logo.jpg",
         sellerVerified: true,
-        optionText: "12 produtos novos a partir de R$ 35,90",
+        optionText: "12 produtos novos a partir de R$ 179,99",
         highlights: [
             "\u00c1lbum de figurinhas capa dura ouro da Copa do Mundo FIFA 2026.",
             "Envio imediato com postagem e c\u00f3digo de rastreio.",
@@ -2871,6 +2899,8 @@ function openDetails(id, triggerEl = null, options = {}) {
     updateProductShareTargets();
     closeProductShareMenu();
     renderRatingStars(meta.rating);
+    renderDesktopDetailLayout(product, meta);
+    renderProductSpecs(product);
     renderDetailBoost(product);
     updateFavoriteButton(id);
     if (triggerEl?.classList) {
@@ -2886,6 +2916,52 @@ function openDetails(id, triggerEl = null, options = {}) {
     void detailsPage?.offsetWidth;
     detailsPage?.classList.add("detail-animating");
     window.setTimeout(() => detailsPage?.classList.remove("detail-animating"), 420);
+}
+
+function renderDesktopDetailLayout(product, meta) {
+    const sidebarLine = document.querySelector("[data-detail-sidebar-line]");
+    const sidebarSub = document.querySelector("[data-detail-sidebar-sub]");
+    const sidebarQty = document.querySelector("[data-detail-sidebar-qty]");
+    const sidebarStock = document.querySelector("[data-detail-sidebar-stock]");
+    const sidebarAddCart = document.querySelector("[data-detail-sidebar-add-cart]");
+    const sidebarSellerLogo = document.querySelector("[data-detail-sidebar-seller-logo]");
+    const sidebarSellerName = document.querySelector("[data-detail-sidebar-seller-name]");
+    const sidebarSellerSubtitle = document.querySelector("[data-detail-sidebar-seller-subtitle]");
+    const sidebarSellerSales = document.querySelector("[data-detail-sidebar-seller-sales]");
+    const sidebarSellerVerified = document.querySelector("[data-detail-sidebar-seller-verified]");
+
+    const desktopDescription = document.querySelector("[data-detail-desktop-description]");
+    const desktopHighlights = document.querySelector("[data-detail-desktop-highlights]");
+    const desktopSellerBanner = document.querySelector("[data-detail-desktop-seller-banner]");
+    const desktopSellerBannerImage = document.querySelector("[data-detail-desktop-seller-banner-image]");
+    const desktopSellerLogo = document.querySelector("[data-detail-desktop-seller-logo]");
+    const desktopSellerName = document.querySelector("[data-detail-desktop-seller-name]");
+    const desktopSellerSubtitle = document.querySelector("[data-detail-desktop-seller-subtitle]");
+    const desktopSellerSales = document.querySelector("[data-detail-desktop-seller-sales]");
+    const desktopSellerVerified = document.querySelector("[data-detail-desktop-seller-verified]");
+
+    const sellerLogo = meta.sellerLogo || "assets/mercado-livre-logo.png";
+
+    if (sidebarLine) sidebarLine.innerText = meta.shippingText;
+    if (sidebarSub) sidebarSub.innerText = "por ser sua primeira compra";
+    if (sidebarQty) sidebarQty.innerText = "1 unidade";
+    if (sidebarStock) sidebarStock.innerText = "(+50 disponíveis)";
+    if (sidebarAddCart) sidebarAddCart.onclick = () => addToCart(product.id);
+    if (sidebarSellerLogo) sidebarSellerLogo.src = sellerLogo;
+    if (sidebarSellerName) sidebarSellerName.innerText = meta.sellerName;
+    if (sidebarSellerSubtitle) sidebarSellerSubtitle.innerText = meta.sellerSubtitle || meta.sellerName;
+    if (sidebarSellerSales) sidebarSellerSales.innerText = `${meta.sellerSales} vendas`;
+    sidebarSellerVerified?.classList.toggle("hidden", !meta.sellerVerified);
+
+    if (desktopDescription) desktopDescription.innerText = product.description;
+    if (desktopHighlights) desktopHighlights.innerHTML = meta.highlights.map((item) => `<li>${item}</li>`).join("");
+    if (desktopSellerLogo) desktopSellerLogo.src = sellerLogo;
+    if (desktopSellerBannerImage) desktopSellerBannerImage.src = sellerLogo;
+    desktopSellerBanner?.classList.toggle("hidden", Boolean(meta.sellerLogo));
+    if (desktopSellerName) desktopSellerName.innerText = meta.sellerName;
+    if (desktopSellerSubtitle) desktopSellerSubtitle.innerText = meta.sellerSubtitle || meta.sellerName;
+    if (desktopSellerSales) desktopSellerSales.innerText = meta.sellerSales;
+    desktopSellerVerified?.classList.toggle("hidden", !meta.sellerVerified);
 }
 
 function renderDetailBoost(product) {
@@ -2944,6 +3020,36 @@ function renderDetailBoost(product) {
     });
 
     lucide.createIcons();
+}
+
+function renderProductSpecs(product) {
+    const section = document.querySelector("[data-detail-specs-section]");
+    const mainWrap = document.querySelector("[data-detail-specs-main]");
+    const dimensionsWrap = document.querySelector("[data-detail-specs-dimensions]");
+    const othersWrap = document.querySelector("[data-detail-specs-others]");
+    const specs = product.specs;
+
+    if (!section || !mainWrap || !dimensionsWrap || !othersWrap) return;
+
+    if (!specs) {
+        section.classList.add("hidden");
+        mainWrap.innerHTML = "";
+        dimensionsWrap.innerHTML = "";
+        othersWrap.innerHTML = "";
+        return;
+    }
+
+    const renderRows = (rows) => rows.map(([label, value], index) => `
+        <div class="grid grid-cols-[190px_minmax(0,1fr)] text-sm ${index % 2 === 0 ? "bg-[#f7f7f7]" : "bg-white"}">
+            <div class="px-4 py-3 text-gray-600 font-medium border-r border-gray-200">${label}</div>
+            <div class="px-4 py-3 text-gray-800 ${value ? "" : "text-gray-400"}">${value || "-"}</div>
+        </div>
+    `).join("");
+
+    mainWrap.innerHTML = renderRows(specs.main || []);
+    dimensionsWrap.innerHTML = renderRows(specs.dimensions || []);
+    othersWrap.innerHTML = renderRows(specs.others || []);
+    section.classList.remove("hidden");
 }
 
 function selectDetailImage(src, alt, trigger) {

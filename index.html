@@ -365,12 +365,13 @@
         .desktop-header-right {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 12px;
             white-space: nowrap;
             flex-shrink: 0;
             margin-left: 0;
-            padding-left: 22px;
+            padding-left: 16px;
             border-left: 1px solid rgba(0, 0, 0, 0.04);
+            min-width: 0;
         }
         @media (min-width: 768px) {
             .desktop-header-actions {
@@ -393,20 +394,21 @@
                 font-size: 14px;
             }
             .desktop-header-right {
-                gap: 22px;
-                padding-left: 24px;
+                gap: 16px;
+                padding-left: 18px;
             }
         }
         .desktop-account-trigger {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
+            gap: 6px;
+            padding: 6px 8px;
             border-radius: 999px;
             transition: background-color 0.2s ease;
             cursor: pointer;
             position: relative;
             z-index: 4;
+            max-width: 100%;
         }
         .desktop-account-trigger:hover {
             background: rgba(255, 255, 255, 0.42);
@@ -491,10 +493,6 @@
         .header-icon-btn:hover {
             background: rgba(255, 255, 255, 0.45);
             transform: translateY(-1px);
-        }
-        .header-icon-btn.is-highlighted {
-            background: #ffef99;
-            box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.72);
         }
         .header-icon-badge {
             position: absolute;
@@ -2077,7 +2075,7 @@
                             <img id="desktop-account-avatar-image" src="" alt="Avatar do usuário" class="hidden">
                                     <span id="desktop-account-avatar-fallback">M</span>
                                 </span>
-                                <span id="desktop-account-name" class="max-w-[92px] truncate text-[13px] font-semibold text-gray-800">Minha conta</span>
+                                <span id="desktop-account-name" class="max-w-[68px] xl:max-w-[84px] truncate text-[13px] font-semibold text-gray-800">Minha conta</span>
                                 <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/70">
                                     <i data-lucide="chevron-down" class="w-4 h-4 text-gray-600"></i>
                                 </span>
@@ -2150,7 +2148,7 @@
                         <button class="nav-link hover:text-black transition-colors" onclick="showPage('orders', this)">Compras</button>
                     </div>
                     <div id="notifications-shell" class="desktop-account-shell">
-                        <button id="notifications-btn" type="button" class="header-icon-btn is-highlighted" onclick="toggleNotificationsMenu(event)" aria-label="Abrir notificações">
+                        <button id="notifications-btn" type="button" class="header-icon-btn" onclick="toggleNotificationsMenu(event)" aria-label="Abrir notificações">
                             <i data-lucide="bell" class="w-5 h-5"></i>
                             <span id="notifications-count" class="hidden header-icon-badge">0</span>
                         </button>
@@ -3234,7 +3232,7 @@
                             <button id="det-option-count" class="text-sm text-blue-600 font-medium hover:underline mt-1">20 produtos novos a partir de R$ 2.299</button>
                         </div>
 
-                        <div class="detail-store-card rounded-lg p-4 mt-8">
+                        <div class="detail-store-card rounded-lg p-4 mt-8 lg:hidden">
                             <div class="inline-flex detail-badge-green text-[11px] font-bold px-2 py-1 rounded mb-3" id="det-shipping-badge">FRETE GRÁTIS ACIMA DE R$ 19</div>
                             <p id="det-shipping-line" class="text-[22px] leading-7 text-green-600 font-medium">Chegará grátis quinta-feira 30 de abril</p>
                             <p id="det-shipping-sub" class="text-sm text-gray-500 mt-1">por ser sua primeira compra</p>
@@ -3277,19 +3275,62 @@
                     </div>
 
                     <div class="p-4 md:p-6 flex flex-col gap-5">
-                        <div data-detail-boost class="hidden lg:block rounded-2xl border border-[#e5f0ff] bg-[#f8fbff] p-4 max-w-[292px] xl:max-w-[300px]">
-                            <div data-detail-boost-urgency class="hidden rounded-xl border border-[#ffe0a6] bg-[#fff8e6] px-4 py-3 mb-4">
-                                <p class="text-sm font-semibold text-[#8a5a00]">Devido à alta procura pelo álbum da Copa 2026, estamos com estoque reduzido.</p>
+                        <div class="hidden lg:block detail-store-card rounded-lg p-4">
+                            <div data-detail-sidebar-badge class="inline-flex detail-badge-green text-[11px] font-bold px-2 py-1 rounded mb-3">FRETE GRÁTIS ACIMA DE R$ 19</div>
+                            <p data-detail-sidebar-line class="text-[24px] leading-8 text-green-600 font-medium">Chegará grátis quinta-feira 30 de abril</p>
+                            <p data-detail-sidebar-sub class="text-sm text-gray-500 mt-1">por ser sua primeira compra</p>
+                            <button class="text-sm text-blue-600 mt-2 hover:underline">Mais detalhes e formas de entrega</button>
+
+                            <div class="mt-6">
+                                <p class="text-lg text-gray-800 font-medium">Estoque disponível</p>
+                                <p class="text-xs text-gray-400 mt-1">Armazenado e enviado pelo <span class="text-green-600 font-bold">FULL</span></p>
+                                <p class="text-sm text-gray-700 mt-3">Quantidade: <span data-detail-sidebar-qty class="font-semibold">1 unidade</span> <span data-detail-sidebar-stock class="text-gray-400">(+50 disponíveis)</span></p>
                             </div>
-                            <div data-detail-boost-trust class="space-y-2 text-sm text-gray-700"></div>
-                            <div class="mt-4 rounded-xl bg-white border border-gray-200 px-4 py-3">
-                                <p data-detail-boost-rating class="text-base font-bold text-gray-900"></p>
-                                <p data-detail-boost-customers class="text-sm text-gray-600 mt-1"></p>
+
+                            <div class="flex flex-col gap-3 mt-6">
+                                <button onclick="buyNow()" class="w-full bg-blue-600 text-white py-4 rounded-md font-bold hover:bg-blue-700 active:scale-95 transition-all">Comprar agora</button>
+                                <button data-detail-sidebar-add-cart class="w-full bg-blue-50 text-blue-600 py-4 rounded-md font-bold hover:bg-blue-100 active:scale-95 transition-all">Adicionar ao carrinho</button>
                             </div>
-                            <div data-detail-boost-testimonials class="mt-4 grid gap-3 max-h-[540px] overflow-y-auto pr-1"></div>
+
+                            <div data-detail-boost class="hidden mt-6 rounded-2xl border border-[#e5f0ff] bg-[#f8fbff] p-4">
+                                <div data-detail-boost-urgency class="hidden rounded-xl border border-[#ffe0a6] bg-[#fff8e6] px-4 py-3 mb-4">
+                                    <p class="text-sm font-semibold text-[#8a5a00]">Devido à alta procura pelo álbum da Copa 2026, estamos com estoque reduzido.</p>
+                                </div>
+                                <div data-detail-boost-trust class="space-y-2 text-sm text-gray-700"></div>
+                                <div class="mt-4 rounded-xl bg-white border border-gray-200 px-4 py-3">
+                                    <p data-detail-boost-rating class="text-base font-bold text-gray-900"></p>
+                                    <p data-detail-boost-customers class="text-sm text-gray-600 mt-1"></p>
+                                </div>
+                                <div data-detail-boost-testimonials class="mt-4 grid gap-3 max-h-[420px] overflow-y-auto pr-1"></div>
+                            </div>
+
+                            <div class="mt-6 pt-5 border-t border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <img data-detail-sidebar-seller-logo src="assets/mercado-livre-logo.png" alt="Loja" class="w-11 h-11 rounded-full object-contain border border-gray-100 bg-gray-50 p-1 shrink-0">
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                                            <span data-detail-sidebar-seller-name class="truncate">Mercado Livre</span>
+                                            <i data-detail-sidebar-seller-verified data-lucide="badge-check" class="w-4 h-4 fill-[#3483fa] text-white hidden shrink-0"></i>
+                                        </p>
+                                        <p data-detail-sidebar-seller-subtitle class="text-xs text-gray-500">Loja oficial do Mercado Livre</p>
+                                        <p data-detail-sidebar-seller-sales class="text-xs text-gray-500 mt-1">+1 M vendas</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 pt-5 border-t border-gray-100 space-y-4 text-sm text-gray-600">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="rotate-ccw" class="w-4 h-4 text-gray-400 mt-0.5"></i>
+                                    <p><span class="text-blue-600 font-medium">Devolução grátis</span> Você tem 30 dias a partir da data de recebimento.</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-gray-400 mt-0.5"></i>
+                                    <p><span class="text-blue-600 font-medium">Compra Garantida.</span> Receba o produto que está esperando ou devolvemos o dinheiro.</p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="detail-store-card rounded-lg p-4">
+                        <div class="detail-store-card rounded-lg p-4 lg:hidden">
                             <h3 class="text-base font-semibold text-gray-800 mb-4">Descrição do produto</h3>
                             <p id="det-description" class="text-gray-600 leading-relaxed whitespace-pre-line"></p>
                             <div class="mt-6 pt-6 border-t border-gray-100">
@@ -3299,7 +3340,7 @@
                             </div>
                         </div>
 
-                        <div class="detail-store-card rounded-lg p-4">
+                        <div class="detail-store-card rounded-lg p-4 lg:hidden">
                             <div id="det-seller-logo-banner" class="rounded-lg bg-[#fff8d9] border border-[#f4e38e] h-28 flex items-center justify-center">
                                 <img id="det-seller-banner-image" src="assets/mercado-livre-logo.png" alt="Loja oficial" class="h-16 object-contain">
                             </div>
@@ -3338,6 +3379,78 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="hidden lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] gap-5 p-6 border-t border-gray-100 bg-white">
+                    <div class="detail-store-card rounded-lg p-5">
+                        <h3 class="text-base font-semibold text-gray-800 mb-4">Descrição do produto</h3>
+                        <p data-detail-desktop-description class="text-gray-600 leading-relaxed whitespace-pre-line"></p>
+                        <div class="mt-6 pt-6 border-t border-gray-100">
+                            <h4 class="text-base font-semibold text-gray-800 mb-4">Detalhes do produto</h4>
+                            <ul data-detail-desktop-highlights class="space-y-2 text-sm text-gray-700 list-disc pl-5"></ul>
+                            <button class="text-sm text-blue-600 mt-4 hover:underline">Ver características</button>
+                        </div>
+                    </div>
+
+                    <div class="detail-store-card rounded-lg p-5">
+                        <div data-detail-desktop-seller-banner class="rounded-lg bg-[#fff8d9] border border-[#f4e38e] h-28 flex items-center justify-center">
+                            <img data-detail-desktop-seller-banner-image src="assets/mercado-livre-logo.png" alt="Loja oficial" class="h-16 object-contain">
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <img data-detail-desktop-seller-logo src="assets/mercado-livre-logo.png" alt="Loja oficial" class="w-11 h-11 rounded-full object-contain border border-gray-100 bg-gray-50 p-1 shrink-0">
+                                    <div class="min-w-0">
+                                        <p class="text-[18px] leading-6 font-medium text-gray-800 flex items-center gap-1.5 min-w-0">
+                                            <span data-detail-desktop-seller-name class="truncate">Mercado Livre</span>
+                                            <i data-detail-desktop-seller-verified data-lucide="badge-check" class="w-4 h-4 fill-[#3483fa] text-white hidden shrink-0"></i>
+                                        </p>
+                                        <p data-detail-desktop-seller-subtitle class="text-sm text-gray-500">Loja oficial do Mercado Livre</p>
+                                    </div>
+                                </div>
+                                <button class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1 rounded-md">Seguir</button>
+                            </div>
+                            <p class="text-sm text-green-600 font-semibold mt-4">MercadoLider Platinum</p>
+                            <p class="text-xs text-gray-500">É um dos melhores do site!</p>
+                            <div class="grid grid-cols-3 gap-3 mt-5 text-center">
+                                <div>
+                                    <p data-detail-desktop-seller-sales class="text-lg font-semibold text-gray-800">+1 M</p>
+                                    <p class="text-xs text-gray-500">Vendas</p>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-semibold text-gray-800">Bom</p>
+                                    <p class="text-xs text-gray-500">atendimento</p>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-semibold text-gray-800">No prazo</p>
+                                    <p class="text-xs text-gray-500">Entrega</p>
+                                </div>
+                            </div>
+                            <button class="w-full mt-5 bg-blue-50 text-blue-600 py-3 rounded-md font-semibold hover:bg-blue-100 transition-colors">Ir para a loja oficial</button>
+                        </div>
+                    </div>
+                </div>
+
+                <section data-detail-specs-section class="hidden border-t border-gray-100 bg-white p-6">
+                    <div class="max-w-[860px]">
+                        <h3 class="text-[28px] leading-tight font-light text-gray-800">Características do produto</h3>
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <div>
+                                <h4 class="text-sm font-semibold text-gray-700 mb-3">Características principais</h4>
+                                <div data-detail-specs-main class="overflow-hidden rounded-lg border border-gray-200"></div>
+                            </div>
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Dimensões</h4>
+                                    <div data-detail-specs-dimensions class="overflow-hidden rounded-lg border border-gray-200"></div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Outros</h4>
+                                    <div data-detail-specs-others class="overflow-hidden rounded-lg border border-gray-200"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 <div class="max-w-6xl p-6 md:p-10 border-t border-gray-100 bg-white mx-auto w-full">
                     <div class="mt-2">
