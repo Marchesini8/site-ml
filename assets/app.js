@@ -2891,10 +2891,11 @@ function renderDetailBoost(product) {
         if (!urgencyBanner || !trustItems || !socialRating || !socialCustomers || !testimonials) return;
 
         if (!boost) {
-            container.classList.add("hidden");
+            container.style.display = "none";
             return;
         }
 
+        container.style.display = "";
         urgencyBanner.classList.toggle("hidden", !boost.urgency);
         urgencyBanner.innerHTML = boost.urgency
             ? `<p class="text-sm font-semibold text-[#8a5a00]">${boost.urgency}</p>`
@@ -2903,7 +2904,6 @@ function renderDetailBoost(product) {
         socialRating.innerText = boost.socialRating || "";
         socialCustomers.innerText = boost.socialCustomers || "";
         testimonials.innerHTML = testimonialsMarkup;
-        container.classList.remove("hidden");
     });
 
     lucide.createIcons();
