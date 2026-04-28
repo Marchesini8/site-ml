@@ -3246,7 +3246,7 @@ function updateCheckoutSummary() {
     const productQty = document.getElementById("summary-product-qty");
 
     if (productLabel) productLabel.innerText = formatCurrency(finalTotal);
-    if (shippingLabel) shippingLabel.innerText = "-";
+    if (shippingLabel) shippingLabel.innerText = "Frete grátis";
     if (grandTotal) grandTotal.innerText = formatCurrency(finalTotal);
     if (productCard && productImage && productTitle && productQty) {
         if (firstItem) {
