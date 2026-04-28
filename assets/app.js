@@ -1131,7 +1131,7 @@ function requireAccountForPurchase(productId = appState.currentProdId) {
     toggleCart(false);
     closeCheckout();
     openAuthPage("login");
-    setAuthFeedback("Crie uma conta ou entre para comprar este produto.", "error");
+    setAuthFeedback("Entre para comprar este produto.", "error");
     return false;
 }
 

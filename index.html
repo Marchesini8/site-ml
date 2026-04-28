@@ -12,7 +12,6 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
@@ -1256,19 +1255,6 @@
             100% {
                 transform: translateX(220%);
             }
-        }
-        .google-shell:empty::before {
-            content: "Continuar com Google";
-            display: inline-flex;
-            width: 100%;
-            justify-content: center;
-            align-items: center;
-            min-height: 44px;
-            border: 1px solid #d1d5db;
-            border-radius: 0.75rem;
-            background: #fff;
-            color: #111827;
-            font-weight: 600;
         }
         .info-card {
             background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
@@ -2713,16 +2699,6 @@
 
                     <div class="mt-2 text-center">
                         <button id="auth-switch-btn" type="button" class="auth-link-button text-sm" onclick="toggleAuthMode()">Criar conta</button>
-                    </div>
-
-                    <div class="auth-login-divider my-5">ou</div>
-
-                    <div>
-                        <div id="google-login-slot" class="google-shell"></div>
-                        <button id="google-fallback-btn" type="button" onclick="handleGoogleFallback()" class="hidden mt-3 w-full rounded-xl border border-gray-300 py-3 font-semibold text-gray-800 hover:bg-gray-50">
-                            Continuar com Google
-                        </button>
-                        <p id="google-login-help" class="text-xs text-gray-400 mt-2 text-center"></p>
                     </div>
 
                     <div class="mt-5 text-center text-sm text-gray-500">
