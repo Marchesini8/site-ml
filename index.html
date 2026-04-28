@@ -1449,6 +1449,73 @@
             object-fit: contain;
             padding: 6px;
         }
+        .mobile-category-shortcuts {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            align-items: start;
+        }
+        .mobile-category-shortcut {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            color: #666;
+            text-align: center;
+            min-width: 0;
+        }
+        .mobile-category-shortcut-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #ececec;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            overflow: hidden;
+        }
+        .mobile-category-shortcut-circleless {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            overflow: visible;
+        }
+        .mobile-category-shortcut:active .mobile-category-shortcut-circle,
+        .mobile-category-shortcut.is-active .mobile-category-shortcut-circle {
+            transform: translateY(-1px);
+            border-color: #3483fa;
+            box-shadow: 0 12px 24px rgba(52, 131, 250, 0.18);
+        }
+        .mobile-category-shortcut-circle img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        .mobile-category-shortcut-label {
+            font-size: 11px;
+            line-height: 1.1;
+            font-weight: 500;
+            color: #666;
+            min-height: 30px;
+            max-width: 68px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            letter-spacing: -0.01em;
+        }
+        .mobile-category-shortcut.is-active .mobile-category-shortcut-label {
+            color: #3483fa;
+        }
         .meli-plus-divider {
             width: 1px;
             background: linear-gradient(180deg, transparent, rgba(125, 69, 168, 0.25), transparent);
@@ -1460,6 +1527,62 @@
             background-size: cover;
             background-position: center;
             box-shadow: 0 28px 60px rgba(15, 23, 42, 0.24);
+        }
+        .electro-shortcut-track {
+            display: flex;
+            gap: 18px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .electro-shortcut-track::-webkit-scrollbar {
+            display: none;
+        }
+        .electro-shortcut-chip {
+            min-width: 84px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+            text-align: center;
+            background: transparent;
+            border: 0;
+        }
+        .electro-shortcut-card {
+            width: 72px;
+            height: 56px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+            background: linear-gradient(135deg, #9333ea 0%, #ec4899 52%, #fb923c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .electro-shortcut-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .electro-shortcut-label {
+            font-size: 10px;
+            line-height: 1.18;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #333;
+            max-width: 88px;
+        }
+        .electro-inline-banner {
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        }
+        .electro-inline-banner img {
+            width: 100%;
+            display: block;
         }
         .related-track {
             scroll-behavior: smooth;
@@ -1870,22 +1993,34 @@
                 font-size: 14px;
             }
             .hero-frame {
-                padding-left: 10px;
-                padding-right: 10px;
+                padding-left: 12px;
+                padding-right: 12px;
             }
             .hero-stage {
                 background: linear-gradient(180deg, #ffe600 0%, #ffe600 58%, #ededed 58%, #ededed 100%);
-                padding-top: 0.35rem;
-                padding-bottom: 0.35rem;
+                padding-top: 0.3rem;
+                padding-bottom: 0.45rem;
             }
             #hero-carousel {
-                height: 132px;
-                border-radius: 16px;
+                height: 146px;
+                border-radius: 10px;
                 box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
                 touch-action: pan-y;
             }
             #hero-carousel-dots {
                 bottom: 10px;
+            }
+            #page-electrodomesticos #electro-carousel {
+                height: 184px;
+            }
+            #page-electrodomesticos #electro-carousel-track > div,
+            #page-electrodomesticos #electro-carousel-track img {
+                height: 100%;
+            }
+            #page-electrodomesticos #electro-carousel-track img {
+                width: 100%;
+                object-fit: cover;
+                object-position: center;
             }
             .hero-dot {
                 width: 6px;
@@ -1904,6 +2039,10 @@
                 box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
                 font-size: 13px;
                 color: #4b5563;
+                width: 100%;
+                max-width: 344px;
+                margin-left: auto;
+                margin-right: auto;
             }
             .mobile-products-showcase {
                 display: block;
@@ -2141,7 +2280,7 @@
                                     </span>
                                     <div class="min-w-0">
                                         <p id="desktop-account-menu-name" class="font-semibold text-gray-900 truncate">Minha conta</p>
-                                        <button class="text-sm text-gray-500 inline-flex items-center gap-1 mt-0.5" onclick="showPage('purchases'); closeDesktopAccountMenu();">
+                                        <button class="text-sm text-gray-500 inline-flex items-center gap-1 mt-0.5" onclick="openProfileOrLogin(); closeDesktopAccountMenu();">
                                             Meu perfil <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                         </button>
                                     </div>
@@ -2239,9 +2378,9 @@
                         </div>
                         <div class="min-w-0">
                             <p id="mobile-menu-user-name" class="font-semibold text-[22px] leading-6 text-gray-900 truncate">Minha conta</p>
-                            <button id="mobile-menu-profile-link" class="text-sm text-gray-700 mt-1 inline-flex items-center gap-1" onclick="showPage('purchases'); closeMobileMenu();">
-                                Meu perfil <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            </button>
+            <button id="mobile-menu-profile-link" class="text-sm text-gray-700 mt-1 inline-flex items-center gap-1" onclick="openProfileOrLogin(); closeMobileMenu();">
+                Meu perfil <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
                         </div>
                     </div>
                     <button class="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center" onclick="closeMobileMenu()" aria-label="Fechar menu">
@@ -2352,6 +2491,10 @@
                     <p><span class="font-semibold text-[#00a650]">Frete grátis</span> em milhões de produtos a partir de R$ 19.</p>
                 </div>
             </div>
+
+            <section class="md:hidden px-3 mt-3">
+                <div id="mobile-category-shortcuts" class="mobile-category-shortcuts"></div>
+            </section>
 
             <section class="mobile-products-showcase px-3 mt-3">
                 <div id="mobile-products-list" class="mobile-products-track"></div>
@@ -2578,16 +2721,17 @@
                             <h2 class="text-3xl md:text-4xl font-black text-white leading-tight">Assuma o controle. Assista o que quiser.</h2>
                             <span class="inline-flex mt-4 bg-[#00a650] text-white text-xs font-black px-3 py-1 rounded-full">GRÁTIS</span>
                             <p class="text-white/75 mt-4">O vídeo agora roda direto no quadro da direita, dentro da área do Mercado Play que você marcou.</p>
+                            <p id="mercado-play-current-title" class="mt-4 text-base font-semibold text-white">Agora passando: Jogos Vorazes: A Esperança - Parte 1</p>
                             <div class="flex flex-wrap gap-3 mt-6">
                                 <button class="bg-white text-gray-900 px-5 py-3 rounded-xl font-bold" onclick="playEmbeddedVideo()">Assistir agora</button>
-                                <a href="https://youtu.be/CI12S_1PNqc?si=P1dmP1Qfxkd3ud5k" target="_blank" rel="noreferrer" class="bg-white/10 text-white px-5 py-3 rounded-xl font-bold border border-white/15">Abrir no YouTube</a>
+                                <a id="mercado-play-open-link" href="https://youtu.be/CORKGv8T9jw?si=Ot_blRmTfgJGFOtF" target="_blank" rel="noreferrer" class="bg-white/10 text-white px-5 py-3 rounded-xl font-bold border border-white/15">Abrir no YouTube</a>
                             </div>
                         </div>
                         <div class="relative rounded-[1.5rem] overflow-hidden border border-white/10 shadow-2xl bg-black aspect-[16/9]">
                             <iframe
                                 id="mercado-play-embed"
                                 class="w-full h-full"
-                                src="https://www.youtube.com/embed/CI12S_1PNqc?autoplay=1&mute=1&loop=1&playlist=CI12S_1PNqc&controls=1&playsinline=1&rel=0"
+                                src="https://www.youtube.com/embed/CORKGv8T9jw?autoplay=1&mute=1&loop=1&playlist=CORKGv8T9jw&controls=1&playsinline=1&rel=0"
                                 title="Mercado Play video"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin"
@@ -2624,10 +2768,26 @@
         </main>
     </div>
 
+    <div id="page-category-browser" class="hidden min-h-screen bg-[#f5f5f5] page-transition">
+        <main class="pb-20">
+            <section class="max-w-[1240px] mx-auto px-3 md:px-4 pt-4 md:pt-6">
+                <div class="rounded-[22px] md:rounded-[28px] overflow-hidden bg-white border border-[#e5e7eb] shadow-[0_12px_34px_rgba(15,23,42,0.08)]">
+                    <div class="px-4 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 border-b border-[#f1f5f9]">
+                        <button onclick="showPage('home')" class="text-[#3483fa] text-sm md:text-base font-semibold">Voltar para a home</button>
+                        <p id="category-browser-kicker" class="mt-4 text-[12px] md:text-sm uppercase tracking-[0.24em] text-gray-400 font-bold">Categoria</p>
+                        <h1 id="category-browser-title" class="mt-2 text-[28px] md:text-[40px] leading-[1.02] font-black text-[#333]">Tecnologia</h1>
+                        <p id="category-browser-subtitle" class="mt-3 text-[15px] md:text-[18px] text-gray-600 max-w-2xl">Explore uma seleção separada para essa categoria.</p>
+                    </div>
+                    <div id="category-browser-products" class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-0"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
     <div id="page-electrodomesticos" class="hidden min-h-screen bg-white page-transition">
         <main class="pb-20">
-            <div class="max-w-[1420px] mx-auto px-0 md:px-4 pt-4 md:pt-6">
-                <div id="electro-carousel" class="relative overflow-hidden rounded-[0] md:rounded-[6px] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08)] md:h-[500px]">
+            <div class="max-w-[1520px] mx-auto px-0 pt-0">
+                <div id="electro-carousel" class="relative overflow-hidden rounded-[0] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08)] md:h-[500px]">
                     <div id="electro-carousel-track" class="hero-carousel-track flex h-full"></div>
 
                     <button onclick="moveElectroSlide(-1)" class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-[#3483fa] items-center justify-center shadow-lg hover:scale-105 transition-all">
@@ -2640,16 +2800,32 @@
                     <div id="electro-carousel-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2"></div>
                 </div>
 
+                <section class="mt-3 md:mt-4 max-w-[1140px] mx-auto px-4 md:px-0">
+                    <div id="electro-quick-track" class="electro-shortcut-track"></div>
+                </section>
+
+                <section class="mt-6 max-w-[1140px] mx-auto px-4 md:px-0">
+                    <div id="electro-feature-banner" class="electro-inline-banner"></div>
+                </section>
+
                 <section class="mt-6 max-w-[1140px] mx-auto px-4 md:px-0">
                     <div class="flex items-center justify-between gap-4 mb-4">
-                        <h2 class="text-[28px] font-semibold tracking-[-0.03em] text-[#333]">MELHORES OFERTAS</h2>
-                        <button class="text-[#3483fa] text-[18px] font-medium" onclick="showPage('electrodomesticos')">Ver mais</button>
+                        <h2 class="text-[22px] md:text-[28px] font-semibold tracking-[-0.03em] text-[#333]">OFERTAS PARA COMPRAR AGORA 🔥</h2>
+                        <button class="text-[#3483fa] text-[16px] md:text-[18px] font-medium" onclick="showPage('electrodomesticos')">Ver mais</button>
                     </div>
                     <div id="electro-products-list" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4"></div>
                 </section>
 
-                <section class="mt-8 max-w-[1140px] mx-auto px-4 md:px-0">
-                    <div id="electro-promo-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"></div>
+                <section class="mt-6 max-w-[1140px] mx-auto px-4 md:px-0">
+                    <div id="electro-climate-banner" class="electro-inline-banner"></div>
+                </section>
+
+                <section class="mt-6 max-w-[1140px] mx-auto px-4 md:px-0">
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <h2 class="text-[22px] md:text-[28px] font-semibold tracking-[-0.03em] text-[#333]">OFERTAS COM DESCONTO NO PIX 🤑</h2>
+                        <button class="text-[#3483fa] text-[16px] md:text-[18px] font-medium" onclick="showPage('electrodomesticos')">Ver mais</button>
+                    </div>
+                    <div id="electro-pix-products-list" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4"></div>
                 </section>
             </div>
         </main>

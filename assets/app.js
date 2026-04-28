@@ -16,8 +16,28 @@ const APP_CONFIG = {
 const AUTH_LOADING_MIN_MS = 950;
 const NAVIGATION_LOADING_MIN_MS = 520;
 const NAVIGATION_LOADING_REVEAL_MS = 170;
+const MERCADO_PLAY_ROTATION_MS = 24000;
 let navigationLoaderToken = 0;
 let navigationLoaderHideTimeout = null;
+let mercadoPlayRotationInterval = null;
+let currentMercadoPlayVideoId = "";
+const mercadoPlayVideos = [
+    {
+        id: "CORKGv8T9jw",
+        title: "Jogos Vorazes: A Esperança - Parte 1",
+        youtubeUrl: "https://youtu.be/CORKGv8T9jw?si=Ot_blRmTfgJGFOtF"
+    },
+    {
+        id: "fxOEBm65oFo",
+        title: "Homem-Aranha: Longe de Casa",
+        youtubeUrl: "https://youtu.be/fxOEBm65oFo?si=CwvHZ-onl6pUPR8q"
+    },
+    {
+        id: "CyiiEJRZjSU",
+        title: "Homem-Aranha: Sem Volta Para Casa",
+        youtubeUrl: "https://youtu.be/CyiiEJRZjSU?si=eY4J_hBQWDTTla4r"
+    }
+];
 const legacyProducts = [
     { id: 1, title: 'Samsung Smart TV 75" Crystal UHD 4K 2025', price: 1499.99, oldPrice: 2199.0, image: "https://m.media-amazon.com/images/I/81QsB0GMcyL._AC_SX522_.jpg", description: "A nova era da TV chegou. Com processador Crystal 4K e Alexa integrada." },
     { id: 2, title: "Geladeira Electrolux Frost Free Inverter 480L", price: 1999.99, oldPrice: 3798.0, image: "https://m.media-amazon.com/images/I/41qntZyTefL._AC_SX342_SY445_QL70_ML2_.jpg", description: "Tecnologia AutoSense que preserva alimentos por muito mais tempo." },
@@ -336,32 +356,163 @@ const products = [
             ]
         },
         priceOverride: 179.99
+    },
+    {
+        id: 25,
+        slug: "coifa-de-ilha-oster-inox-touch-control-90cm",
+        category: "eletrodomesticos",
+        title: "Coifa De Ilha Oster Inox Touch Control 90cm 127v",
+        price: 2207.08,
+        oldPrice: 2399.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_862825-MLA99936140385_112025-F.webp",
+        gallery: [
+            "https://http2.mlstatic.com/D_NQ_NP_2X_862825-MLA99936140385_112025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_966807-MLA84539012650_052025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_773806-MLA84539012682_052025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_840945-MLA84539209486_052025-F.webp"
+        ],
+        description: "Coifa de ilha Oster inox com touch control e 90 cm para cozinhas planejadas."
+    },
+    {
+        id: 26,
+        slug: "kit-click-cadence-sanduicheira-e-cafeteira-desperta",
+        category: "eletrodomesticos",
+        title: "Kit Click Cadence - Sanduicheira E Cafeteira Desperta Cadence",
+        price: 196.65,
+        oldPrice: 229.99,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_630316-MLB95942026038_102025-F.webp",
+        gallery: [
+            "https://http2.mlstatic.com/D_NQ_NP_2X_630316-MLB95942026038_102025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_881482-MLB95942026040_102025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_842161-MLB95942026048_102025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_630316-MLB95942026038_102025-F.webp"
+        ],
+        description: "Kit com sanduicheira e cafeteira Cadence para montar sua rotina de café da manhã."
+    },
+    {
+        id: 27,
+        slug: "micro-ondas-electrolux-20l-branco-mto30",
+        category: "eletrodomesticos",
+        title: "Micro-ondas Electrolux 20L Branco Com Função Tira Odor e Descongelar MTO30",
+        price: 454.93,
+        oldPrice: 599.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_787358-MLA100187065347_122025-F.webp",
+        gallery: [
+            "https://http2.mlstatic.com/D_NQ_NP_2X_787358-MLA100187065347_122025-F.webp",
+            "https://http2.mlstatic.com/D_Q_NP_822028-MLA95939779945_102025-R.webp",
+            "https://http2.mlstatic.com/D_Q_NP_783226-MLA95940247157_102025-R.webp"
+        ],
+        description: "Micro-ondas Electrolux de 20 litros com função tira odor e descongelamento prático."
+    },
+    {
+        id: 28,
+        slug: "kit-batedeira-planetaria-digital-com-salada-maker-oster",
+        category: "eletrodomesticos",
+        title: "Kit Batedeira Planetária Digital Com Salada Maker Oster",
+        price: 1799.0,
+        oldPrice: 1999.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_686946-MLA100019189743_122025-F.webp",
+        gallery: [
+            "https://http2.mlstatic.com/D_NQ_NP_2X_686946-MLA100019189743_122025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_669339-MLA82419296856_022025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_789626-MLA82419296860_022025-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_989260-MLA82419425406_022025-F.webp"
+        ],
+        description: "Kit Oster com batedeira planetária digital e salada maker para preparar receitas completas."
+    },
+    {
+        id: 29,
+        slug: "cooktop-itatiaia-essencial-4-bocas-preto",
+        category: "eletrodomesticos",
+        title: "Cooktop Itatiaia Essencial 4 Bocas Cor Preto 127/220v",
+        price: 295.0,
+        oldPrice: 464.0,
+        image: "https://http2.mlstatic.com/D_NQ_NP_2X_813079-MLU77315310073_062024-F.webp",
+        gallery: [
+            "https://http2.mlstatic.com/D_NQ_NP_2X_813079-MLU77315310073_062024-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_874294-MLU77315319729_062024-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_957778-MLU77315369593_062024-F.webp",
+            "https://http2.mlstatic.com/D_NQ_NP_2X_865616-MLA99389801684_112025-F.webp"
+        ],
+        description: "Cooktop Itatiaia Essencial com 4 bocas e acabamento preto para cozinhas modernas."
     }
 ];
 
-const electroPromoTiles = [
-    "https://http2.mlstatic.com/D_NQ_NP_2X_851669-MLA99906883721_112025-F.webp",
-    "https://http2.mlstatic.com/D_NQ_NP887410-MLA94263488132_102025-B.webp",
-    "https://http2.mlstatic.com/D_NQ_NP966738-MLA94692492411_102025-B.webp",
-    "https://http2.mlstatic.com/D_NQ_NP906445-MLA94692593391_102025-B.webp",
-    "https://http2.mlstatic.com/D_NQ_NP723603-MLA94696018473_102025-B.webp",
-    "https://http2.mlstatic.com/D_NQ_NP911670-MLA94696018299_102025-B.webp"
-];
-
 const homeHeroSlides = [
-    { image: "./assets/banner-home-1.png", alt: "Banner principal Mercado Livre 1" },
-    { image: "./assets/banner-home-2.png", alt: "Banner principal Mercado Livre 2" },
-    { image: "./assets/banner-home-3.png", alt: "Banner principal Mercado Livre 3" },
-    { image: "./assets/banner-home-4.png", alt: "Banner principal Mercado Livre 4" },
-    { image: "./assets/banner-home-5.png", alt: "Banner principal Mercado Livre 5" },
-    { image: "./assets/banner-home-6.webp", alt: "Banner principal Mercado Livre 6" }
+    { image: "./assets/banner-home-new-1.png", alt: "Banner principal dia das mães" },
+    { image: "./assets/banner-home-new-2.png", alt: "Banner principal renove sua casa" },
+    { image: "./assets/banner-home-new-3.png", alt: "Banner principal casa e decoração" },
+    { image: "./assets/banner-home-new-4.png", alt: "Banner principal evolua sua experiência" },
+    { image: "./assets/banner-home-new-5.png", alt: "Banner principal melhores presentes" },
+    { image: "./assets/banner-home-new-6.png", alt: "Banner principal mimo perfeito para sua mãe" },
+    { image: "./assets/banner-home-new-7.png", alt: "Banner principal vinhos e presenteáveis" }
 ];
 
 const electrodomesticosHeroSlides = [
-    { image: "./assets/banner-eletro-1.png", alt: "Banner de eletrodomesticos Wap Week" },
-    { image: "./assets/banner-eletro-2.png", alt: "Banner de eletrodomesticos Arno" },
-    { image: "./assets/banner-eletro-3.png", alt: "Banner de eletrodomesticos renove sua casa" }
+    { image: "./assets/electro-hero-renove-casa-1.png", alt: "Banner renove sua casa com descontos em eletrodomésticos" },
+    { image: "./assets/electro-hero-renove-casa-2.png", alt: "Banner renove sua casa com Casas Bahia" },
+    { image: "./assets/electro-hero-cozinha.png", alt: "Banner sua cozinha renovada" },
+    { image: "./assets/electro-hero-ar-ventilacao.png", alt: "Banner sua casa refrescada" }
 ];
+
+const electroQuickAccessTiles = [
+    { title: "ATÉ 70% OFF", image: "./assets/electro-tile-70-off.png" },
+    { title: "FRETE GRÁTIS", image: "./assets/electro-tile-frete-gratis.png" },
+    { title: "OFERTAS COM PIX", image: "./assets/electro-tile-pix.png" },
+    { title: "CUPONS", image: "./assets/electro-tile-cupons.png" },
+    { title: "VENDIDOS E ENTREGUES", image: "./assets/electro-tile-vendidos.png" },
+    { title: "COZINHA", image: "./assets/electro-tile-cozinha.png" },
+    { title: "LAVADORAS", image: "./assets/electro-tile-lavadoras.png" },
+    { title: "LIMPEZA", image: "./assets/electro-tile-limpeza.png" },
+    { title: "FORNOS E FOGÕES", image: "./assets/electro-tile-fornos-fogoes.png" },
+    { title: "GELADEIRA", image: "./assets/electro-tile-geladeira.png" },
+    { title: "AR E VENTILAÇÃO", image: "./assets/electro-hero-ar-ventilacao.png" }
+];
+
+const electroFeatureBanner = {
+    image: "./assets/electro-banner-renove-sua-casa.png",
+    alt: "Banner renove sua casa"
+};
+
+const electroClimateBanner = {
+    image: "./assets/electro-banner-clima-ideal.png",
+    alt: "Banner clima ideal"
+};
+
+const electroPixDealsIds = [25, 26, 27, 28, 29];
+
+const electroPixDealMeta = {
+    25: {
+        coupon: "10% OFF Saldo no Mercado Pago",
+        shipping: "",
+        full: false,
+        installmentText: "ou R$ 2.399 em 10x R$ 239,90 sem juros"
+    },
+    26: {
+        coupon: "Cupom 10% OFF",
+        shipping: "",
+        full: false,
+        installmentText: "ou R$ 207 em 6x R$ 34,50 sem juros"
+    },
+    27: {
+        coupon: "Cupom R$ 20 OFF",
+        shipping: "Chegará grátis quinta-feira",
+        full: true,
+        installmentText: "ou R$ 469 em 9x R$ 52,11 sem juros"
+    },
+    28: {
+        coupon: "Cupom 10% OFF",
+        shipping: "",
+        full: false,
+        installmentText: "ou R$ 1.999 em 10x R$ 199,90 sem juros"
+    },
+    29: {
+        coupon: "15% OFF Saldo no Mercado Pago",
+        shipping: "Chegará grátis quinta-feira",
+        full: true,
+        installmentText: "ou R$ 339,90 em 6x R$ 56,65 sem juros"
+    }
+};
 
 const sportsFitnessHeroSlides = [
     { image: "./assets/sports/Captura de tela 2026-04-19 000627.png", alt: "Banner o melhor do esporte" },
@@ -452,6 +603,8 @@ const appState = {
     pendingCheckout: false,
     pendingCheckoutProductId: null,
     searchQuery: "",
+    activeMobileCategory: "",
+    currentCategoryBrowserId: "",
     currentElectroSlide: 0,
     electroCarouselInterval: null,
     electroSlideCount: electrodomesticosHeroSlides.length,
@@ -462,6 +615,47 @@ const appState = {
         paymentMethod: "pix"
     }
 };
+
+const mobileCategoryShortcuts = [
+    {
+        id: "tecnologia",
+        label: "Tecnologia",
+        labelHtml: "Tecnologia",
+        image: "assets/mobile-category-tecnologia-v2.png",
+        browseCategory: "tecnologia",
+        pageId: "category-browser",
+        title: "Tecnologia",
+        subtitle: "Notebooks, consoles, acessórios e eletrônicos para navegar em uma tela dedicada."
+    },
+    {
+        id: "casa-moveis",
+        label: "Casa e Móveis",
+        labelHtml: "Casa e<br>Móveis",
+        image: "assets/mobile-category-casa-moveis-v2.png",
+        browseCategory: "casa-moveis",
+        pageId: "category-browser",
+        title: "Casa e Móveis",
+        subtitle: "Poltronas, sofás e itens para renovar os ambientes em uma vitrine separada."
+    },
+    {
+        id: "eletrodomesticos",
+        label: "Eletrodomésticos",
+        labelHtml: "Eletro-<br>domésticos",
+        image: "assets/mobile-category-eletrodomesticos-v2.png",
+        pageId: "electrodomesticos",
+        title: "Eletrodomésticos",
+        subtitle: "Linha completa de eletrodomésticos em uma página própria, como no desktop."
+    },
+    {
+        id: "esportes-fitness",
+        label: "Esportes e Fitness",
+        labelHtml: "Esportes e<br>Fitness",
+        image: "assets/mobile-category-esportes-fitness-v2.png",
+        pageId: "esportes-fitness",
+        title: "Esportes e Fitness",
+        subtitle: "Equipamentos, bikes e produtos esportivos em uma tela separada."
+    }
+];
 
 const legacyProductDetailMap = {
     1: {
@@ -1158,6 +1352,10 @@ function formatCurrency(value) {
     return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function renderFullShippingBadge(extraClasses = "") {
+    return `<span class="inline-flex items-center gap-1 ${extraClasses}"><span>Frete grátis</span><span class="inline-flex items-center gap-0.5 font-bold italic tracking-[-0.01em]"><img src="assets/flash-full.png" alt="" class="w-3 h-3 object-contain" aria-hidden="true"><span>FULL</span></span></span>`;
+}
+
 function getBasePrice(product) {
     const oldPrice = Number(product?.oldPrice || 0);
     if (oldPrice > 0) return oldPrice;
@@ -1283,7 +1481,7 @@ function renderMobileProductCard(product) {
                     <p class="text-[24px] leading-none font-normal text-gray-900">${formatCurrency(currentPrice)}</p>
                     ${showDiscount ? `<p class="text-[11px] font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
-                <p class="text-[11px] text-green-600 font-semibold mt-2">Frete grátis</p>
+                <p class="text-[11px] text-green-600 font-semibold mt-2">${renderFullShippingBadge()}</p>
             </div>
         </div>
     `;
@@ -1347,6 +1545,45 @@ function findProductsByQuery(rawQuery = "") {
     });
 }
 
+function renderMobileCategoryShortcuts() {
+    const container = document.getElementById("mobile-category-shortcuts");
+    if (!container) return;
+
+    container.innerHTML = mobileCategoryShortcuts.map((shortcut) => `
+        <button
+            class="mobile-category-shortcut ${appState.activeMobileCategory === shortcut.id ? "is-active" : ""}"
+            onclick="openMobileCategoryShortcut('${shortcut.id}')"
+            aria-label="${shortcut.label}"
+        >
+            <span class="${shortcut.noCircle ? "mobile-category-shortcut-circleless" : "mobile-category-shortcut-circle"}">
+                <img src="${shortcut.image}" alt="${shortcut.label}" onerror="this.onerror=null;this.src='assets/mercado-livre-mobile-logo-v2.png'">
+            </span>
+            <span class="mobile-category-shortcut-label">${shortcut.labelHtml || shortcut.label}</span>
+        </button>
+    `).join("");
+}
+
+function openMobileCategoryShortcut(shortcutId) {
+    const shortcut = mobileCategoryShortcuts.find((item) => item.id === shortcutId);
+    if (!shortcut) return;
+
+    appState.activeMobileCategory = shortcutId;
+    appState.currentCategoryBrowserId = shortcutId;
+    appState.searchQuery = "";
+    syncSearchInputs();
+    closeSearchSuggestions();
+    renderMobileCategoryShortcuts();
+    renderProducts();
+
+    if (shortcut.pageId === "category-browser") {
+        renderCategoryBrowserPage(shortcutId);
+        showPage("category-browser");
+        return;
+    }
+
+    showPage(shortcut.pageId || "home");
+}
+
 function getSearchSuggestions(rawQuery = "", limit = 6) {
     return findProductsByQuery(rawQuery).slice(0, limit);
 }
@@ -1390,7 +1627,7 @@ function renderInspiredProductCard(product) {
                     <p class="text-[28px] leading-none font-light text-gray-900">${formatCurrency(currentPrice)}</p>
                     ${showDiscount ? `<p class="text-sm font-bold text-green-600">${discount}% OFF</p>` : ""}
                 </div>
-                <p class="text-[11px] text-green-600 font-bold mt-2">Frete grátis</p>
+                <p class="text-[11px] text-green-600 font-bold mt-2">${renderFullShippingBadge()}</p>
             </div>
         </article>
     `;
@@ -1938,9 +2175,37 @@ function renderProducts() {
         `;
     }
 
+    renderMobileCategoryShortcuts();
     renderHomeShortcuts();
     renderInspiredSection();
     renderMobileDiscoverySections();
+}
+
+function getCategoryBrowserProducts(shortcut) {
+    if (!shortcut) return [];
+    if (shortcut.browseCategory) {
+        return prioritizeDailyOffers(products.filter((product) => product.category === shortcut.browseCategory));
+    }
+    return prioritizeDailyOffers(products);
+}
+
+function renderCategoryBrowserPage(shortcutId = appState.currentCategoryBrowserId) {
+    const shortcut = mobileCategoryShortcuts.find((item) => item.id === shortcutId);
+    const title = document.getElementById("category-browser-title");
+    const kicker = document.getElementById("category-browser-kicker");
+    const subtitle = document.getElementById("category-browser-subtitle");
+    const productsWrap = document.getElementById("category-browser-products");
+    if (!shortcut || !title || !kicker || !subtitle || !productsWrap) return;
+
+    appState.currentCategoryBrowserId = shortcut.id;
+    kicker.innerText = "Categoria";
+    title.innerText = shortcut.title || shortcut.label;
+    subtitle.innerText = shortcut.subtitle || "Explore uma seleção separada para essa categoria.";
+
+    const items = getCategoryBrowserProducts(shortcut);
+    productsWrap.innerHTML = items.length
+        ? items.map(renderProductCard).join("")
+        : '<div class="col-span-full px-4 py-10 text-center text-gray-500">Nenhum produto encontrado nesta categoria.</div>';
 }
 
 function syncSearchInputs() {
@@ -2012,6 +2277,9 @@ function renderSearchSuggestions() {
 
 function applySearchQuery(rawValue = "") {
     appState.searchQuery = rawValue.trimStart();
+    if (appState.searchQuery.trim()) {
+        appState.activeMobileCategory = "";
+    }
     commitSearchHistory(appState.searchQuery);
     syncSearchInputs();
     closeSearchSuggestions();
@@ -2029,7 +2297,11 @@ function applySearchQuery(rawValue = "") {
 
 function previewSearchQuery(rawValue = "") {
     appState.searchQuery = rawValue.trimStart();
+    if (appState.searchQuery.trim()) {
+        appState.activeMobileCategory = "";
+    }
     syncSearchInputs();
+    renderMobileCategoryShortcuts();
     renderSearchSuggestions();
 }
 
@@ -2174,6 +2446,44 @@ function renderElectroPromoTile(imageUrl) {
     `;
 }
 
+function renderElectroQuickAccessCard(tile) {
+    return `
+        <button class="electro-shortcut-chip" onclick="showPage('electrodomesticos')">
+            <span class="electro-shortcut-card">
+                <img src="${tile.image}" alt="${tile.title}" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-3','bg-white')">
+            </span>
+            <span class="electro-shortcut-label">${tile.title}</span>
+        </button>
+    `;
+}
+
+function renderElectroPixDealCard(product) {
+    const currentPrice = getEffectivePrice(product);
+    const discount = getDiscountPercentage(product);
+    const meta = electroPixDealMeta[product.id] || {};
+    const [priceInt, priceDecimal = "00"] = currentPrice.toFixed(2).split(".");
+
+    return `
+        <article class="bg-white border border-[#ededed] rounded-[8px] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04)] cursor-pointer" onclick="openDetails(${product.id}, this)">
+            <div class="h-[210px] bg-white flex items-center justify-center p-3 border-b border-[#f5f5f5]">
+                <img src="${product.image}" alt="${product.title}" class="max-h-full object-contain" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-4')">
+            </div>
+            <div class="p-3">
+                <h3 class="text-[13px] leading-[1.35] text-[#333] line-clamp-3 min-h-[52px]">${product.title}</h3>
+                <p class="mt-2 text-[12px] text-[#999] line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <div class="mt-1 flex items-end gap-1 flex-wrap">
+                    <p class="text-[17px] leading-none text-[#333]">R$ ${Number(priceInt).toLocaleString("pt-BR")}<sup class="text-[11px] align-top">${priceDecimal}</sup></p>
+                    <p class="text-[13px] font-semibold text-[#00a650]">${discount}% OFF no Pix</p>
+                </div>
+                ${meta.installmentText ? `<p class="mt-1 text-[13px] leading-5 text-[#333]">${meta.installmentText}</p>` : ""}
+                ${meta.coupon ? `<p class="mt-2 inline-flex rounded-[3px] bg-[#e8f0ff] px-1.5 py-0.5 text-[12px] font-medium text-[#3483fa]">${meta.coupon}</p>` : ""}
+                ${meta.shipping ? `<p class="mt-2 text-[12px] font-semibold text-[#00a650]">${meta.shipping}</p>` : ""}
+                ${meta.full ? `<p class="mt-1 text-[12px] font-semibold text-[#00a650]">${renderFullShippingBadge()}</p>` : ""}
+            </div>
+        </article>
+    `;
+}
+
 function renderSportsQuickAccessCard(tile) {
     return `
         <button class="rounded-[22px] bg-white border border-[#e5e7eb] p-4 shadow-[0_10px_30px_rgba(15,23,42,0.07)] text-left hover:-translate-y-1 transition-transform" onclick="showPage('esportes-fitness')">
@@ -2237,8 +2547,11 @@ function renderElectrodomesticosPage() {
     const track = document.getElementById("electro-carousel-track");
     const dotsWrap = document.getElementById("electro-carousel-dots");
     const list = document.getElementById("electro-products-list");
-    const promoGrid = document.getElementById("electro-promo-grid");
-    if (!track || !dotsWrap || !list || !promoGrid) return;
+    const quickTrack = document.getElementById("electro-quick-track");
+    const featureBanner = document.getElementById("electro-feature-banner");
+    const climateBanner = document.getElementById("electro-climate-banner");
+    const pixDealsList = document.getElementById("electro-pix-products-list");
+    if (!track || !dotsWrap || !list || !quickTrack || !featureBanner || !climateBanner || !pixDealsList) return;
 
     track.innerHTML = electrodomesticosHeroSlides.map((slide) => `
         <div class="min-w-full h-full">
@@ -2250,8 +2563,11 @@ function renderElectrodomesticosPage() {
         <button class="hero-dot ${index === 0 ? "active" : ""}" onclick="setElectroSlide(${index})" aria-label="${slide.alt}"></button>
     `).join("");
 
-    list.innerHTML = getElectrodomesticosProducts().map(renderElectroProductCard).join("");
-    promoGrid.innerHTML = electroPromoTiles.map(renderElectroPromoTile).join("");
+    quickTrack.innerHTML = electroQuickAccessTiles.map(renderElectroQuickAccessCard).join("");
+    featureBanner.innerHTML = `<img src="${electroFeatureBanner.image}" alt="${electroFeatureBanner.alt}" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">`;
+    list.innerHTML = getElectrodomesticosProducts().slice(0, 5).map(renderElectroProductCard).join("");
+    climateBanner.innerHTML = `<img src="${electroClimateBanner.image}" alt="${electroClimateBanner.alt}" onerror="this.onerror=null;this.src='assets/mercado-livre-logo.png';this.classList.add('p-8','bg-white')">`;
+    pixDealsList.innerHTML = electroPixDealsIds.map((id) => getProductById(id)).filter(Boolean).map(renderElectroPixDealCard).join("");
     appState.currentElectroSlide = 0;
     appState.electroSlideCount = electrodomesticosHeroSlides.length;
     updateElectroCarousel();
@@ -2391,7 +2707,7 @@ function closeCategoriesMenu() {
 }
 
 function getVisiblePageId() {
-    const pageMap = ["home", "electrodomesticos", "esportes-fitness", "auth", "purchases", "orders", "history", "addresses", "details", "cart", "cart-loading"];
+    const pageMap = ["home", "category-browser", "electrodomesticos", "esportes-fitness", "auth", "purchases", "orders", "history", "addresses", "details", "cart", "cart-loading"];
     return pageMap.find((pageId) => !document.getElementById(`page-${pageId}`)?.classList.contains("hidden")) || "home";
 }
 
@@ -2402,6 +2718,7 @@ function isCheckoutOpen() {
 function captureNavigationState() {
     return {
         page: getVisiblePageId(),
+        categoryShortcutId: appState.currentCategoryBrowserId || appState.activeMobileCategory || null,
         productId: appState.currentProdId || null,
         checkoutOpen: isCheckoutOpen(),
         checkoutStep: appState.currentCheckoutStep || "address"
@@ -2431,10 +2748,16 @@ function getInitialProductIdFromUrl() {
 function restoreNavigationState(state) {
     const targetState = state?.__appNavigation
         ? state
-        : { page: "home", productId: null, checkoutOpen: false, checkoutStep: "address" };
+        : { page: "home", categoryShortcutId: null, productId: null, checkoutOpen: false, checkoutStep: "address" };
+
+    appState.currentCategoryBrowserId = targetState.categoryShortcutId || "";
+    appState.activeMobileCategory = targetState.categoryShortcutId || "";
 
     if (targetState.page === "details" && targetState.productId) {
         openDetails(targetState.productId, null, { updateHistory: false });
+    } else if (targetState.page === "category-browser") {
+        renderCategoryBrowserPage(targetState.categoryShortcutId || "tecnologia");
+        showPage("category-browser", null, { updateHistory: false });
     } else {
         showPage(targetState.page || "home", null, { updateHistory: false });
     }
@@ -2498,6 +2821,7 @@ function showPage(pageId, triggerEl = null, options = {}) {
     const { updateHistory = true, skipAnimation = false } = options;
     const pageMap = {
         home: document.getElementById("page-home"),
+        "category-browser": document.getElementById("page-category-browser"),
         electrodomesticos: document.getElementById("page-electrodomesticos"),
         "esportes-fitness": document.getElementById("page-esportes-fitness"),
         auth: document.getElementById("page-auth"),
@@ -2572,6 +2896,7 @@ function showPage(pageId, triggerEl = null, options = {}) {
     document.body.style.overflow = "auto";
     if (pageId === "electrodomesticos") renderElectrodomesticosPage();
     if (pageId === "esportes-fitness") renderSportsFitnessPage();
+    if (pageId === "category-browser") renderCategoryBrowserPage();
     if (pageId === "purchases") renderAccountArea();
     if (pageId === "orders") renderPurchaseHistory();
     if (pageId === "history") renderHistoryPage();
@@ -3183,8 +3508,76 @@ function toggleCart(show) {
 function playEmbeddedVideo() {
     const frame = document.getElementById("mercado-play-embed");
     if (!frame) return;
-    frame.src = "https://www.youtube.com/embed/CI12S_1PNqc?autoplay=1&mute=0&loop=1&playlist=CI12S_1PNqc&controls=1&playsinline=1&rel=0";
+    const selectedVideo = mercadoPlayVideos.find((video) => video.id === currentMercadoPlayVideoId) || mercadoPlayVideos[0];
+    if (!selectedVideo) return;
+    frame.src = buildMercadoPlayEmbedUrl(selectedVideo.id, { autoplay: true, mute: false });
     frame.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function buildMercadoPlayEmbedUrl(videoId, { autoplay = true, mute = true } = {}) {
+    const params = new URLSearchParams({
+        autoplay: autoplay ? "1" : "0",
+        mute: mute ? "1" : "0",
+        loop: "1",
+        playlist: videoId,
+        controls: "1",
+        playsinline: "1",
+        rel: "0"
+    });
+    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+function getRandomMercadoPlayVideoId() {
+    const candidates = mercadoPlayVideos.filter((video) => video.id !== currentMercadoPlayVideoId);
+    const pool = candidates.length ? candidates : mercadoPlayVideos;
+    return pool[Math.floor(Math.random() * pool.length)]?.id || mercadoPlayVideos[0]?.id || "";
+}
+
+function renderMercadoPlayVideo(videoId, options = {}) {
+    const frame = document.getElementById("mercado-play-embed");
+    const title = document.getElementById("mercado-play-current-title");
+    const link = document.getElementById("mercado-play-open-link");
+    const selectedVideo = mercadoPlayVideos.find((video) => video.id === videoId) || mercadoPlayVideos[0];
+
+    if (!frame || !selectedVideo) return;
+
+    currentMercadoPlayVideoId = selectedVideo.id;
+    frame.src = buildMercadoPlayEmbedUrl(selectedVideo.id, options);
+    if (title) {
+        title.innerText = `Agora passando: ${selectedVideo.title}`;
+    }
+    if (link) {
+        link.href = selectedVideo.youtubeUrl;
+    }
+}
+
+function rotateMercadoPlayVideo() {
+    const nextVideoId = getRandomMercadoPlayVideoId();
+    if (!nextVideoId) return;
+    renderMercadoPlayVideo(nextVideoId, { autoplay: true, mute: true });
+}
+
+function startMercadoPlayRotation() {
+    if (!document.getElementById("mercado-play-embed")) return;
+    if (!currentMercadoPlayVideoId) {
+        rotateMercadoPlayVideo();
+    }
+    if (mercadoPlayRotationInterval) {
+        window.clearInterval(mercadoPlayRotationInterval);
+    }
+    mercadoPlayRotationInterval = window.setInterval(() => {
+        rotateMercadoPlayVideo();
+    }, MERCADO_PLAY_ROTATION_MS);
+}
+
+function initMercadoPlaySection() {
+    if (!document.getElementById("mercado-play-embed")) return;
+    if (!currentMercadoPlayVideoId) {
+        rotateMercadoPlayVideo();
+    } else {
+        renderMercadoPlayVideo(currentMercadoPlayVideoId, { autoplay: true, mute: true });
+    }
+    startMercadoPlayRotation();
 }
 
 function addToCart(id) {
@@ -3997,6 +4390,14 @@ function openAuthPage(mode = "register", triggerEl = null) {
     initGoogleAuth();
 }
 
+function openProfileOrLogin(triggerEl = null) {
+    if (appState.session) {
+        showPage("purchases", triggerEl);
+        return;
+    }
+    openAuthPage("login", triggerEl);
+}
+
 function setAuthModeGoogleOnlyLegacyFinal(mode) {
     appState.authMode = mode;
     const isRegister = mode === "register";
@@ -4806,6 +5207,7 @@ function init() {
     setAuthMode("register");
     initGoogleAuth();
     initHeroCarousel();
+    initMercadoPlaySection();
     document.getElementById("nav-account-btn")?.addEventListener("click", toggleDesktopAccountMenu);
     document.addEventListener("click", (event) => {
         closeCategoriesMenu();
@@ -4884,6 +5286,7 @@ window.buyNow = buyNow;
 window.togglePasswordVisibility = togglePasswordVisibility;
 window.resendRegisterCode = resendRegisterCode;
 window.openAuthPage = openAuthPage;
+window.openProfileOrLogin = openProfileOrLogin;
 window.toggleAuthMode = toggleAuthMode;
 window.handleGoogleFallback = handleGoogleFallback;
 window.deleteSavedAddress = deleteSavedAddress;
