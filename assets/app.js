@@ -240,16 +240,68 @@ const products = [
         title: "Copa do Mundo 2026 Álbum de Figurinhas Capa Dura Ouro FIFA WORLD CUP 2026™ + 70 figurinhas",
         price: 35.9,
         oldPrice: 79.9,
-        image: "assets/album-copa-2026-pre-venda-principal.jpeg",
+        image: "assets/album-copa-2026-capa-dura-oficial-2026.png",
         gallery: [
-            "assets/album-copa-2026-pre-venda-principal.jpeg",
-            "assets/album-copa-2026-envelopes.jpeg"
+            "assets/album-copa-2026-capa-dura-oficial-2026.png",
+            "assets/album-copa-2026-capa-dura-kit-24.jpeg",
+            "assets/album-copa-2026-24-envelopes.jpeg"
         ],
-        description: "Álbum de figurinhas capa dura ouro da Copa do Mundo 2026 em pré-venda, com visual oficial FIFA World Cup 2026 e 70 figurinhas.",
+        description: "Álbum de figurinhas capa dura ouro da Copa do Mundo 2026 com visual oficial FIFA World Cup 2026 e 70 figurinhas para começar a coleção.",
         preSale: {
-            launchDate: "25/Maio/2026",
-            message: "Este produto será lançado em 25/Maio/2026.",
-            cta: "Reserve o seu na pré-venda."
+            message: "Envio imediato para todo o Brasil.",
+            cta: "Compra protegida e postagem com rastreio."
+        },
+        detailBoost: {
+            urgency: "Devido à alta procura pelo álbum da Copa 2026, estamos com estoque reduzido.",
+            trustItems: [
+                "Compra 100% segura",
+                "Envio com código de rastreio",
+                "Pagamento protegido"
+            ],
+            socialRating: "⭐⭐⭐⭐⭐ (4.8/5)",
+            socialCustomers: "+1.237 clientes satisfeitos",
+            testimonials: [
+                {
+                    name: "Fernanda A.",
+                    text: "Chegou rápido e é original mesmo!",
+                    photo: "https://randomuser.me/api/portraits/women/12.jpg"
+                },
+                {
+                    name: "Carlos R.",
+                    text: "Vale muito a pena pelo preço",
+                    photo: "https://randomuser.me/api/portraits/men/14.jpg"
+                },
+                {
+                    name: "Priscila N.",
+                    text: "Meu filho amou",
+                    photo: "https://randomuser.me/api/portraits/women/22.jpg"
+                },
+                {
+                    name: "Eduardo L.",
+                    text: "Veio muito bem embalado e o álbum é lindo ao vivo.",
+                    photo: "https://randomuser.me/api/portraits/men/41.jpg"
+                },
+                {
+                    name: "Tatiane F.",
+                    text: "Acabamento excelente, superou minha expectativa.",
+                    photo: "https://randomuser.me/api/portraits/women/31.jpg"
+                },
+                {
+                    name: "Gustavo P.",
+                    text: "Postaram rápido e o código de rastreio funcionou certinho.",
+                    photo: "https://randomuser.me/api/portraits/men/52.jpg"
+                },
+                {
+                    name: "Aline C.",
+                    text: "Produto original e chegou antes do prazo aqui em casa.",
+                    photo: "https://randomuser.me/api/portraits/women/46.jpg"
+                },
+                {
+                    name: "Marcelo D.",
+                    text: "Comprei para colecionar e achei o custo-benefício ótimo.",
+                    photo: "https://randomuser.me/api/portraits/men/63.jpg"
+                }
+            ]
         },
         priceOverride: 35.9
     }
@@ -860,8 +912,8 @@ const productDetailMap = {
         brand: "FIFA World Cup",
         breadcrumb: "Esportes e Fitness > Futebol > \u00c1lbuns e Colecion\u00e1veis",
         sold: "+1 mil vendidos",
-        rating: 4.9,
-        reviews: 214,
+        rating: 4.8,
+        reviews: 1237,
         shippingText: "Chegar\u00e1 r\u00e1pido com envio Full",
         sellerName: "Loja oficial Panini",
         sellerSubtitle: "Loja oficial Panini",
@@ -871,7 +923,7 @@ const productDetailMap = {
         optionText: "12 produtos novos a partir de R$ 35,90",
         highlights: [
             "\u00c1lbum de figurinhas capa dura ouro da Copa do Mundo FIFA 2026.",
-            "Produto em pr\u00e9-venda com lan\u00e7amento previsto para 25 de maio de 2026.",
+            "Envio imediato com postagem e c\u00f3digo de rastreio.",
             "Visual oficial FIFA World Cup 2026.",
             "Acompanha 70 figurinhas para iniciar a cole\u00e7\u00e3o.",
             "Boa op\u00e7\u00e3o para f\u00e3s de futebol e colecionadores."
@@ -2782,6 +2834,7 @@ function openDetails(id, triggerEl = null, options = {}) {
     updateProductShareTargets();
     closeProductShareMenu();
     renderRatingStars(meta.rating);
+    renderDetailBoost(product);
     updateFavoriteButton(id);
     if (triggerEl?.classList) {
         triggerEl.classList.add("product-opening");
@@ -2796,6 +2849,64 @@ function openDetails(id, triggerEl = null, options = {}) {
     void detailsPage?.offsetWidth;
     detailsPage?.classList.add("detail-animating");
     window.setTimeout(() => detailsPage?.classList.remove("detail-animating"), 420);
+}
+
+function renderDetailBoost(product) {
+    const boost = product.detailBoost;
+    const containers = document.querySelectorAll("[data-detail-boost]");
+    if (!containers.length) return;
+
+    const trustMarkup = (boost?.trustItems || [])
+        .map((item) => `
+            <div class="flex items-center gap-2.5">
+                <span class="inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#1d9bf0]">
+                    <i data-lucide="badge-check" class="w-4 h-4 fill-[#1d9bf0] text-white"></i>
+                </span>
+                <span>${item}</span>
+            </div>
+        `)
+        .join("");
+
+    const testimonialsMarkup = (boost?.testimonials || [])
+        .map((item) => `
+            <article class="rounded-xl border border-gray-200 bg-white p-3 shadow-[0_8px_20px_rgba(15,23,42,0.04)]">
+                <div class="flex items-center gap-3">
+                    <img src="${item.photo}" alt="${item.name}" class="w-12 h-12 rounded-full object-cover border border-gray-200" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='assets/panini-logo.jpg'">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-900">${item.name}</p>
+                    </div>
+                </div>
+                <p class="text-sm leading-5 text-gray-700 mt-3">"${item.text}"</p>
+            </article>
+        `)
+        .join("");
+
+    containers.forEach((container) => {
+        const urgencyBanner = container.querySelector("[data-detail-boost-urgency]");
+        const trustItems = container.querySelector("[data-detail-boost-trust]");
+        const socialRating = container.querySelector("[data-detail-boost-rating]");
+        const socialCustomers = container.querySelector("[data-detail-boost-customers]");
+        const testimonials = container.querySelector("[data-detail-boost-testimonials]");
+
+        if (!urgencyBanner || !trustItems || !socialRating || !socialCustomers || !testimonials) return;
+
+        if (!boost) {
+            container.classList.add("hidden");
+            return;
+        }
+
+        urgencyBanner.classList.toggle("hidden", !boost.urgency);
+        urgencyBanner.innerHTML = boost.urgency
+            ? `<p class="text-sm font-semibold text-[#8a5a00]">${boost.urgency}</p>`
+            : "";
+        trustItems.innerHTML = trustMarkup;
+        socialRating.innerText = boost.socialRating || "";
+        socialCustomers.innerText = boost.socialCustomers || "";
+        testimonials.innerHTML = testimonialsMarkup;
+        container.classList.remove("hidden");
+    });
+
+    lucide.createIcons();
 }
 
 function selectDetailImage(src, alt, trigger) {
