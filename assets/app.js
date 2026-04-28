@@ -241,7 +241,7 @@ const products = [
         id: 24,
         slug: "copa-do-mundo-2026-album-capa-dura-kit-24-envelopes",
         category: "esportes-fitness",
-        title: "Copa do Mundo 2026 Álbum de Figurinhas Capa Dura Ouro FIFA WORLD CUP 2026™ + 70 figurinhas",
+        title: "Copa do Mundo 2026 Álbum de Figurinhas Capa Dura Ouro FIFA WORLD CUP 2026™ + 168 figurinhas",
         price: 179.99,
         oldPrice: 599.9,
         image: "assets/album-copa-2026-capa-dura-oficial-2026.png",
@@ -250,7 +250,7 @@ const products = [
             "assets/album-copa-2026-capa-dura-kit-24.jpeg",
             "assets/album-copa-2026-24-envelopes.jpeg"
         ],
-        description: "Álbum de figurinhas capa dura ouro da Copa do Mundo 2026 com visual oficial FIFA World Cup 2026 e 70 figurinhas para começar a coleção.",
+        description: "Álbum de figurinhas capa dura ouro da Copa do Mundo 2026 com visual oficial FIFA World Cup 2026 e 168 figurinhas para começar a coleção.",
         preSale: {
             message: "Envio imediato para todo o Brasil.",
             cta: "Compra protegida e postagem com rastreio."
@@ -312,26 +312,26 @@ const products = [
                 ["Marca", "Album Copa do Mundo Panini"],
                 ["Nome", "ÁLBUM CAPA DURA DOURADA GOLD COM PACOTES"],
                 ["É kit", "Sim"],
-                ["Modelo", "Capa Dura DOURADA + 70 Figurinhas"],
+                ["Modelo", "Capa Dura DOURADA + 168 Figurinhas"],
                 ["Tipo de capa", "Capa Dura Dourada"],
                 ["Cor", "Colorido"],
-                ["Quantidade de pacotes de figurinhas", "10"]
+                ["Quantidade de pacotes de figurinhas", "24"]
             ],
             dimensions: [
                 ["Comprimento", "29,7 cm"],
                 ["Largura", "21 cm"]
             ],
             others: [
-                ["Quantidade total de figurinhas", "70"],
+                ["Quantidade total de figurinhas", "168"],
                 ["Ano", "2026"],
                 ["Tema", "Copa do Mundo FIFA 2026"],
                 ["Quantidade de páginas", "112"],
                 ["Quantidade de figurinhas para completar", "980"],
                 ["Com caixa de pacotes de figurinha", "Não"],
                 ["Quantidade de figurinhas por pacote", "7"],
-                ["Extras incluídos", "10 pacote de figurinhas"],
+                ["Extras incluídos", "24 pacote de figurinhas"],
                 ["Idade mínima recomendada", "5 anos"],
-                ["Condição", "Incompleto"],
+                ["Condição", "Novo"],
                 ["Idade recomendada", ""]
             ]
         },
@@ -957,7 +957,7 @@ const productDetailMap = {
             "\u00c1lbum de figurinhas capa dura ouro da Copa do Mundo FIFA 2026.",
             "Envio imediato com postagem e c\u00f3digo de rastreio.",
             "Visual oficial FIFA World Cup 2026.",
-            "Acompanha 70 figurinhas para iniciar a cole\u00e7\u00e3o.",
+            "Acompanha 168 figurinhas para iniciar a cole\u00e7\u00e3o.",
             "Boa op\u00e7\u00e3o para f\u00e3s de futebol e colecionadores."
         ]
     }
@@ -3050,6 +3050,27 @@ function renderProductSpecs(product) {
     dimensionsWrap.innerHTML = renderRows(specs.dimensions || []);
     othersWrap.innerHTML = renderRows(specs.others || []);
     section.classList.remove("hidden");
+}
+
+function scrollToDetailSpecs() {
+    const specsSection = document.querySelector("[data-detail-specs-section]");
+    const fallbackSection = document.getElementById("det-highlights");
+    const target = specsSection && !specsSection.classList.contains("hidden") ? specsSection : fallbackSection;
+    if (!target) return;
+
+    const detailsPage = document.getElementById("page-details");
+    const headerOffset = window.innerWidth >= 768 ? 110 : 96;
+
+    if (detailsPage) {
+        const detailsRect = detailsPage.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const nextTop = detailsPage.scrollTop + (targetRect.top - detailsRect.top) - headerOffset;
+        detailsPage.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
+        return;
+    }
+
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
 }
 
 function selectDetailImage(src, alt, trigger) {
