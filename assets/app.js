@@ -1204,8 +1204,11 @@ function getPreferredLocationLabel() {
 
 function renderHeaderLocation() {
     const label = getPreferredLocationLabel();
+    const hasSavedLocation = label !== "Informe seu CEP";
+    const mobileLocationRow = document.getElementById("mobile-location-row");
     document.getElementById("mobile-header-location-text")?.replaceChildren(document.createTextNode(label));
     document.getElementById("desktop-header-location-text")?.replaceChildren(document.createTextNode(label));
+    mobileLocationRow?.classList.toggle("hidden", !hasSavedLocation);
 }
 
 function requireAccountForPurchase(productId = appState.currentProdId) {
@@ -1679,12 +1682,19 @@ function openNotificationsCenter() {
 function updateFavoriteButton(productId) {
     const button = document.getElementById("det-favorite-btn");
     const icon = document.getElementById("det-favorite-icon");
+    const mobileButton = document.getElementById("det-mobile-favorite-btn");
+    const mobileIcon = document.getElementById("det-mobile-favorite-icon");
     if (!button || !icon) return;
 
     const active = isFavorite(productId);
     button.classList.toggle("text-blue-600", !active);
     button.classList.toggle("text-pink-500", active);
     icon.classList.toggle("fill-current", active);
+    if (mobileButton && mobileIcon) {
+        mobileButton.classList.toggle("text-blue-600", !active);
+        mobileButton.classList.toggle("text-pink-500", active);
+        mobileIcon.classList.toggle("fill-current", active);
+    }
 }
 
 function toggleFavorite(productId) {
@@ -2629,12 +2639,14 @@ function getProductDetailMeta(product) {
 }
 
 function renderRatingStars(score) {
-    const container = document.getElementById("det-stars");
-    if (!container) return;
     const rounded = Math.round(score);
-    container.innerHTML = Array.from({ length: 5 }, (_, index) => `
+    const markup = Array.from({ length: 5 }, (_, index) => `
         <i data-lucide="star" class="w-4 h-4 ${index < rounded ? "fill-current" : ""}"></i>
     `).join("");
+    ["det-stars", "det-mobile-stars"].forEach((id) => {
+        const container = document.getElementById(id);
+        if (container) container.innerHTML = markup;
+    });
 }
 
 function updateMainDetailImage(src, alt) {
@@ -2855,12 +2867,18 @@ function openDetails(id, triggerEl = null, options = {}) {
     appState.currentProdId = id;
     recordViewedProduct(id);
     document.getElementById("det-title").innerText = product.title;
+    document.getElementById("det-mobile-title").innerText = product.title;
     document.getElementById("det-breadcrumb").innerText = meta.breadcrumb;
     document.getElementById("det-brand-link").innerText = `Conferir mais produtos da marca ${meta.brand}`;
+    document.getElementById("det-mobile-brand-link").innerText = `Conferir mais produtos da marca ${meta.brand}`;
     document.getElementById("det-condition").innerText = "Novo";
+    document.getElementById("det-mobile-condition").innerText = "Novo";
     document.getElementById("det-sold").innerText = meta.sold;
+    document.getElementById("det-mobile-sold").innerText = meta.sold;
     document.getElementById("det-rating-score").innerText = meta.rating.toFixed(1);
+    document.getElementById("det-mobile-rating-score").innerText = meta.rating.toFixed(1);
     document.getElementById("det-reviews").innerText = `(${meta.reviews})`;
+    document.getElementById("det-mobile-reviews").innerText = `(${meta.reviews})`;
     document.getElementById("det-price").innerText = formatCurrency(currentPrice);
     document.getElementById("det-old-price").innerHTML = showDiscount ? `De <span class="line-through">R$ ${product.oldPrice.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>` : "";
     document.getElementById("det-old-price").style.display = showDiscount ? "" : "none";
@@ -2896,6 +2914,8 @@ function openDetails(id, triggerEl = null, options = {}) {
     sellerVerifiedIcon?.classList.toggle("hidden", !meta.sellerVerified);
     document.getElementById("det-add-cart").onclick = () => addToCart(id);
     document.getElementById("det-favorite-btn").onclick = () => toggleFavorite(id);
+    const mobileFavoriteBtn = document.getElementById("det-mobile-favorite-btn");
+    if (mobileFavoriteBtn) mobileFavoriteBtn.onclick = () => toggleFavorite(id);
     updateProductShareTargets();
     closeProductShareMenu();
     renderRatingStars(meta.rating);
@@ -3238,7 +3258,7 @@ function renderCartPage() {
 function updateCartUI() {
     const container = document.getElementById("cart-items");
     const countLabel = document.getElementById("cart-count");
-    const mobileBadge = document.getElementById("mobile-menu-badge");
+    const mobileBadge = document.getElementById("mobile-cart-badge");
     const totalLabel = document.getElementById("cart-total");
     if (!container || !countLabel || !totalLabel) return;
 
